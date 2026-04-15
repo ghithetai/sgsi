@@ -49,6 +49,133 @@
       padding: 16px 24px 0;
       flex-wrap: wrap;
     }
+
+    .tabs {
+      display: none;
+    }
+    .screen-login-only .head-subtitle {
+      margin-top: 10px;
+    }
+    .app-dashboard {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .app-tile {
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      cursor: pointer;
+      text-align: left;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .app-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+      border-color: #93c5fd;
+    }
+    .app-tile:active {
+      transform: scale(.98);
+    }
+    .app-tile-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      margin-bottom: 12px;
+    }
+    .app-tile-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .app-tile-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    .dashboard-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 6px;
+    }
+    .dashboard-note {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .panel-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .panel-topbar-left {
+      min-width: 0;
+    }
+    .panel-back-btn {
+  border: none;
+  background: #fee2e2;        /* nền đỏ rất nhẹ */
+  color: #dc2626;             /* chữ đỏ dễ nhìn */
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover nhìn rõ hơn */
+.panel-back-btn:hover {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+/* Khi bấm */
+.panel-back-btn:active {
+  transform: scale(0.96);
+}
+    .panel-mini-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+    .panel-mini-subtitle {
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 13px;
+    }
+    .login-tab-standalone {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .app-only-panel {
+      display: none;
+    }
+    body.app-mode .app-only-panel.active {
+      display: block;
+    }
+    @media (max-width: 700px) {
+      .app-dashboard {
+        grid-template-columns: 1fr;
+      }
+      .panel-topbar {
+        align-items: flex-start;
+      }
+    }
+
     .tab-btn {
       border: none;
       padding: 12px 16px;
@@ -623,6 +750,406 @@ button.error {
     transform: translateY(0);
   }
 }
+
+/* ===== Modern UI refresh ===== */
+:root{
+  --bg-1:#eef4ff;
+  --bg-2:#f8fbff;
+  --card:#ffffffcc;
+  --text:#0f172a;
+  --muted:#64748b;
+  --line:#dbe4f0;
+  --primary:#2563eb;
+  --primary-2:#0ea5e9;
+  --danger:#ef4444;
+  --success:#16a34a;
+  --shadow:0 20px 60px rgba(15,23,42,.12);
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,.14), transparent 30%),
+    radial-gradient(circle at top right, rgba(14,165,233,.12), transparent 24%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  color:var(--text);
+  padding:20px;
+}
+
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:auto;
+  width:280px;
+  height:280px;
+  border-radius:999px;
+  filter:blur(70px);
+  opacity:.16;
+  z-index:0;
+  pointer-events:none;
+}
+body::before{
+  left:-80px;
+  top:-40px;
+  background:#60a5fa;
+}
+body::after{
+  right:-90px;
+  bottom:-50px;
+  background:#22d3ee;
+}
+
+.wrap{
+  max-width:1160px;
+  position:relative;
+  z-index:1;
+}
+
+.card{
+  border:1px solid rgba(255,255,255,.7);
+  background:var(--card);
+  backdrop-filter:blur(12px);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.head{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52)),
+    linear-gradient(135deg, rgba(37,99,235,.08), rgba(14,165,233,.04));
+  padding:28px 28px 18px;
+}
+
+.head-subtitle{
+  margin-top:12px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.title-main{
+  font-size:32px;
+  letter-spacing:.3px;
+}
+
+.tabs{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  gap:10px;
+  padding:14px 20px 0;
+  background:linear-gradient(180deg, rgba(248,250,252,.96), rgba(248,250,252,.82));
+  backdrop-filter:blur(10px);
+  scrollbar-width:thin;
+}
+.tabs::-webkit-scrollbar{
+  height:6px;
+}
+.tabs::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:999px;
+}
+
+.tab-btn{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:12px 16px;
+  background:#fff;
+  border:1px solid #dbe4f0;
+  color:#334155;
+  font-weight:800;
+  letter-spacing:.1px;
+  box-shadow:0 8px 20px rgba(15,23,42,.05);
+  transition:all .18s ease;
+}
+.tab-btn:hover{
+  transform:translateY(-1px);
+  border-color:#93c5fd;
+}
+.tab-btn.active{
+  background:linear-gradient(135deg, var(--primary), var(--primary-2));
+  color:#fff;
+  box-shadow:0 12px 30px rgba(37,99,235,.28);
+}
+
+.body{
+  padding:26px;
+}
+
+.tab-panel{
+  animation:fadeTab .18s ease;
+}
+@keyframes fadeTab{
+  from{opacity:0; transform:translateY(5px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.grid,
+.grid-1{
+  gap:16px;
+}
+
+.grid > div:not([style*="display:none"]),
+.grid-1 > div:not([style*="display:none"]),
+.grid-1 > label.remember-row{
+  background:rgba(255,255,255,.78);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 8px 24px rgba(15,23,42,.04);
+}
+
+label{
+  margin-bottom:10px;
+  color:#334155;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+input, select, textarea{
+  border:1px solid #d5dfeb;
+  border-radius:16px;
+  padding:14px 15px;
+  font-size:15px;
+  background:linear-gradient(180deg,#fff,#fbfdff);
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+input:hover, select:hover, textarea:hover{
+  border-color:#93c5fd;
+}
+input:focus, select:focus, textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+.password-wrap{
+  position:relative;
+}
+.password-toggle{
+  right:10px;
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:#f8fafc;
+}
+.password-toggle:hover{
+  background:#eef2ff;
+}
+
+button.action{
+  border-radius:16px;
+  padding:14px 18px;
+  font-size:15px;
+  font-weight:800;
+  background:linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow:0 12px 24px rgba(37,99,235,.22);
+  transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease;
+}
+button.action:hover{
+  transform:translateY(-1px);
+  box-shadow:0 16px 30px rgba(37,99,235,.26);
+}
+button.action.secondary{
+  background:linear-gradient(135deg, #f43f5e, #ef4444);
+  box-shadow:0 12px 24px rgba(239,68,68,.18);
+}
+button.action.secondary:hover{
+  box-shadow:0 16px 30px rgba(239,68,68,.23);
+}
+
+.msg{
+  margin-top:18px;
+  border-radius:18px;
+  padding:14px 16px;
+  border-width:1px;
+  font-size:14px;
+  line-height:1.6;
+  box-shadow:0 8px 20px rgba(15,23,42,.04);
+}
+.msg.ok{border-left:5px solid #22c55e;}
+.msg.err{border-left:5px solid #ef4444;}
+.msg.info{border-left:5px solid #3b82f6;}
+
+.custom-select-trigger{
+  border-radius:16px;
+  min-height:52px;
+  border-color:#d5dfeb;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.custom-select-dropdown{
+  border-radius:18px;
+  border-color:#dbe4f0;
+  box-shadow:0 18px 38px rgba(15,23,42,.14);
+}
+
+#driverListSimpleBox,
+#groupDeviceListBox{
+  margin-top:18px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.8);
+  box-shadow:0 10px 24px rgba(15,23,42,.05);
+  padding:10px;
+}
+
+.modern-card-list{
+  display:grid;
+  gap:12px;
+}
+.modern-item{
+  padding:14px 15px;
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  background:linear-gradient(180deg, #fff, #fbfdff);
+  box-shadow:0 6px 16px rgba(15,23,42,.04);
+}
+.modern-item-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.modern-item-title{
+  font-weight:800;
+  font-size:16px;
+  color:#111827;
+}
+.modern-item-sub{
+  margin-top:6px;
+  color:#64748b;
+  font-size:14px;
+  line-height:1.5;
+}
+.modern-badge{
+  flex:0 0 auto;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  background:#eff6ff;
+  color:#1d4ed8;
+}
+.modern-empty{
+  padding:18px;
+  text-align:center;
+  color:#64748b;
+}
+
+.setup-driver-item,
+.setup-vehicle-item,
+.delete-driver-item{
+  border-radius:14px;
+  margin:6px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 14px rgba(15,23,42,.04);
+}
+.setup-driver-item.selected,
+.setup-vehicle-item.selected,
+.delete-driver-item.selected{
+  transform:translateY(-1px);
+}
+
+.opcode210-wrap{
+  gap:18px;
+}
+.opcode210-circle{
+  filter:drop-shadow(0 22px 36px rgba(37,99,235,.12));
+}
+.opcode210-circle-bg{
+  stroke:#d7e4f6;
+}
+.opcode210-title{
+  font-size:15px;
+}
+.opcode210-subtext{
+  max-width:150px;
+}
+
+.small{
+  color:var(--muted);
+}
+
+@media (max-width: 900px){
+  .body{padding:18px;}
+  .head{padding:22px 18px 14px;}
+  .tabs{padding:12px 14px 0;}
+}
+
+@media (max-width: 600px){
+  body{padding:10px;}
+  .card{border-radius:20px;}
+  .title-main{font-size:24px;}
+  .head-subtitle{font-size:13px;}
+  .grid > div:not([style*="display:none"]),
+  .grid-1 > div:not([style*="display:none"]),
+  .grid-1 > label.remember-row{
+    border-radius:16px;
+    padding:14px;
+  }
+  .tab-btn{
+    padding:11px 14px;
+    font-size:13px;
+  }
+  #driverListSimpleBox,
+  #groupDeviceListBox{
+    padding:8px;
+  }
+}
+
+
+.app-header-actions{
+  display:none;
+  justify-content:center;
+  margin-top:14px;
+}
+body.app-mode .app-header-actions{
+  display:flex;
+}
+.header-ghost-btn{
+  border:none;
+  background:rgba(255,255,255,.88);
+  color:#0f172a;
+  padding:10px 16px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(15,23,42,.08);
+}
+.login-screen-note{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  margin-top:14px;
+}
+body.login-mode .tabs{
+  display:none;
+}
+body.login-mode .tab-panel{
+  display:none !important;
+}
+body.login-mode #loginTab{
+  display:block !important;
+}
+body.app-mode #loginTab{
+  display:none !important;
+}
+body.app-mode .tabs{
+  display:flex;
+}
+body.app-mode .tab-btn[data-tab="loginTab"]{
+  display:none !important;
+}
+
 </style>
 </head>
 <body>
@@ -644,27 +1171,22 @@ button.error {
 ">
   Bấm để gọi Hotline: 📞 0902.55.50.70
 </a>
+  <div class="head-subtitle">Tra cứu nhanh, thao tác gọn, giao diện tối ưu cho điện thoại và máy tính.</div>
+<div class="app-header-actions">
+  <button id="btnBackToLogin" class="header-ghost-btn" type="button">Đổi tài khoản</button>
+</div>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" data-tab="loginTab">Đăng nhập</button>
-
-  <button class="tab-btn" data-tab="groupDeviceTab">DANH SÁCH XE</button>
-  <button class="tab-btn" data-tab="driverListTab">Danh sách tài xế</button>
-  <button class="tab-btn" data-tab="deleteDriverTab">Xoá tài xế</button>
-  <button class="tab-btn" data-tab="opcode210Tab">Xoá tài xế trên xe</button>
-  <button class="tab-btn" data-tab="driverTab">Thêm tài xế</button>
-  <button class="tab-btn" data-tab="setupDriverTab">Gắn tài xế vào thẻ</button>
-</div>
+<div class="tabs" aria-hidden="true"></div>
 
       <div class="body">
         <div class="statusbar" id="globalInfo" style="display:none !important"></div>
 
-        <div id="loginTab" class="tab-panel active">
+        <div id="loginTab" class="tab-panel active login-tab-standalone">
           <form id="loginForm" class="grid-1">
             <div style="display:none">
               <label for="baseUrl">Base URL</label>
-              <input id="baseUrl" type="text" value="https://lively-cloud-d33f.gianglue819.workers.dev" />
+              <input id="baseUrl" type="text" value="http://route.sgsi.vn" />
             </div>
             <div style="display:none">
               <label for="apiKey">API Key dùng chung</label>
@@ -698,10 +1220,59 @@ button.error {
           </form>
 
           <div id="loginMessage" class="msg info" style="display:none"></div>
-          
+          <div class="login-screen-note">Đăng nhập thành công hệ thống sẽ tự chuyển sang màn hình thao tác.</div>
         </div>
 
-        <div id="groupDeviceTab" class="tab-panel">
+
+        <div id="appHomeTab" class="tab-panel app-only-panel">
+          <div class="panel-topbar">
+            <div class="panel-topbar-left">
+              <div class="panel-mini-title">Chọn chức năng</div>
+              <div class="panel-mini-subtitle">Bấm vào 1 ô để mở nhanh đúng màn thao tác.</div>
+            </div>
+          </div>
+          <div class="app-dashboard">
+            <button class="app-tile" type="button" data-app-panel="driverTab">
+              <div class="app-tile-icon">➕</div>
+              <div class="app-tile-title">Thêm tài xế</div>
+              <div class="app-tile-desc">Tạo nhanh tài xế mới với giao diện gọn, rõ và dễ nhập.</div>
+            </button>
+            <button class="app-tile" type="button" data-app-panel="setupDriverTab">
+              <div class="app-tile-icon">💳</div>
+              <div class="app-tile-title">Gắn tài xế vào thẻ</div>
+              <div class="app-tile-desc">Chọn tài xế, chọn xe rồi thao tác gắn thẻ thuận tiện hơn.</div>
+            </button>
+            <button class="app-tile" type="button" data-app-panel="groupDeviceTab">
+              <div class="app-tile-icon">🚚</div>
+              <div class="app-tile-title">Danh sách xe</div>
+              <div class="app-tile-desc">Xem và tìm nhanh các xe đang có trong công ty.</div>
+            </button>
+            <button class="app-tile" type="button" data-app-panel="driverListTab">
+              <div class="app-tile-icon">👤</div>
+              <div class="app-tile-title">Danh sách tài xế</div>
+              <div class="app-tile-desc">Xem tài xế đã có và tra cứu nhanh theo danh sách.</div>
+            </button>
+            <button class="app-tile" type="button" data-app-panel="deleteDriverTab">
+              <div class="app-tile-icon">🗑️</div>
+              <div class="app-tile-title">Xoá tài xế</div>
+              <div class="app-tile-desc">Chọn tài xế cần xoá bằng giao diện dễ bấm hơn.</div>
+            </button>
+            <button class="app-tile" type="button" data-app-panel="opcode210Tab">
+              <div class="app-tile-icon">🚫</div>
+              <div class="app-tile-title">Xoá tài xế trên xe</div>
+              <div class="app-tile-desc">Gửi lệnh xoá tài xế trực tiếp xuống thiết bị trên xe.</div>
+            </button>
+          </div>
+        </div>
+
+        <div id="groupDeviceTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Danh sách xe</div>
+      <div class="panel-mini-subtitle">Xem xe và biển số đã tải về từ hệ thống.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
   <div class="grid">
     <div style="display:none">
   <input id="groupDeviceCompanyId" type="text" value="1">
@@ -734,7 +1305,14 @@ button.error {
   <pre id="groupDeviceRawBox" class="box"></pre>
 </div>
 
-        <div id="driverListTab" class="tab-panel">
+        <div id="driverListTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Danh sách tài xế</div>
+      <div class="panel-mini-subtitle">Xem các tài xế hiện có trong công ty.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
   <div class="grid">
     <div style="display:none">
       <input id="driverListCompanyId" type="text" value="1">
@@ -762,7 +1340,14 @@ button.error {
   <pre id="driverListRawBox" class="box"></pre>
 </div>
 
-        <div id="deleteDriverTab" class="tab-panel">
+        <div id="deleteDriverTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Xoá tài xế</div>
+      <div class="panel-mini-subtitle">Chọn tài xế rồi thực hiện xoá.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
           <div class="grid">
             <div style="display:none">
   <input id="deleteDriverCompanyId" type="text" value="1">
@@ -812,7 +1397,14 @@ button.error {
           <pre id="deleteDriverResponseBox" class="box"></pre>
         </div>
 
-        <div id="opcode210Tab" class="tab-panel">
+        <div id="opcode210Tab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Xoá tài xế trên xe</div>
+      <div class="panel-mini-subtitle">Gửi lệnh xoá tài xế trực tiếp xuống thiết bị.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
           <div class="grid">
             <div>
               <label>Chọn xe / biển số</label>
@@ -906,7 +1498,14 @@ button.error {
           <pre id="opcode210ResponseBox" class="box"></pre>
         </div>
 
-        <div id="driverTab" class="tab-panel">
+        <div id="driverTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Thêm tài xế</div>
+      <div class="panel-mini-subtitle">Nhập thông tin để thêm tài xế mới.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
           <div class="grid">
             
             <div>
@@ -993,7 +1592,14 @@ button.error {
           <div class="title-mini">Kết quả API trả về</div>
           <pre id="responseBox" class="box"></pre>
         </div>
-        <div id="setupDriverTab" class="tab-panel">
+        <div id="setupDriverTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-mini-title">Gắn tài xế vào thẻ</div>
+      <div class="panel-mini-subtitle">Chọn tài xế và xe để gắn thẻ.</div>
+    </div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
   <div class="grid">
     <div>
   <label>Chọn tài xế</label>
@@ -1047,7 +1653,7 @@ button.error {
 </div>
 
     <div class="full">
-      <button id="btnSetupDriver" class="action secondary" type="button">Gắn tài xế vào thẻ</button>
+      <button id="btnSetupDriver" class="action secondary" type="button">Gắn vào thẻ</button>
     </div>
   </div>
 
@@ -1092,15 +1698,62 @@ const state = {
   const tabs = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
 
+  function setActiveTab(tabId) {
+    tabs.forEach(b => b.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+
+    const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const targetPanel = document.getElementById(tabId);
+
+    if (targetBtn) targetBtn.classList.add('active');
+    if (targetPanel) targetPanel.classList.add('active');
+  }
+
   tabs.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabs.forEach(b => b.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-
+      const tabId = btn.dataset.tab;
+      if (!tabId) return;
+      setActiveTab(tabId);
     });
   });
+
+  function setAppView(mode = 'login', firstTab = 'appHomeTab') {
+    const isAppMode = String(mode).toLowerCase() === 'app';
+    document.body.classList.toggle('app-mode', isAppMode);
+    document.body.classList.toggle('login-mode', !isAppMode);
+
+    if (isAppMode) {
+      setActiveTab(firstTab || 'appHomeTab');
+    } else {
+      setActiveTab('loginTab');
+    }
+  }
+
+
+  function showLoginScreen() {
+    setAppView('login');
+  }
+
+  function showAppScreen(tabId = 'appHomeTab') {
+    setAppView('app', tabId || 'appHomeTab');
+  }
+
+  function openAppHome() {
+    setAppView('app', 'appHomeTab');
+  }
+
+  function openAppPanel(tabId) {
+    setAppView('app', tabId || 'appHomeTab');
+  }
+
+  function bindAppTiles() {
+    document.querySelectorAll('.app-tile[data-app-panel]').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const tabId = tile.getAttribute('data-app-panel');
+        openAppPanel(tabId);
+      });
+    });
+  }
 
   function $(id) { return document.getElementById(id); }
 
@@ -1388,6 +2041,7 @@ hideOpcode210ConfirmBox();
   updateApiLabels();
   updateGlobalInfo();
   resetOpcode210Circle();
+  setAppView('login');
 }
 
   function getLoginApiKey() {
@@ -2870,6 +3524,7 @@ function filterDriversByMnv(drivers, username) {
   e.preventDefault();
 
   const btn = $('loginBtn');
+  setAppView('login');
   const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
   const loginApiKey = getLoginApiKey();
   const username = $('username').value.trim().toLowerCase();
@@ -2958,6 +3613,7 @@ function filterDriversByMnv(drivers, username) {
 
     state.hasAutoLoadedAfterLogin = false;
     await runAutoLoginTasksOnce();
+    setAppView('app', 'appHomeTab');
 
     setTimeout(() => {
       btn.disabled = false;
@@ -3151,19 +3807,26 @@ function filterDriversByMnv(drivers, username) {
     $('groupDeviceBsBox').textContent = '';
 
     if (bsList.length > 0) {
-      let html = '<div style="padding:10px">';
-      bsList.forEach((item) => {
+      let html = '<div class="modern-card-list">';
+      bsList.forEach((item, index) => {
         const bs = item.Bs || '(chưa có biển số)';
+        const serial = item.Serial || '';
         html += `
-          <div style="padding:8px; border-bottom:1px solid #ddd">
-            <b>${bs}</b>
+          <div class="modern-item">
+            <div class="modern-item-top">
+              <div class="modern-item-title">${escapeHtml(bs)}</div>
+              <div class="modern-badge">Xe ${index + 1}</div>
+            </div>
+            <div class="modern-item-sub">
+              ${serial ? 'Serial: ' + escapeHtml(serial) : 'Chưa có serial'}
+            </div>
           </div>
         `;
       });
       html += '</div>';
       $('groupDeviceListBox').innerHTML = html;
     } else {
-      $('groupDeviceListBox').innerHTML = '<div></div>';
+      $('groupDeviceListBox').innerHTML = '<div class="modern-empty">Không có xe nào phù hợp</div>';
     }
 
     if (devices.length > 0) {
@@ -3230,19 +3893,22 @@ function filterDriversByMnv(drivers, username) {
     if ($('deleteDriverUsername')) $('deleteDriverUsername').value = username;
 
     if (shownDrivers.length > 0) {
-      const html = shownDrivers.map(driver => {
+      const html = shownDrivers.map((driver, index) => {
         const name = escapeHtml(driver?.Name ?? driver?.name ?? 'Chưa có tên');
         const gplx = escapeHtml(driver?.Gplx ?? driver?.gplx ?? '');
         return `
-          <div style="padding:10px; border-bottom:1px solid #ddd">
-            <div style="font-weight:bold; font-size:16px">${name}</div>
-            <div style="color:#555; margin-top:2px">GPLX: ${gplx}</div>
+          <div class="modern-item">
+            <div class="modern-item-top">
+              <div class="modern-item-title">${name}</div>
+              <div class="modern-badge">TX ${index + 1}</div>
+            </div>
+            <div class="modern-item-sub">GPLX: ${gplx || 'Chưa có GPLX'}</div>
           </div>
         `;
       }).join('');
-      $('driverListSimpleBox').innerHTML = `<div>${html}</div>`;
+      $('driverListSimpleBox').innerHTML = `<div class="modern-card-list">${html}</div>`;
     } else {
-      $('driverListSimpleBox').innerHTML = '<div>Không có tài xế</div>';
+      $('driverListSimpleBox').innerHTML = '<div class="modern-empty">Không có tài xế</div>';
     }
 
     if (shownDrivers.length > 0) {
@@ -4031,6 +4697,11 @@ $('btnOpcode210Confirm')?.addEventListener('click', async () => {
     state.isSendingOpcode210 = false;
   }
 });
+document.getElementById('btnBackToLogin')?.addEventListener('click', () => {
+  setAppView('login');
+  if ($('password')) $('password').focus();
+});
+
 function initPasswordToggle() {
   const toggle = $('togglePassword');
   const pwd = $('password');
@@ -4043,11 +4714,25 @@ function initPasswordToggle() {
   });
 }
 
+function initBackToLoginButton() {
+  const btn = $('btnBackToLogin');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    setAppView('login');
+    if ($('password')) $('password').focus();
+  });
+}
+
+  setAppView('login');
   loadConfig();
   setDefaultDates();
   initPasswordToggle();
+  initBackToLoginButton();
+  bindAppTiles();
   updateApiLabels();
   updateGlobalInfo();
+  setAppView('login');
 </script>
 </body>
 </html>
