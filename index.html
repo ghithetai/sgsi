@@ -1,4 +1,4051 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CÔNG TY NGÔI SAO SAI GON</title>
+  <style>
+    * { box-sizing: border-box; }
+    img, iframe { max-width: 100%; display: block; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #0f172a;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+    .head {
+      padding: 22px 24px 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .head h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      color: #0f172a;
+    }
+    .head p {
+      margin: 4px 0;
+      color: #475569;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 16px 24px 0;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 12px 12px 0 0;
+      background: #e2e8f0;
+      color: #334155;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #fff;
+    }
+    .body {
+      padding: 24px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .full { grid-column: 1 / -1; }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #334155;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+    button.action {
+      width: 100%;
+      border: none;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 13px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    button.action.secondary {
+      background: #e91e63;
+    }
+    button.action:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    .ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .box {
+      margin-top: 16px;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      overflow: auto;
+      max-height: 260px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #driverListSimpleBox {
+  display: block !important;
+  margin-top: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  max-height: 320px;
+  overflow: auto;
+  white-space: normal;
+}
+#groupDeviceListBox {
+  display: block !important;
+  margin-top: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  max-height: 320px;
+  overflow: auto;
+  white-space: normal;
+}
+.driver-item.selected {
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+}
+    .small {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .statusbar {
+      margin-top: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      color: #334155;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .title-mini {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+      .body, .head, .tabs { padding-left: 16px; padding-right: 16px; }
+    }
+    #extraFields {
+  display: none;
+}
+#btnLoadGroupDevice {
+  display: none !important;
+}
+#btnLoadDriverList {
+  display: none !important;
+}
+#btnLoadDeleteDriverList {
+  display: none !important;
+}
+.box {
+  display: none !important;
+}
+.title-mini {
+  display: none !important;
+}
 
+.delete-driver-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.delete-driver-item {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.delete-driver-item:hover {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+.delete-driver-item.selected {
+  background: #fee2e2;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.12);
+}
+.delete-driver-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111827;
+}
+.delete-driver-gplx {
+  color: #6b7280;
+  margin-top: 4px;
+}
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-select-trigger:hover {
+  border-color: #93c5fd;
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.custom-select-dropdown.show {
+  display: block;
+}
+
+#setupDriverSearch,
+#deleteDriverSearch {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#setupDriverListBox,
+#deleteDriverListBox {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+#setupVehicleSearch {
+  margin-bottom: 8px;
+}
+
+.setup-driver-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  background: #fff;
+}
+
+.setup-driver-item:last-child {
+  border-bottom: none;
+}
+
+.setup-driver-item:hover {
+  background: #f8fafc;
+}
+
+.setup-driver-item.selected {
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+}
+
+.setup-driver-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111827;
+}
+
+.setup-driver-gplx {
+  color: #666;
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+#setupVehicleListBox {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.setup-vehicle-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  background: #fff;
+}
+
+.setup-vehicle-item:last-child {
+  border-bottom: none;
+}
+
+.setup-vehicle-item:hover {
+  background: #f8fafc;
+}
+
+.setup-vehicle-item.selected {
+  background: #dbeafe;
+  border-left: 4px solid #2563eb;
+}
+
+.setup-vehicle-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111827;
+}
+
+.setup-vehicle-serial {
+  color: #666;
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+button.action:active {
+  transform: scale(0.96);
+}
+
+button.success {
+  background: #16a34a !important;
+}
+
+button.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+button.error {
+  background: #dc2626 !important;
+}
+.title-main {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+
+  background: linear-gradient(270deg, #2563eb, #06b6d4, #2563eb);
+  background-size: 200% auto;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+
+  .head h1 {
+    font-size: 20px;
+  }
+
+  .tab-btn {
+    flex: 1 1 45%;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  input, select {
+    font-size: 16px; /* tránh zoom iPhone */
+    padding: 12px;
+  }
+
+  button.action {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .driver-item,
+  .delete-driver-item,
+  .setup-driver-item {
+    padding: 12px;
+  }
+
+  #groupDeviceListBox,
+  #driverListSimpleBox {
+    max-height: 250px;
+  }
+}
+  
+
+.password-wrap {
+  position: relative;
+}
+.password-wrap input {
+  padding-right: 44px;
+}
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+}
+.password-toggle:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #334155;
+  font-size: 14px;
+  user-select: none;
+  cursor: pointer;
+}
+.remember-row input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.opcode210-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+.opcode210-circle {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+
+  animation: pulse210 1.5s infinite;
+}
+.opcode210-circle:disabled {
+  cursor: not-allowed;
+}
+.opcode210-circle svg {
+  width: 220px;
+  height: 220px;
+  transform: rotate(-90deg);
+}
+.opcode210-circle-bg {
+  fill: #ffffff;
+  stroke: #e2e8f0;
+  stroke-width: 10;
+}
+.opcode210-circle-track {
+  fill: none;
+  stroke: #dbeafe;
+  stroke-width: 10;
+}
+.opcode210-circle-progress {
+  fill: none;
+  stroke: #e91e63;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.2s linear, stroke 0.25s ease;
+  filter: drop-shadow(0 0 6px rgba(233,30,99,.28));
+}
+.opcode210-circle-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 22px;
+}
+.opcode210-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #334155;
+  line-height: 1.4;
+}
+.opcode210-time {
+  margin-top: 8px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #e91e63;
+  line-height: 1;
+}
+.opcode210-subtext {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+.opcode210-circle.running .opcode210-time {
+  color: #2563eb;
+}
+.opcode210-circle.running .opcode210-circle-progress {
+  stroke: #2563eb;
+  filter: drop-shadow(0 0 8px rgba(37,99,235,.35));
+}
+.opcode210-circle.done .opcode210-time {
+  color: #16a34a;
+  font-size: 24px;
+}
+.opcode210-circle.done .opcode210-circle-progress {
+  stroke: #16a34a;
+  filter: drop-shadow(0 0 8px rgba(22,163,74,.28));
+}
+.opcode210-circle.error .opcode210-time {
+  color: #dc2626;
+  font-size: 24px;
+}
+.opcode210-circle.error .opcode210-circle-progress {
+  stroke: #dc2626;
+  filter: drop-shadow(0 0 8px rgba(220,38,38,.28));
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes pulse210 {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.opcode210-circle:hover {
+  animation: shake210 0.4s;
+}
+
+@keyframes shake210 {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes fadeIn210 {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+  <div class="card">
+    <div class="head" style="text-align:center">
+      <h1 class="title-main">
+        CÔNG TY NGÔI SAO SÀI GÒN
+      </h1>
+
+  <a href="tel:+84902555070" style="
+  display:block;
+  margin-top:6px;
+  font-size:16px;
+  font-weight:700;
+  text-align:center;
+  color:#ef4444;
+  text-decoration:none;
+">
+  Bấm để gọi Hotline: 📞 0902.55.50.70
+</a>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="loginTab">Đăng nhập</button>
+
+  <button class="tab-btn" data-tab="groupDeviceTab">DANH SÁCH XE</button>
+  <button class="tab-btn" data-tab="driverListTab">Danh sách tài xế</button>
+  <button class="tab-btn" data-tab="deleteDriverTab">Xoá tài xế</button>
+  <button class="tab-btn" data-tab="opcode210Tab">Xoá tài xế trên xe</button>
+  <button class="tab-btn" data-tab="driverTab">Thêm tài xế</button>
+  <button class="tab-btn" data-tab="setupDriverTab">Gắn tài xế vào thẻ</button>
+</div>
+
+      <div class="body">
+        <div class="statusbar" id="globalInfo" style="display:none !important"></div>
+
+        <div id="loginTab" class="tab-panel active">
+          <form id="loginForm" class="grid-1">
+            <div style="display:none">
+              <label for="baseUrl">Base URL</label>
+              <input id="baseUrl" type="text" value="http://route.sgsi.vn" />
+            </div>
+            <div style="display:none">
+              <label for="apiKey">API Key dùng chung</label>
+              <input id="apiKey" type="text" value="f7359125-0d67-4822-8584-f6deeb5bb6db" />
+            </div>
+            <div>
+              <label for="username">Tên đăng nhập</label>
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="Nhập username" required />
+            </div>
+            <div>
+              <label for="password">Mật khẩu</label>
+              <div class="password-wrap">
+                <input 
+                  id="password" 
+                  name="password" 
+                  type="password" 
+                  autocomplete="current-password" 
+                  placeholder="Nhập mật khẩu" 
+                  required
+                />
+                <button id="togglePassword" class="password-toggle" type="button" aria-label="Hiện mật khẩu">👁️</button>
+              </div>
+            </div>
+            <label class="remember-row">
+              <input id="rememberAccount" type="checkbox" />
+              <span>Nhớ tài khoản cho lần sau</span>
+            </label>
+            <div>
+              <button id="loginBtn" class="action" type="submit">Đăng nhập</button>
+            </div>
+          </form>
+
+          <div id="loginMessage" class="msg info" style="display:none"></div>
+          
+        </div>
+
+        <div id="groupDeviceTab" class="tab-panel">
+  <div class="grid">
+    <div style="display:none">
+  <input id="groupDeviceCompanyId" type="text" value="1">
+</div>
+<div style="display:none">
+  <input id="groupDeviceGroupId" type="text" value="">
+</div>
+    <div class="full">
+      <button id="btnLoadGroupDevice" class="action" type="button">Tự động lấy danh sách thiết bị theo nhóm</button>
+    </div>
+  </div>
+
+  <div id="groupDeviceStatus" class="msg info">Sẵn sàng lấy danh sách xe.</div>
+
+<div id="groupDeviceListBox"></div>
+
+<div class="title-mini">URL gọi API</div>
+<pre id="groupDeviceUrlBox" class="box"></pre>
+
+<div class="title-mini">Danh sách thiết bị trả về</div>
+<pre id="groupDeviceBox" class="box"></pre>
+
+  <div class="title-mini">Biển số xe của user lẻ đang nhập</div>
+  <pre id="groupDeviceBsBox" class="box"></pre>
+
+  <div class="title-mini">Thiết bị khớp user lẻ</div>
+  <pre id="groupDeviceMatchedBox" class="box"></pre>
+
+  <div class="title-mini">Dữ liệu gốc API trả về</div>
+  <pre id="groupDeviceRawBox" class="box"></pre>
+</div>
+
+        <div id="driverListTab" class="tab-panel">
+  <div class="grid">
+    <div style="display:none">
+      <input id="driverListCompanyId" type="text" value="1">
+    </div>
+    <div style="display:none">
+      <input id="driverListUsername" type="text">
+    </div>
+    <div class="full">
+      <button id="btnLoadDriverList" class="action" type="button">DANH SÁCH TÀI XẾ</button>
+    </div>
+  </div>
+
+  <div id="driverListStatus" class="msg info">Sẵn sàng lấy danh sách tài xế.</div>
+
+  <div class="title-mini">URL gọi API</div>
+  <pre id="driverListUrlBox" class="box"></pre>
+
+  <div class="title-mini">Tài xế khớp Mnv</div>
+  <pre id="driverListMatchedBox" class="box"></pre>
+
+  <div class="title-mini">Chỉ lấy Name và Gplx</div>
+  <div id="driverListSimpleBox"></div>
+
+  <div class="title-mini">Dữ liệu gốc API trả về</div>
+  <pre id="driverListRawBox" class="box"></pre>
+</div>
+
+        <div id="deleteDriverTab" class="tab-panel">
+          <div class="grid">
+            <div style="display:none">
+  <input id="deleteDriverCompanyId" type="text" value="1">
+</div>
+<div style="display:none">
+  <input id="deleteDriverUsername" type="text">
+</div>
+            <div class="full">
+              <label>Chọn tài xế để xoá</label>
+
+              <div class="custom-select" id="deleteDriverSelect">
+                <div class="custom-select-trigger" onclick="toggleDeleteDriverDropdown()">
+                  <span id="deleteDriverSelectedText">-- Chưa chọn tài xế --</span>
+                  <span>▼</span>
+                </div>
+
+                <div class="custom-select-dropdown" id="deleteDriverDropdown">
+                  <input
+                    type="text"
+                    id="deleteDriverSearch"
+                    placeholder="Tìm theo tên tài xế hoặc GPLX"
+                    oninput="filterDeleteDriverList()"
+                  >
+                  <div id="deleteDriverListBox"></div>
+                </div>
+              </div>
+
+              <input type="hidden" id="deleteDriverId">
+            </div>
+            <div class="full">
+              <button id="btnLoadDeleteDriverList" class="action" type="button">Tự động lấy lại danh sách tài xế để xoá</button>
+            </div>
+            <div class="full">
+              <button id="btnDeleteDriver" class="action secondary" type="button">Xoá tài xế đã chọn</button>
+            </div>
+          </div>
+
+          <div id="deleteDriverStatus" class="msg info">Hệ thống sẽ tự động lấy danh sách tài xế để xoá. Hãy tự chọn tài xế trước khi xoá.</div>
+
+          <div class="title-mini">URL gọi API</div>
+          <pre id="deleteDriverUrlBox" class="box"></pre>
+
+          <div class="title-mini">Tài xế khớp user lẻ</div>
+          <pre id="deleteDriverMatchedBox" class="box"></pre>
+
+          <div class="title-mini">Kết quả API xoá</div>
+          <pre id="deleteDriverResponseBox" class="box"></pre>
+        </div>
+
+        <div id="opcode210Tab" class="tab-panel">
+          <div class="grid">
+            <div>
+              <label>Chọn xe / biển số</label>
+
+              <div class="custom-select" id="opcodeVehicleSelect">
+                <div class="custom-select-trigger" onclick="toggleOpcodeVehicleDropdown()">
+                  <span id="opcodeVehicleSelectedText">-- Chưa chọn xe --</span>
+                  <span>▼</span>
+                </div>
+
+                <div class="custom-select-dropdown" id="opcodeVehicleDropdown">
+                  <input
+                    type="text"
+                    id="opcodeVehicleSearch"
+                    placeholder="Tìm theo biển số"
+                    oninput="filterOpcodeVehicleList()"
+                  >
+                  <div id="opcodeVehicleListBox"></div>
+                </div>
+              </div>
+
+              <input type="hidden" id="opcode210Serial" value="">
+            </div>
+            <div style="display:none">
+  <label for="opcode210Username">Username gửi lệnh</label>
+  <input id="opcode210Username" type="text" value="1" />
+</div>
+            <div class="full">
+              <div class="opcode210-wrap">
+              <div style="
+  text-align:center;
+  font-weight:800;
+  color:#dc2626;
+  font-size:16px;
+  animation: blink 1s infinite;
+">
+  👇 BẤM VÀO ĐÂY ĐỂ XOÁ TÀI XẾ
+(chức năng xoá toàn bộ tài xế trong xe - chỉ sử dụng khi nạp tài xế nhiều lần mà thiết bị không phát tín hiệu chờ ghi thẻ )
+</div>
+<div id="opcode210ConfirmBox" style="
+  display:none;
+  margin-top:10px;
+  border:1px solid #fecaca;
+  background:#fff7f7;
+  border-radius:14px;
+  padding:14px;
+  animation: fadeIn210 0.3s ease;
+">
+  <div style="font-weight:800; color:#b91c1c; font-size:16px; margin-bottom:8px;">
+    ⚠️ Cảnh báo xoá tài xế trên xe
+  </div>
+
+  <div id="opcode210ConfirmText" style="color:#7f1d1d; line-height:1.6; font-size:14px;">
+    Bạn có chắc muốn xoá tài xế của xe này không?
+  </div>
+
+  <div style="display:flex; gap:10px; margin-top:12px;">
+    <button id="btnOpcode210Cancel" type="button" class="action" style="background:#64748b; flex:1;">
+      Không
+    </button>
+    <button id="btnOpcode210Confirm" type="button" class="action secondary" style="flex:1;">
+      Đồng ý xoá
+    </button>
+  </div>
+</div>
+                <button id="btnSendOpcode210" class="opcode210-circle" type="button">
+                  <svg viewBox="0 0 220 220" aria-hidden="true">
+                    <circle class="opcode210-circle-bg" cx="110" cy="110" r="92"></circle>
+                    <circle class="opcode210-circle-track" cx="110" cy="110" r="92"></circle>
+                    <circle id="opcode210Progress" class="opcode210-circle-progress" cx="110" cy="110" r="92"></circle>
+                  </svg>
+                  <div class="opcode210-circle-content">
+                    <div id="opcode210Title" class="opcode210-title">
+  ⚠️ XOÁ<br>TÀI XẾ
+</div>
+                    <div id="opcode210Time" class="opcode210-time">02:10</div>
+                    <div id="opcode210Subtext" class="opcode210-subtext">Bấm để bắt đầu xoá</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="opcode210Status" class="msg info" style="display:none !important">Sẵn sàng gửi mã 210 xuống thiết bị.</div>
+           
+
+          <div class="title-mini">URL gọi API</div>
+          <pre id="opcode210UrlBox" class="box"></pre>
+
+          <div class="title-mini">Kết quả API trả về</div>
+          <pre id="opcode210ResponseBox" class="box"></pre>
+        </div>
+
+        <div id="driverTab" class="tab-panel">
+          <div class="grid">
+            
+            <div>
+              <label for="name">Tên tài xế</label>
+              <input id="name" placeholder="Nhập tên tài xế">
+            </div>
+            <div>
+              <label for="gplx">GPLX</label>
+              <input id="gplx" placeholder="Nhập số GPLX">
+            </div>
+            
+            <div id="extraFields">
+  <div>
+    <div style="display:none">
+  <input id="companyId" value="1">
+</div>
+  </div>
+<div>
+              <label for="mnv">Mã nhân viên</label>
+              <input id="mnv" placeholder="Nhập mã nhân viên">
+            </div>
+  <div>
+    <div style="display:none">
+  <input id="groupId" value="">
+</div>
+  </div>
+
+  <div>
+    <label for="phone">Số điện thoại</label>
+    <input id="phone" placeholder="Nhập số điện thoại">
+  </div>
+
+  <div>
+    <label for="cmnd">CMND/CCCD</label>
+    <input id="cmnd" placeholder="Nhập CMND/CCCD">
+  </div>
+
+  <div>
+    <label for="born">Năm sinh</label>
+    <input id="born" type="number" value="1990">
+  </div>
+
+  <div>
+    <label for="sex">Giới tính</label>
+    <select id="sex">
+      <option value="0">0 - Nữ / mặc định</option>
+      <option value="1">1 - Nam</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="createDateOfGplx">Ngày cấp GPLX</label>
+    <input id="createDateOfGplx" type="datetime-local">
+  </div>
+
+  <div>
+    <label for="endDateOfGplx">Ngày hết hạn GPLX</label>
+    <input id="endDateOfGplx" type="datetime-local">
+  </div>
+
+  <div>
+    <label for="address">Địa chỉ</label>
+    <input id="address" placeholder="Nhập địa chỉ">
+  </div>
+
+  <div class="full">
+    <label for="addressOfGplx">Nơi cấp GPLX</label>
+    <input id="addressOfGplx" placeholder="Nhập nơi cấp GPLX">
+  </div>
+</div>
+            <div class="full">
+              <button id="btnAdd" class="action secondary" type="button">Thêm tài xế</button>
+            </div>
+          </div>
+
+          <div id="driverStatus" class="msg info">Sẵn sàng gửi dữ liệu.</div>
+
+          <div class="title-mini">URL gọi API</div>
+          <pre id="urlBox" class="box"></pre>
+
+          <div class="title-mini">JSON gửi đi</div>
+          <pre id="requestBox" class="box"></pre>
+
+          <div class="title-mini">Kết quả API trả về</div>
+          <pre id="responseBox" class="box"></pre>
+        </div>
+        <div id="setupDriverTab" class="tab-panel">
+  <div class="grid">
+    <div>
+  <label>Chọn tài xế</label>
+
+  <div class="custom-select" id="setupDriverSelect">
+    <div class="custom-select-trigger" onclick="toggleSetupDriverDropdown()">
+      <span id="setupDriverSelectedText">-- Chưa chọn tài xế --</span>
+      <span>▼</span>
+    </div>
+
+    <div class="custom-select-dropdown" id="setupDriverDropdown">
+      <input
+        type="text"
+        id="setupDriverSearch"
+        placeholder="Tìm theo tên tài xế hoặc GPLX"
+        oninput="filterSetupDriverList()"
+      >
+      <div id="setupDriverListBox"></div>
+    </div>
+  </div>
+
+  <input type="hidden" id="setupDriverId">
+</div>
+
+    <div>
+      <label>Chọn xe / biển số</label>
+
+      <div class="custom-select" id="setupVehicleSelect">
+        <div class="custom-select-trigger" onclick="toggleSetupVehicleDropdown()">
+          <span id="setupVehicleSelectedText">-- Chưa chọn xe --</span>
+          <span>▼</span>
+        </div>
+
+        <div class="custom-select-dropdown" id="setupVehicleDropdown">
+          <input
+            type="text"
+            id="setupVehicleSearch"
+            placeholder="Tìm theo xe / biển số hoặc serial"
+            oninput="filterSetupVehicleList()"
+          >
+          <div id="setupVehicleListBox"></div>
+        </div>
+      </div>
+
+      <input type="hidden" id="setupSerial" value="">
+    </div>
+
+    <div style="display:none">
+  <input id="setupUsername" type="text">
+  <input id="setupCompanyId" type="text" value="1">
+</div>
+
+    <div class="full">
+      <button id="btnSetupDriver" class="action secondary" type="button">Gắn tài xế vào thẻ</button>
+    </div>
+  </div>
+
+  <div id="setupDriverStatus" class="msg info">Sẵn sàng gắn tài xế vào thiết bị.</div>
+
+  <div class="title-mini">URL gọi API</div>
+  <pre id="setupDriverUrlBox" class="box"></pre>
+
+  <div class="title-mini">JSON gửi đi</div>
+  <pre id="setupDriverRequestBox" class="box"></pre>
+
+  <div class="title-mini">Kết quả API trả về</div>
+  <pre id="setupDriverResponseBox" class="box"></pre>
+</div>
+      </div>
+    </div>
+  </div>
+
+ <script>
+ // =========================
+// STATE
+// =========================
+const state = {
+  allDrivers: [],
+  setupDriverData: [],
+  deleteDriverData: [],
+  setupDeviceData: [],
+  opcodeDeviceData: [],
+  autoGroupDeviceTimer: null,
+  autoDriverListTimer: null,
+  hasAutoLoadedAfterLogin: false,
+  autoLoginRunInProgress: false,
+
+  isLoadingGroupDevices: false,
+  isLoadingDriverList: false,
+  isLoadingDeleteDriverList: false,
+  isAddingDriver: false,
+  isDeletingDriver: false,
+  isSettingUpDriver: false,
+  isSendingOpcode210: false
+};
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+
+    });
+  });
+
+  function $(id) { return document.getElementById(id); }
+
+function decodeText(v) {
+  try {
+    if (Array.isArray(v)) v = v.join('');
+    return atob(v);
+  } catch {
+    return '';
+  }
+}
+
+
+const APP_RUNTIME = {
+  REQUEST_TIMEOUT_MS: 20000,
+  SETUP_TOKEN_CACHE_MS: 5 * 60 * 1000
+};
+
+function safeStorageGet(storage, key, fallback = '') {
+  try {
+    const value = storage.getItem(key);
+    return value === null || value === undefined ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeStorageSet(storage, key, value) {
+  try {
+    storage.setItem(key, String(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function safeStorageRemove(storage, key) {
+  try {
+    storage.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function safeJsonParse(text, fallback = null) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return fallback;
+  }
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = APP_RUNTIME.REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const finalOptions = {
+      ...options,
+      signal: options.signal || controller.signal
+    };
+    return await fetch(url, finalOptions);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function readResponseSmart(res) {
+  const rawText = await res.text();
+  const parsed = safeJsonParse(rawText, { raw: rawText });
+  return { rawText, data: parsed };
+}
+
+function getErrorMessage(error, fallback = 'Có lỗi xảy ra.') {
+  if (!error) return fallback;
+  if (typeof error === 'string') return error || fallback;
+  if (error.name === 'AbortError') return 'Kết nối quá lâu, vui lòng thử lại.';
+  return error.message || fallback;
+}
+
+function getCachedSetupToken() {
+  const token = safeStorageGet(sessionStorage, 'sgsi_setup_token', '').trim();
+  const expireAt = Number(safeStorageGet(sessionStorage, 'sgsi_setup_token_expire_at', '0')) || 0;
+
+  if (!token || !expireAt) return '';
+  if (Date.now() >= expireAt) {
+    safeStorageRemove(sessionStorage, 'sgsi_setup_token');
+    safeStorageRemove(sessionStorage, 'sgsi_setup_token_expire_at');
+    safeStorageRemove(sessionStorage, 'sgsi_setup_login_response');
+    return '';
+  }
+  return token;
+}
+
+function setCachedSetupToken(token, loginResponse = null) {
+  const normalizedToken = String(token || '').trim();
+  if (!normalizedToken) return;
+
+  safeStorageSet(sessionStorage, 'sgsi_setup_token', normalizedToken);
+  safeStorageSet(
+    sessionStorage,
+    'sgsi_setup_token_expire_at',
+    String(Date.now() + APP_RUNTIME.SETUP_TOKEN_CACHE_MS)
+  );
+
+  if (loginResponse !== null && loginResponse !== undefined) {
+    try {
+      safeStorageSet(sessionStorage, 'sgsi_setup_login_response', JSON.stringify(loginResponse));
+    } catch {}
+  }
+}
+
+async function loginSetupPrivilegedUser() {
+  const cachedToken = getCachedSetupToken();
+  if (cachedToken) {
+    return cachedToken;
+  }
+
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  const loginApiKey = getLoginApiKey();
+  const username = getSetupPrivUsername();
+  const password = getSetupPrivPassword();
+
+  if (!baseUrl || !loginApiKey || !username || !password) {
+    throw new Error('Thiếu Base URL, API Key login, user quyền gắn hoặc mật khẩu quyền gắn.');
+  }
+
+  const loginUrl = baseUrl + '/Auth/Login?api_key=' + encodeURIComponent(loginApiKey);
+
+  const res = await fetchWithTimeout(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    cache: 'no-store',
+    body: JSON.stringify({
+      Username: username,
+      Pwd: password
+    })
+  });
+
+  const { rawText, data } = await readResponseSmart(res);
+
+  if (!res.ok) {
+    throw new Error('Đăng nhập user quyền gắn thất bại. HTTP ' + res.status + '. Nội dung: ' + rawText);
+  }
+
+  if (isExplicitApiFailure(data) || !isLoginSuccessPayload(data)) {
+    const apiMsg = extractApiMessage(data, rawText) || 'User quyền gắn đăng nhập không thành công.';
+    throw new Error(apiMsg);
+  }
+
+  const token = extractToken(data);
+  if (!token || !String(token).trim()) {
+    throw new Error('User quyền gắn không trả về token hợp lệ.');
+  }
+
+  setCachedSetupToken(token, data);
+  updateGlobalInfo();
+  return String(token).trim();
+}
+  function resetUserUiData() {
+  [
+    'groupDeviceListBox', 'driverListSimpleBox', 'deleteDriverListBox', 'setupDriverListBox',
+    'groupDeviceUrlBox', 'groupDeviceBox', 'groupDeviceBsBox', 'groupDeviceMatchedBox', 'groupDeviceRawBox',
+    'driverListUrlBox', 'driverListMatchedBox', 'driverListRawBox',
+    'deleteDriverUrlBox', 'deleteDriverMatchedBox', 'deleteDriverResponseBox',
+    'setupDriverUrlBox', 'setupDriverRequestBox', 'setupDriverResponseBox',
+    'opcode210UrlBox', 'opcode210ResponseBox',
+    'urlBox', 'requestBox', 'responseBox'
+  ].forEach(id => {
+    const el = $(id);
+    if (!el) return;
+
+    if (
+      'value' in el &&
+      (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')
+    ) {
+      el.value = '';
+    } else {
+      el.innerHTML = '';
+      el.textContent = '';
+    }
+  });
+
+  if ($('setupSerial')) $('setupSerial').value = '';
+  if ($('setupVehicleListBox')) $('setupVehicleListBox').innerHTML = '<div style="padding:10px">Không có thiết bị</div>';
+  if ($('setupVehicleSelectedText')) $('setupVehicleSelectedText').textContent = '-- Chưa chọn xe --';
+  if ($('opcode210Serial')) $('opcode210Serial').value = '';
+  if ($('opcodeVehicleSearch')) $('opcodeVehicleSearch').value = '';
+  if ($('opcodeVehicleSelectedText')) $('opcodeVehicleSelectedText').textContent = '-- Chưa chọn xe --';
+  if ($('opcodeVehicleListBox')) $('opcodeVehicleListBox').innerHTML = '';
+
+  resetOpcode210Circle();
+
+  if ($('setupDriverId')) $('setupDriverId').value = '';
+  if ($('deleteDriverId')) $('deleteDriverId').value = '';
+  if ($('setupDriverSelectedText')) $('setupDriverSelectedText').textContent = '-- Chưa chọn tài xế --';
+  if ($('deleteDriverSelectedText')) $('deleteDriverSelectedText').textContent = '-- Chưa chọn tài xế --';
+  if ($('deleteDriverSearch')) $('deleteDriverSearch').value = '';
+  if ($('setupVehicleSearch')) $('setupVehicleSearch').value = '';
+
+  if ($('groupDeviceStatus')) {
+    $('groupDeviceStatus').className = 'msg info';
+    $('groupDeviceStatus').textContent = 'Sẵn sàng lấy danh sách xe.';
+  }
+
+  if ($('driverListStatus')) {
+    $('driverListStatus').className = 'msg info';
+    $('driverListStatus').textContent = 'Sẵn sàng lấy danh sách tài xế.';
+  }
+
+  if ($('deleteDriverStatus')) {
+    $('deleteDriverStatus').className = 'msg info';
+    $('deleteDriverStatus').textContent = 'Sẵn sàng lấy danh sách tài xế để xoá.';
+  }
+
+  if ($('setupDriverStatus')) {
+    $('setupDriverStatus').className = 'msg info';
+    $('setupDriverStatus').textContent = 'Sẵn sàng gắn tài xế vào thiết bị.';
+  }
+
+  if ($('driverStatus')) {
+    $('driverStatus').className = 'msg info';
+    $('driverStatus').textContent = 'Sẵn sàng gửi dữ liệu.';
+  }
+
+  if ($('opcode210Status')) {
+    $('opcode210Status').className = 'msg info';
+    $('opcode210Status').textContent = 'Sẵn sàng gửi mã 210 xuống thiết bị.';
+  }
+hideOpcode210ConfirmBox();
+  ['name', 'gplx', 'phone', 'cmnd', 'address', 'addressOfGplx'].forEach(id => {
+    if ($(id)) $(id).value = '';
+  });
+  if ($('born')) $('born').value = '1990';
+  if ($('sex')) $('sex').value = '0';
+
+  if ($('loginMessage')) {
+    $('loginMessage').style.display = 'none';
+    $('loginMessage').className = 'msg info';
+    $('loginMessage').textContent = '';
+  }
+
+  state.allDrivers = [];
+  state.setupDriverData = [];
+  state.deleteDriverData = [];
+  clearTimeout(state.autoGroupDeviceTimer);
+  clearTimeout(state.autoDriverListTimer);
+}
+  function prepareForNewLogin(newUsername) {
+  const normalized = normalizeUsername(newUsername);
+
+  safeStorageRemove(sessionStorage, 'sgsi_token');
+  safeStorageRemove(sessionStorage, 'sgsi_setup_token');
+  safeStorageRemove(sessionStorage, 'sgsi_setup_token_expire_at');
+  safeStorageRemove(sessionStorage, 'sgsi_login_response');
+  safeStorageRemove(sessionStorage, 'sgsi_setup_login_response');
+
+  safeStorageRemove(localStorage, 'sgsi_company_id');
+  safeStorageRemove(localStorage, 'sgsi_group_id');
+  safeStorageRemove(sessionStorage, 'sgsi_primary_company_id');
+  safeStorageRemove(sessionStorage, 'sgsi_driver_flow_mode');
+
+  if ($('driverListUsername')) $('driverListUsername').value = normalized;
+  if ($('deleteDriverUsername')) $('deleteDriverUsername').value = normalized;
+  if ($('setupUsername')) $('setupUsername').value = normalized;
+  if ($('mnv')) $('mnv').value = normalized;
+
+  if ($('groupDeviceCompanyId')) $('groupDeviceCompanyId').value = '1';
+  if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = '';
+  if ($('driverListCompanyId')) $('driverListCompanyId').value = '1';
+  if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = '1';
+  if ($('setupCompanyId')) $('setupCompanyId').value = '1';
+  if ($('companyId')) $('companyId').value = '1';
+  if ($('groupId')) $('groupId').value = '';
+
+  state.hasAutoLoadedAfterLogin = false;
+  state.autoLoginRunInProgress = false;
+
+  clearApiCache();
+  resetUserUiData();
+  updateApiLabels();
+  updateGlobalInfo();
+  resetOpcode210Circle();
+}
+
+  function getLoginApiKey() {
+    return (
+      $('apiKey')?.value.trim() ||
+      localStorage.getItem('sgsi_api_key_login') ||
+      ''
+    ).trim();
+  }
+
+  function getRuntimeApiKey() {
+  return (
+    sessionStorage.getItem('sgsi_token') ||
+    $('apiKey')?.value.trim() ||
+    localStorage.getItem('sgsi_api_key_login') ||
+    ''
+  ).trim();
+}
+
+  function getCurrentLoginToken() {
+  return String(safeStorageGet(sessionStorage, 'sgsi_token', '') || '').trim();
+}
+
+function getSetupPrivUsername() {
+  return decodeText(['a2hha','WJhb3','R4']);
+}
+
+function getSetupPrivPassword() {
+  return decodeText(['MDkzMz','MzMDAx','OA==']);
+}
+
+function getSetupRuntimeApiKey() {
+  return (
+    getCachedSetupToken() ||
+    getRuntimeApiKey()
+  ).trim();
+}
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+ 
+  function saveConfig() {
+  safeStorageSet(localStorage, 'sgsi_base_url', $('baseUrl')?.value.trim() || '');
+  safeStorageSet(localStorage, 'sgsi_api_key_login', $('apiKey')?.value.trim() || '');
+  safeStorageSet(localStorage, 'sgsi_company_id', $('companyId')?.value.trim() || '');
+
+  const currentGroupId = String($('groupId')?.value || '').trim();
+  if (currentGroupId) {
+    safeStorageSet(localStorage, 'sgsi_group_id', currentGroupId);
+  }
+
+  const rememberAccount = !!$('rememberAccount')?.checked;
+  safeStorageSet(localStorage, 'sgsi_remember_account', rememberAccount ? '1' : '0');
+
+  if (rememberAccount) {
+    safeStorageSet(localStorage, 'sgsi_saved_username', $('username')?.value.trim() || '');
+    safeStorageSet(localStorage, 'sgsi_saved_password', $('password')?.value || '');
+  } else {
+    safeStorageRemove(localStorage, 'sgsi_saved_username');
+    safeStorageRemove(localStorage, 'sgsi_saved_password');
+  }
+
+  updateApiLabels();
+  updateGlobalInfo();
+}
+function loadConfig() {
+  $('baseUrl').value = safeStorageGet(localStorage, 'sgsi_base_url', $('baseUrl').value || '');
+  $('apiKey').value = safeStorageGet(localStorage, 'sgsi_api_key_login', $('apiKey').value || '');
+  $('companyId').value = safeStorageGet(localStorage, 'sgsi_company_id', $('companyId').value || '');
+
+  if ($('groupId')) {
+    $('groupId').value = safeStorageGet(localStorage, 'sgsi_group_id', $('groupId').value || '');
+  }
+
+  const rememberAccount = safeStorageGet(localStorage, 'sgsi_remember_account', '0') === '1';
+  const savedUsername = safeStorageGet(localStorage, 'sgsi_saved_username', '');
+  const savedPassword = safeStorageGet(localStorage, 'sgsi_saved_password', '');
+  const lastUsername = safeStorageGet(localStorage, 'sgsi_username', '');
+
+  if ($('rememberAccount')) $('rememberAccount').checked = rememberAccount;
+  $('username').value = (rememberAccount ? savedUsername : lastUsername) || $('username').value;
+
+  if (rememberAccount && $('password')) {
+    $('password').value = savedPassword;
+  }
+
+  if ($('deviceUsername')) {
+    $('deviceUsername').value =
+      (safeStorageGet(localStorage, 'sgsi_username', '') || $('deviceUsername').value || '').toLowerCase();
+  }
+
+  if ($('groupDeviceCompanyId')) {
+    $('groupDeviceCompanyId').value =
+      safeStorageGet(localStorage, 'sgsi_company_id', $('groupDeviceCompanyId').value || '');
+  }
+
+  if ($('groupDeviceGroupId')) {
+    $('groupDeviceGroupId').value =
+      safeStorageGet(localStorage, 'sgsi_group_id', $('groupDeviceGroupId').value || '');
+  }
+
+  if ($('driverListCompanyId')) {
+    $('driverListCompanyId').value =
+      safeStorageGet(localStorage, 'sgsi_company_id', $('driverListCompanyId').value || '');
+  }
+
+  if ($('driverListUsername')) {
+    $('driverListUsername').value =
+      (safeStorageGet(localStorage, 'sgsi_username', '') || $('driverListUsername').value || '').toLowerCase();
+  }
+
+  if ($('deleteDriverUsername')) {
+    $('deleteDriverUsername').value =
+      (safeStorageGet(localStorage, 'sgsi_username', '') || $('deleteDriverUsername').value || '').toLowerCase();
+  }
+
+  if ($('setupUsername')) {
+    $('setupUsername').value =
+      (safeStorageGet(localStorage, 'sgsi_username', '') || $('setupUsername').value || '').toLowerCase();
+  }
+
+  if ($('setupCompanyId')) {
+    $('setupCompanyId').value =
+      safeStorageGet(localStorage, 'sgsi_company_id', $('setupCompanyId').value || '1');
+  }
+}
+
+  function updateApiLabels() {
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  const loginApiKey = getLoginApiKey();
+  const runtimeApiKey = getRuntimeApiKey();
+
+  const currentUser = (
+    $('deviceUsername')?.value ||
+    localStorage.getItem('sgsi_username') ||
+    '{username}'
+  ).trim().toLowerCase();
+
+  const companyId = (
+    $('groupDeviceCompanyId')?.value ||
+    $('companyId')?.value ||
+    '1'
+  ).trim();
+}
+  function updateGlobalInfo() {
+    const el = $('globalInfo');
+    if (!el) return;
+    el.style.display = 'none';
+    el.innerHTML = '';
+  }
+
+  
+
+  function getCacheTtlMs(type) {
+    if (type === 'groupDevices') return 10 * 1000;
+    if (type === 'drivers') return 45 * 1000;
+    return 30 * 1000;
+  }
+
+  function getCacheKey(type, params = {}) {
+    return 'sgsi_cache_' + type + '_' + btoa(unescape(encodeURIComponent(JSON.stringify(params))));
+  }
+
+  function readApiCache(type, params = {}) {
+    try {
+      const key = getCacheKey(type, params);
+      const raw = sessionStorage.getItem(key);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return null;
+
+      const age = Date.now() - Number(parsed.time || 0);
+      if (age > getCacheTtlMs(type)) {
+        sessionStorage.removeItem(key);
+        return null;
+      }
+
+      return parsed.data ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeApiCache(type, params = {}, data = null) {
+    try {
+      const key = getCacheKey(type, params);
+      sessionStorage.setItem(key, JSON.stringify({
+        time: Date.now(),
+        data
+      }));
+    } catch {}
+  }
+
+  function clearApiCache() {
+    try {
+      const keys = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && key.startsWith('sgsi_cache_')) keys.push(key);
+      }
+      keys.forEach(key => sessionStorage.removeItem(key));
+    } catch {}
+  }
+
+  function setLoginStatus(message, type = 'info', details = '') {
+    const el = $('loginMessage');
+    if (!el) return;
+
+    if (!message) {
+      el.style.display = 'none';
+      el.className = 'msg info';
+      el.textContent = '';
+      return;
+    }
+
+    el.style.display = 'block';
+    el.className = 'msg ' + type;
+    el.textContent = details ? `${message}
+${details}` : message;
+  }
+
+  function extractApiMessage(data, fallback = '') {
+    if (data === null || data === undefined) return fallback;
+    if (typeof data === 'string') return data.trim() || fallback;
+
+    const directKeys = [
+      'Message', 'message', 'Error', 'error', 'Err', 'err',
+      'Description', 'description', 'title', 'detail', 'raw',
+      'Reason', 'reason', 'StatusMessage', 'statusMessage'
+    ];
+
+    for (const key of directKeys) {
+      const value = data?.[key];
+      if (typeof value === 'string' && value.trim()) return value.trim();
+    }
+
+    const nestedCandidates = [
+      data?.Data?.Message,
+      data?.Data?.message,
+      data?.data?.Message,
+      data?.data?.message,
+      data?.Data?.Error,
+      data?.Data?.error,
+      data?.data?.Error,
+      data?.data?.error
+    ];
+
+    for (const value of nestedCandidates) {
+      if (typeof value === 'string' && value.trim()) return value.trim();
+    }
+
+    if (Array.isArray(data?.Errors) && data.Errors.length) {
+      return data.Errors.map(item => typeof item === 'string' ? item : JSON.stringify(item)).join(' | ');
+    }
+
+    if (Array.isArray(data?.errors) && data.errors.length) {
+      return data.errors.map(item => typeof item === 'string' ? item : JSON.stringify(item)).join(' | ');
+    }
+
+    if (data?.ModelState && typeof data.ModelState === 'object') {
+      const all = Object.values(data.ModelState).flat().filter(Boolean);
+      if (all.length) return all.join(' | ');
+    }
+
+    return fallback;
+  }
+
+  function isExplicitApiFailure(data) {
+    if (data === null || data === undefined) return false;
+    if (typeof data === 'string') {
+      const s = data.trim().toLowerCase();
+      if (!s) return false;
+      return /sai mật khẩu|sai tài khoản|không đúng|đăng nhập thất bại|login failed|invalid|unauthorized|forbidden|not authorized|failed/.test(s);
+    }
+
+    const failFlags = [
+      data?.Success,
+      data?.success,
+      data?.IsSuccess,
+      data?.isSuccess,
+      data?.Status,
+      data?.status,
+      data?.Ok,
+      data?.ok
+    ];
+
+    for (const flag of failFlags) {
+      if (flag === false) return true;
+      if (typeof flag === 'string') {
+        const v = flag.trim().toLowerCase();
+        if (['false', 'failed', 'fail', 'error', 'unauthorized', 'invalid'].includes(v)) return true;
+      }
+      if (typeof flag === 'number' && flag === 0) return true;
+    }
+
+    const msg = extractApiMessage(data, '').toLowerCase();
+    return /sai mật khẩu|sai tài khoản|không đúng|đăng nhập thất bại|login failed|invalid|unauthorized|forbidden|not authorized|failed/.test(msg);
+  }
+
+  function isLoginSuccessPayload(data) {
+    const token = extractToken(data);
+    if (token && String(token).trim()) return true;
+
+    const successFlags = [
+      data?.Success,
+      data?.success,
+      data?.IsSuccess,
+      data?.isSuccess,
+      data?.Ok,
+      data?.ok
+    ];
+
+    for (const flag of successFlags) {
+      if (flag === true) return true;
+      if (typeof flag === 'string' && ['true', 'success', 'ok', 'passed'].includes(flag.trim().toLowerCase())) return true;
+      if (typeof flag === 'number' && flag === 1) return true;
+    }
+
+    return false;
+  }
+
+  async function fetchFilteredDrivers(companyId, username, forceRefresh = false) {
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  let apiKey = await loginSetupPrivilegedUser();
+  const normalizedCompanyId = String(companyId || '').trim();
+  const normalizedUsername = normalizeUsername(username);
+  const normalizedGroupId = String(
+    $('groupId')?.value ||
+    $('groupDeviceGroupId')?.value ||
+    localStorage.getItem('sgsi_group_id') ||
+    ''
+  ).trim();
+
+  const useUserFilter = shouldFilterDriversByUsername(normalizedCompanyId);
+
+  if (!baseUrl || !apiKey || !normalizedCompanyId) {
+    throw new Error('Thiếu Base URL, API Key hoặc Company ID.');
+  }
+
+  if (useUserFilter && !normalizedUsername) {
+    throw new Error('Chưa có user lẻ để lọc theo Mnv.');
+  }
+
+  const cacheParams = {
+    baseUrl,
+    companyId: normalizedCompanyId,
+    groupId: normalizedGroupId,
+    username: useUserFilter ? normalizedUsername : '',
+    useUserFilter
+  };
+
+  if (!forceRefresh) {
+    const cached = readApiCache('drivers', cacheParams);
+    if (cached) return cached;
+  }
+
+  apiKey = await loginSetupPrivilegedUser();
+
+  let url = '';
+  let data = null;
+  let drivers = [];
+
+  async function fetchJson(fetchUrl) {
+    const res = await fetch(fetchUrl, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const rawText = await res.text();
+    let parsed;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch {
+      parsed = { raw: rawText };
+    }
+
+    if (!res.ok) {
+      const apiMsg = extractApiMessage(parsed, rawText);
+      throw new Error(`Lấy danh sách tài xế thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`);
+    }
+
+    return parsed;
+  }
+
+  if (!useUserFilter && normalizedGroupId) {
+    const groupUrl = `${baseUrl}/api/Driver/GetDriverByGroupId?companyId=${encodeURIComponent(normalizedCompanyId)}&groupId=${encodeURIComponent(normalizedGroupId)}&api_key=${encodeURIComponent(apiKey)}`;
+
+    try {
+      const groupData = await fetchJson(groupUrl);
+      const groupDrivers = extractDriverArray(groupData);
+
+      if (groupDrivers.length > 0) {
+        url = groupUrl;
+        data = groupData;
+        drivers = groupDrivers;
+      }
+    } catch (err) {
+      console.warn('GetDriverByGroupId fallback warning:', err);
+    }
+  }
+
+  if (!url) {
+    const companyUrl = `${baseUrl}/api/Driver/GetDriverByCompany?companyId=${encodeURIComponent(normalizedCompanyId)}&api_key=${encodeURIComponent(apiKey)}`;
+    const companyData = await fetchJson(companyUrl);
+
+    url = companyUrl;
+    data = companyData;
+    drivers = extractDriverArray(companyData);
+  }
+
+  let matchedDrivers = [];
+  let shownDrivers = [];
+
+  if (useUserFilter) {
+    matchedDrivers = filterDriversByMnv(drivers, normalizedUsername);
+    shownDrivers = matchedDrivers;
+  } else {
+    shownDrivers = filterDriversForFallback(drivers, normalizedCompanyId, normalizedGroupId);
+  }
+
+  const result = {
+    url,
+    data,
+    drivers,
+    matchedDrivers,
+    shownDrivers,
+    companyId: normalizedCompanyId,
+    groupId: normalizedGroupId,
+    username: normalizedUsername,
+    useUserFilter
+  };
+
+  writeApiCache('drivers', cacheParams, result);
+  return result;
+}
+  function extractToken(data) {
+  if (!data || typeof data !== 'object') return null;
+
+  return (
+    data.token ||
+    data.Token ||
+    data.access_token ||
+    data.AccessToken ||
+    data.jwt ||
+    data.Jwt ||
+
+    // 👉 THÊM DÒNG QUAN TRỌNG
+    data.ApiKey ||
+    data.api_key ||
+
+    null
+  );
+}
+
+  function parseCombinedCompanyGroup(value) {
+  const s = String(value ?? '').trim();
+  if (!/^\d+$/.test(s)) return null;
+
+  if (s.length <= 8) {
+    return {
+      companyId: s,
+      groupId: ''
+    };
+  }
+
+  const companyId = String(parseInt(s.slice(0, -8), 10) || 0);
+  const groupId = String(parseInt(s.slice(-8), 10) || 0);
+
+  return {
+    companyId,
+    groupId
+  };
+}
+
+function extractCompanyGroupInfo(userObj) {
+  const companyIds = Array.isArray(userObj?.CompanyIds) ? userObj.CompanyIds : [];
+  const groupIds = Array.isArray(userObj?.GroupIds) ? userObj.GroupIds : [];
+  const directCompanyId = userObj?.CompanyId ?? userObj?.companyId ?? '';
+  const directGroupId = userObj?.GroupId ?? userObj?.groupId ?? '';
+
+  let companyId =
+    directCompanyId !== '' && directCompanyId !== null && directCompanyId !== undefined
+      ? String(directCompanyId)
+      : '';
+
+  let groupId =
+    directGroupId !== '' && directGroupId !== null && directGroupId !== undefined
+      ? String(directGroupId)
+      : '';
+
+  if ((!companyId || !groupId) && companyIds.length > 0) {
+    const parsed = parseCombinedCompanyGroup(companyIds[0]);
+    if (parsed) {
+      if (!companyId) companyId = parsed.companyId || '';
+      if (!groupId) groupId = parsed.groupId || '';
+    }
+  }
+
+  if (!groupId && groupIds.length > 0) {
+    const firstGroupId = String(groupIds[0] ?? '').trim();
+    if (firstGroupId) groupId = firstGroupId;
+  }
+
+  return {
+    companyId: String(companyId || '').trim(),
+    groupId: String(groupId || '').trim(),
+    companyIds,
+    groupIds,
+    combinedSource: companyIds.length > 0 ? String(companyIds[0]) : ''
+  };
+}
+
+  function findCompanyGroupInfoDeep(source, depth = 0) {
+    if (!source || depth > 4) return null;
+
+    if (Array.isArray(source)) {
+      for (const item of source) {
+        const found = findCompanyGroupInfoDeep(item, depth + 1);
+        if (found?.companyId) return found;
+      }
+      return null;
+    }
+
+    if (typeof source !== 'object') return null;
+
+    const direct = extractCompanyGroupInfo(source);
+    if (direct?.companyId) return direct;
+
+    const keys = ['Data', 'data', 'User', 'user', 'Users', 'users', 'Result', 'result', 'Info', 'info'];
+    for (const key of keys) {
+      if (source[key] !== undefined) {
+        const found = findCompanyGroupInfoDeep(source[key], depth + 1);
+        if (found?.companyId) return found;
+      }
+    }
+
+    for (const value of Object.values(source)) {
+      if (value && typeof value === 'object') {
+        const found = findCompanyGroupInfoDeep(value, depth + 1);
+        if (found?.companyId) return found;
+      }
+    }
+
+    return null;
+  }
+
+  function applyCompanyGroupToGroupTab(info) {
+  if (!info) return;
+
+  const companyId = String(info.companyId || '').trim();
+  const groupId = String(info.groupId || '').trim();
+
+  if (companyId) {
+    if ($('groupDeviceCompanyId')) $('groupDeviceCompanyId').value = companyId;
+    if ($('driverListCompanyId')) $('driverListCompanyId').value = companyId;
+    if ($('companyId')) $('companyId').value = companyId;
+    if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = companyId;
+    if ($('setupCompanyId')) $('setupCompanyId').value = companyId;
+    localStorage.setItem('sgsi_company_id', companyId);
+  }
+
+  if (groupId) {
+    if ($('groupId')) $('groupId').value = groupId;
+    if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = groupId;
+    localStorage.setItem('sgsi_group_id', groupId);
+  }
+
+  updateApiLabels();
+  updateGlobalInfo();
+}
+
+  function getPrimaryLoginCompanyId() {
+  return String(safeStorageGet(sessionStorage, 'sgsi_primary_company_id', '') || '').trim();
+}
+
+function setDriverFlowMode(mode) {
+  const safeMode = String(mode || '').trim().toLowerCase() === 'fallback' ? 'fallback' : 'primary';
+  safeStorageSet(sessionStorage, 'sgsi_driver_flow_mode', safeMode);
+  return safeMode;
+}
+
+function getDriverFlowMode() {
+  const mode = String(safeStorageGet(sessionStorage, 'sgsi_driver_flow_mode', '') || '').trim().toLowerCase();
+  return mode === 'fallback' ? 'fallback' : 'primary';
+}
+
+function shouldFilterDriversByUsername(companyId) {
+  const flowMode = getDriverFlowMode();
+  if (flowMode === 'fallback') return false;
+
+  const currentCompanyId = String(companyId || '').trim();
+  const primaryCompanyId = getPrimaryLoginCompanyId();
+
+  if (!currentCompanyId) return true;
+  if (!primaryCompanyId) return true;
+
+  return currentCompanyId === primaryCompanyId;
+}
+
+function applyFallbackCompanyToAllTabs(companyId) {
+    const company = String(companyId || '').trim();
+    if (!company) return;
+
+    if ($('groupDeviceCompanyId')) $('groupDeviceCompanyId').value = company;
+    if ($('driverListCompanyId')) $('driverListCompanyId').value = company;
+    if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = company;
+    if ($('setupCompanyId')) $('setupCompanyId').value = company;
+    if ($('companyId')) $('companyId').value = company;
+
+    localStorage.setItem('sgsi_company_id', company);
+    updateApiLabels();
+    updateGlobalInfo();
+  }
+
+  async function getFallbackCompanyFromFirstDebug(forceRefresh = false) {
+    const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+    const token = getCurrentLoginToken();
+    const currentUser = normalizeUsername(
+      localStorage.getItem('sgsi_username') ||
+      $('username')?.value ||
+      ''
+    );
+
+    if (!baseUrl || !token) {
+      throw new Error('Luồng phụ bắt buộc phải dùng token của tài khoản vừa đăng nhập.');
+    }
+
+    const cacheKey = 'sgsi_fallback_first_company_' + btoa(unescape(encodeURIComponent(currentUser + '|' + token)));
+    if (!forceRefresh) {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached && String(cached).trim()) return String(cached).trim();
+    }
+
+    const url = `${baseUrl}/admin/GetAllUser?api_key=${encodeURIComponent(token)}&_t=${Date.now()}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
+    });
+
+    const rawText = await res.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = { raw: rawText };
+    }
+
+    if (!res.ok) {
+      throw new Error('Luồng phụ GetAllUser lỗi HTTP ' + res.status);
+    }
+
+    const first = Array.isArray(data?.AccountTranfers) ? data.AccountTranfers[0] : null;
+    const fullCompany = first?.CompanyIds?.[0];
+    const companyShort = fullCompany !== undefined && fullCompany !== null && String(fullCompany).trim() !== ''
+      ? String(Math.floor(Number(fullCompany) / 100000000))
+      : '';
+
+    if (!companyShort || companyShort === 'NaN') {
+      throw new Error('Luồng phụ không lấy được CompanyIds đầu tiên.');
+    }
+
+    sessionStorage.setItem(cacheKey, companyShort);
+    return companyShort;
+  }
+
+  function getValue(id) {
+    return $(id).value.trim();
+  }
+
+  function setGroupDeviceStatus(message, type) {
+    const el = $('groupDeviceStatus');
+    el.className = 'msg ' + type;
+    el.textContent = message;
+  }
+
+  function scheduleAutoLoadGroupDevices(delay = 300) {
+  clearTimeout(state.autoGroupDeviceTimer);
+  state.autoGroupDeviceTimer = setTimeout(() => {
+    if ($('groupDeviceCompanyId')?.value.trim()) {
+      $('btnLoadGroupDevice').click();
+    }
+  }, delay);
+}
+  function scheduleAutoLoadDrivers(delay = 300) {
+  clearTimeout(state.autoDriverListTimer);
+  state.autoDriverListTimer = setTimeout(() => {
+    const companyId = (($('driverListCompanyId')?.value || $('setupCompanyId')?.value || $('companyId')?.value || '')).trim();
+    const username = normalizeUsername(
+      $('driverListUsername')?.value ||
+      $('setupUsername')?.value ||
+      localStorage.getItem('sgsi_username') ||
+      $('username')?.value ||
+      ''
+    );
+
+    if ($('driverListCompanyId') && companyId) $('driverListCompanyId').value = companyId;
+    if ($('driverListUsername') && username) $('driverListUsername').value = username;
+    if ($('deleteDriverCompanyId') && companyId) $('deleteDriverCompanyId').value = companyId;
+    if ($('deleteDriverUsername') && username) $('deleteDriverUsername').value = username;
+    if ($('setupCompanyId') && companyId) $('setupCompanyId').value = companyId;
+    if ($('setupUsername') && username) $('setupUsername').value = username;
+
+    if (companyId && username) {
+      $('btnLoadDriverList').click();
+      if (typeof loadDeleteDriverList === 'function') {
+        loadDeleteDriverList();
+      }
+    }
+  }, delay);
+}
+  function setDriverStatus(message, type) {
+    const el = $('driverStatus');
+    el.className = 'msg ' + type;
+    el.textContent = message;
+  }
+
+  function setDriverListStatus(message, type) {
+    const el = $('driverListStatus');
+    el.className = 'msg ' + type;
+    el.textContent = message;
+  }
+
+  function setDeleteDriverStatus(message, type) {
+  const el = $('deleteDriverStatus');
+  if (!el) return;
+
+  if (!message) {
+    el.style.display = 'none';
+    el.textContent = '';
+    return;
+  }
+
+  el.style.display = 'block';
+  el.className = 'msg ' + type;
+  el.textContent = message;
+}
+  function setSetupDriverStatus(message, type) {
+  const el = $('setupDriverStatus');
+  el.className = 'msg ' + type;
+  el.textContent = message;
+}
+
+function setOpcode210Status(message, type) {
+  const el = $('opcode210Status');
+  if (!el) return;
+  el.style.display = 'none';
+  el.className = 'msg ' + (type || 'info');
+  el.textContent = message || '';
+}
+function showOpcode210ConfirmBox(serial) {
+  const box = $('opcode210ConfirmBox');
+  const text = $('opcode210ConfirmText');
+
+  if (!box || !text) return;
+
+  const bs = String($('opcodeVehicleSelectedText')?.textContent || '').trim() || serial;
+  text.innerHTML = `Bạn có chắc muốn xoá tài xế của xe <b>${escapeHtml(bs)}</b> không?`;
+  box.style.display = 'block';
+}
+
+function hideOpcode210ConfirmBox() {
+  const box = $('opcode210ConfirmBox');
+  if (box) box.style.display = 'none';
+}
+
+function formatOpcode210Time(totalSeconds) {
+  const sec = Math.max(0, Number(totalSeconds) || 0);
+  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+  const ss = String(sec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
+function updateOpcode210Progress(secondsLeft, totalSeconds = 130) {
+  const circle = $('opcode210Progress');
+  if (!circle) return;
+  const radius = Number(circle.getAttribute('r')) || 92;
+  const circumference = 2 * Math.PI * radius;
+  const safeTotal = Math.max(1, Number(totalSeconds) || 130);
+  const safeLeft = Math.max(0, Math.min(safeTotal, Number(secondsLeft) || 0));
+  const percent = safeLeft / safeTotal;
+  circle.style.strokeDasharray = `${circumference}`;
+  circle.style.strokeDashoffset = `${circumference * (1 - percent)}`;
+}
+
+function resetOpcode210Circle() {
+  clearInterval(state.opcode210CountdownTimer);
+  state.opcode210CountdownTimer = null;
+  state.opcode210CountdownEndAt = 0;
+
+  const btn = $('btnSendOpcode210');
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('running', 'done', 'error');
+  }
+  if ($('opcode210Title')) $('opcode210Title').innerHTML = 'Xoá tài <br>xế của xe';
+  if ($('opcode210Time')) $('opcode210Time').textContent = '02:10';
+  if ($('opcode210Subtext')) $('opcode210Subtext').textContent = 'Bấm để bắt đầu xoá';
+  updateOpcode210Progress(130, 130);
+}
+
+function setOpcode210CircleError(message = 'Lỗi gửi') {
+  clearInterval(state.opcode210CountdownTimer);
+  state.opcode210CountdownTimer = null;
+  state.opcode210CountdownEndAt = 0;
+
+  const btn = $('btnSendOpcode210');
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('running', 'done');
+    btn.classList.add('error');
+  }
+  if ($('opcode210Title')) $('opcode210Title').innerHTML = 'Gửi mã 210<br>không thành công';
+  if ($('opcode210Time')) $('opcode210Time').textContent = 'Lỗi';
+  if ($('opcode210Subtext')) $('opcode210Subtext').textContent = message;
+  updateOpcode210Progress(130, 130);
+}
+
+function finishOpcode210Countdown() {
+  clearInterval(state.opcode210CountdownTimer);
+  state.opcode210CountdownTimer = null;
+  state.opcode210CountdownEndAt = 0;
+
+  const btn = $('btnSendOpcode210');
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('running', 'error');
+    btn.classList.add('done');
+  }
+  if ($('opcode210Title')) $('opcode210Title').innerHTML = 'Xoá tài<br> xế của xe';
+  if ($('opcode210Time')) $('opcode210Time').textContent = 'Đã xoá xong';
+  if ($('opcode210Subtext')) $('opcode210Subtext').textContent = 'Thiết bị đã chạy hết thời gian xoá.';
+  updateOpcode210Progress(130, 130);
+}
+
+function startOpcode210Countdown(totalSeconds = 130) {
+  clearInterval(state.opcode210CountdownTimer);
+  state.opcode210CountdownEndAt = Date.now() + totalSeconds * 1000;
+
+  const btn = $('btnSendOpcode210');
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.remove('done', 'error');
+    btn.classList.add('running');
+  }
+
+  if ($('opcode210Title')) $('opcode210Title').innerHTML = 'Bắt đầu xoá<br>tài xế của xe';
+  if ($('opcode210Subtext')) $('opcode210Subtext').textContent = 'Đang đếm ngược 2 phút 10 giây';
+
+  const tick = () => {
+    const msLeft = Math.max(0, state.opcode210CountdownEndAt - Date.now());
+    const secondsLeftFloat = msLeft / 1000;
+    const secondsLeftText = Math.ceil(secondsLeftFloat);
+
+    if ($('opcode210Time')) {
+      $('opcode210Time').textContent = formatOpcode210Time(secondsLeftText);
+    }
+
+    updateOpcode210Progress(secondsLeftFloat, totalSeconds);
+
+    if (msLeft <= 0) {
+      finishOpcode210Countdown();
+      setOpcode210Status('Đã xoá xong tài xế của xe sau 2 phút 10 giây.', 'ok');
+    }
+  };
+
+  tick();
+  state.opcode210CountdownTimer = setInterval(tick, 50);
+}
+
+function fillSetupDriverList(drivers) {
+  const box = $('setupDriverListBox');
+  const input = $('setupDriverId');
+  const selectedText = $('setupDriverSelectedText');
+
+  if (!box) return;
+
+  state.setupDriverData = Array.isArray(drivers) ? drivers : [];
+
+  if (state.setupDriverData.length === 0) {
+    box.innerHTML = '<div style="padding:10px">Không có tài xế</div>';
+    if (selectedText) selectedText.textContent = '-- Không có tài xế --';
+    if (input) input.value = '';
+    return;
+  }
+
+  renderSetupDriverList(state.setupDriverData);
+
+  if (input) input.value = '';
+  if (selectedText) selectedText.textContent = '-- Chưa chọn tài xế --';
+}
+
+function renderSetupDriverList(drivers) {
+  const box = $('setupDriverListBox');
+  const selectedId = String($('setupDriverId')?.value || '');
+
+  if (!box) return;
+
+  if (!drivers || drivers.length === 0) {
+    box.innerHTML = '<div style="padding:10px">Không tìm thấy tài xế</div>';
+    return;
+  }
+
+  let html = '';
+
+  drivers.forEach(driver => {
+    const id = String(driver?.Id ?? '');
+    const name = String(driver?.Name ?? 'Chưa có tên');
+    const gplx = String(driver?.Gplx ?? '');
+    const selectedClass = selectedId === id ? 'selected' : '';
+
+    html += `
+      <div class="setup-driver-item ${selectedClass}"
+           onclick="selectSetupDriver('${escapeHtml(id)}', '${escapeHtml(name)}', '${escapeHtml(gplx)}')">
+        <div class="setup-driver-name">${escapeHtml(name)}</div>
+        <div class="setup-driver-gplx">GPLX: ${escapeHtml(gplx)}</div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+}
+function toggleSetupDriverDropdown() {
+  const dropdown = $('setupDriverDropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    setTimeout(() => {
+      $('setupDriverSearch')?.focus();
+    }, 50);
+  }
+}
+
+function selectSetupDriver(id, name, gplx) {
+  $('setupDriverId').value = id;
+  $('setupDriverSelectedText').textContent = `${name}${gplx ? ' - GPLX: ' + gplx : ''}`;
+  $('setupDriverDropdown')?.classList.remove('show');
+  renderSetupDriverList(state.setupDriverData || []);
+}
+function filterSetupDriverList() {
+  const keyword = String($('setupDriverSearch')?.value || '').trim().toLowerCase();
+  const drivers = Array.isArray(state.setupDriverData) ? state.setupDriverData : [];
+
+  if (!keyword) {
+    renderSetupDriverList(drivers);
+    return;
+  }
+
+  const filtered = drivers.filter(driver => {
+    const name = String(driver?.Name ?? '').toLowerCase();
+    const gplx = String(driver?.Gplx ?? '').toLowerCase();
+    return name.includes(keyword) || gplx.includes(keyword);
+  });
+
+  renderSetupDriverList(filtered);
+}
+document.addEventListener('click', function(e) {
+  const dropdownPairs = [
+    ['setupDriverSelect', 'setupDriverDropdown'],
+    ['setupVehicleSelect', 'setupVehicleDropdown'],
+    ['opcodeVehicleSelect', 'opcodeVehicleDropdown'],
+    ['deleteDriverSelect', 'deleteDriverDropdown']
+  ];
+
+  dropdownPairs.forEach(([wrapId, dropdownId]) => {
+    const wrap = $(wrapId);
+    const dropdown = $(dropdownId);
+    if (wrap && dropdown && !wrap.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+});
+function fillDeleteDriverList(drivers) {
+  const box = $('deleteDriverListBox');
+  const input = $('deleteDriverId');
+  const selectedText = $('deleteDriverSelectedText');
+
+  if (!box || !input) return;
+
+  state.deleteDriverData = Array.isArray(drivers) ? drivers : [];
+
+  if (state.deleteDriverData.length === 0) {
+    box.innerHTML = '<div style="padding:10px">Không có tài xế</div>';
+    if (selectedText) selectedText.textContent = '-- Không có tài xế --';
+    input.value = '';
+    return;
+  }
+
+  if ($('deleteDriverSearch')) $('deleteDriverSearch').value = '';
+  input.value = '';
+  if (selectedText) selectedText.textContent = '-- Chưa chọn tài xế --';
+
+  renderDeleteDriverList(state.deleteDriverData);
+}
+
+function renderDeleteDriverList(drivers) {
+  const box = $('deleteDriverListBox');
+  const selectedId = String($('deleteDriverId')?.value || '');
+
+  if (!box) return;
+
+  const list = Array.isArray(drivers) ? drivers : [];
+  if (!list.length) {
+    box.innerHTML = '<div style="padding:10px">Không tìm thấy tài xế</div>';
+    return;
+  }
+
+  let html = '';
+  list.forEach(driver => {
+    const id = String(driver?.Id ?? '').trim();
+    const name = String(driver?.Name ?? 'Chưa có tên');
+    const gplx = String(driver?.Gplx ?? '');
+    const selectedClass = selectedId === id ? 'selected' : '';
+
+    html += `
+      <div class="setup-driver-item ${selectedClass}"
+           onclick="selectDeleteDriver('${escapeHtml(id)}', '${escapeHtml(name)}', '${escapeHtml(gplx)}')">
+        <div class="setup-driver-name">${escapeHtml(name)}</div>
+        <div class="setup-driver-gplx">GPLX: ${escapeHtml(gplx)}</div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+}
+
+function toggleDeleteDriverDropdown() {
+  const dropdown = $('deleteDriverDropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    setTimeout(() => {
+      $('deleteDriverSearch')?.focus();
+    }, 50);
+  }
+}
+
+function selectDeleteDriver(id, name, gplx) {
+  if ($('deleteDriverId')) $('deleteDriverId').value = id;
+  if ($('deleteDriverSelectedText')) {
+    $('deleteDriverSelectedText').textContent = `${name}${gplx ? ' - GPLX: ' + gplx : ''}`;
+  }
+  $('deleteDriverDropdown')?.classList.remove('show');
+  renderDeleteDriverList(state.deleteDriverData || []);
+}
+
+function filterDeleteDriverList() {
+  const keyword = String($('deleteDriverSearch')?.value || '').trim().toLowerCase();
+  const drivers = Array.isArray(state.deleteDriverData) ? state.deleteDriverData : [];
+
+  if (!keyword) {
+    renderDeleteDriverList(drivers);
+    return;
+  }
+
+  const filtered = drivers.filter(driver => {
+    const name = String(driver?.Name ?? '').toLowerCase();
+    const gplx = String(driver?.Gplx ?? '').toLowerCase();
+    return name.includes(keyword) || gplx.includes(keyword);
+  });
+
+  renderDeleteDriverList(filtered);
+}
+function applyDriverFormCompanyGroupFromDevices(devices) {
+  let list = Array.isArray(devices) ? devices : [];
+  if (!list.length) return;
+
+  const firstDevice = list.find(device => {
+    const companyId = device?.CompanyId ?? device?.companyId ?? '';
+    const groupId = device?.GroupId ?? device?.groupId ?? '';
+    return String(companyId).trim() !== '' || String(groupId).trim() !== '';
+  }) || list[0];
+
+  if (!firstDevice) return;
+
+  const companyId = String(firstDevice?.CompanyId ?? firstDevice?.companyId ?? '').trim();
+  const groupId = String(firstDevice?.GroupId ?? firstDevice?.groupId ?? '').trim();
+
+  if (companyId) {
+    if ($('groupDeviceCompanyId')) $('groupDeviceCompanyId').value = companyId;
+    if ($('driverListCompanyId')) $('driverListCompanyId').value = companyId;
+    if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = companyId;
+    if ($('setupCompanyId')) $('setupCompanyId').value = companyId;
+    if ($('companyId')) $('companyId').value = companyId;
+    localStorage.setItem('sgsi_company_id', companyId);
+  }
+
+  if (groupId) {
+    if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = groupId;
+    if ($('groupId')) $('groupId').value = groupId;
+    localStorage.setItem('sgsi_group_id', groupId);
+  }
+
+  updateApiLabels();
+  updateGlobalInfo();
+}
+
+function fillSetupDeviceList(devices) {
+  let list = Array.isArray(devices) ? devices : [];
+  list = list.filter(device => {
+    const serial = device?.Serial ?? device?.serial ?? '';
+    return String(serial).trim() !== '';
+  });
+
+  state.setupDeviceData = list.slice();
+  state.opcodeDeviceData = list.slice();
+
+  if ($('setupVehicleSearch')) $('setupVehicleSearch').value = '';
+  if ($('setupSerial')) $('setupSerial').value = '';
+  if ($('setupVehicleSelectedText')) $('setupVehicleSelectedText').textContent = list.length ? '-- Chưa chọn xe --' : '-- Không có thiết bị --';
+  renderSetupVehicleList(list);
+
+  if ($('opcodeVehicleSearch')) $('opcodeVehicleSearch').value = '';
+  if ($('opcode210Serial')) $('opcode210Serial').value = '';
+  if ($('opcodeVehicleSelectedText')) $('opcodeVehicleSelectedText').textContent = list.length ? '-- Chưa chọn xe --' : '-- Không có thiết bị --';
+  renderOpcodeVehicleList(list);
+
+  if (list.length === 0) return;
+
+  applyDriverFormCompanyGroupFromDevices(list);
+}
+
+function renderSetupVehicleList(devices) {
+  const box = $('setupVehicleListBox');
+  const selectedSerial = String($('setupSerial')?.value || '');
+  if (!box) return;
+
+  const list = Array.isArray(devices) ? devices : [];
+  if (!list.length) {
+    box.innerHTML = '<div style="padding:10px">Không tìm thấy xe</div>';
+    return;
+  }
+
+  let html = '';
+  list.forEach(device => {
+    const serial = String(device?.Serial ?? device?.serial ?? '');
+    const bs = String(device?.Bs ?? device?.bs ?? '').trim() || '(chưa có biển số)';
+    const selectedClass = selectedSerial === serial ? 'selected' : '';
+
+    html += `
+      <div class="setup-vehicle-item ${selectedClass}"
+           onclick="selectSetupVehicle('${escapeHtml(serial)}', '${escapeHtml(bs)}')">
+        <div class="setup-vehicle-name">${escapeHtml(bs)}</div>
+        <div class="setup-vehicle-serial">Serial: ${escapeHtml(serial)}</div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+}
+
+function toggleSetupVehicleDropdown() {
+  const dropdown = $('setupVehicleDropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    setTimeout(() => {
+      $('setupVehicleSearch')?.focus();
+    }, 50);
+  }
+}
+
+function selectSetupVehicle(serial, bs) {
+  if ($('setupSerial')) $('setupSerial').value = serial;
+  if ($('setupVehicleSelectedText')) $('setupVehicleSelectedText').textContent = `${bs} - Serial: ${serial}`;
+  $('setupVehicleDropdown')?.classList.remove('show');
+  renderSetupVehicleList(state.setupDeviceData || []);
+}
+
+function filterSetupVehicleList() {
+  const keyword = String($('setupVehicleSearch')?.value || '').trim().toLowerCase();
+  const devices = Array.isArray(state.setupDeviceData) ? state.setupDeviceData : [];
+
+  if (!keyword) {
+    renderSetupVehicleList(devices);
+    return;
+  }
+
+  const filtered = devices.filter(device => {
+    const bs = String(device?.Bs ?? device?.bs ?? '').toLowerCase();
+    const serial = String(device?.Serial ?? device?.serial ?? '').toLowerCase();
+    return bs.includes(keyword) || serial.includes(keyword);
+  });
+
+  renderSetupVehicleList(filtered);
+}
+
+function renderOpcodeVehicleList(devices) {
+  const box = $('opcodeVehicleListBox');
+  const selectedSerial = String($('opcode210Serial')?.value || '');
+  if (!box) return;
+
+  const list = Array.isArray(devices) ? devices : [];
+  if (!list.length) {
+    box.innerHTML = '<div style="padding:10px">Không tìm thấy xe</div>';
+    return;
+  }
+
+  let html = '';
+  list.forEach(device => {
+    const serial = String(device?.Serial ?? device?.serial ?? '');
+    const bs = String(device?.Bs ?? device?.bs ?? '').trim() || '(chưa có biển số)';
+    const selectedClass = selectedSerial === serial ? 'selected' : '';
+
+    html += `
+      <div class="setup-vehicle-item ${selectedClass}"
+           onclick="selectOpcodeVehicle('${escapeHtml(serial)}', '${escapeHtml(bs)}')">
+        <div class="setup-vehicle-name">${escapeHtml(bs)}</div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+}
+
+function toggleOpcodeVehicleDropdown() {
+  const dropdown = $('opcodeVehicleDropdown');
+  if (!dropdown) return;
+
+  dropdown.classList.toggle('show');
+
+  if (dropdown.classList.contains('show')) {
+    setTimeout(() => {
+      $('opcodeVehicleSearch')?.focus();
+    }, 50);
+  }
+}
+
+function selectOpcodeVehicle(serial, bs) {
+  if ($('opcode210Serial')) $('opcode210Serial').value = serial;
+  if ($('opcodeVehicleSelectedText')) $('opcodeVehicleSelectedText').textContent = bs;
+  $('opcodeVehicleDropdown')?.classList.remove('show');
+  renderOpcodeVehicleList(state.opcodeDeviceData || []);
+}
+
+function filterOpcodeVehicleList() {
+  const keyword = String($('opcodeVehicleSearch')?.value || '').trim().toLowerCase();
+  const devices = Array.isArray(state.opcodeDeviceData) ? state.opcodeDeviceData : [];
+
+  if (!keyword) {
+    renderOpcodeVehicleList(devices);
+    return;
+  }
+
+  const filtered = devices.filter(device => {
+    const bs = String(device?.Bs ?? device?.bs ?? '').toLowerCase();
+    return bs.includes(keyword);
+  });
+
+  renderOpcodeVehicleList(filtered);
+}
+
+
+  function clearSetupPrivilegedToken() {
+  safeStorageRemove(sessionStorage, 'sgsi_setup_token');
+  safeStorageRemove(sessionStorage, 'sgsi_setup_token_expire_at');
+  safeStorageRemove(sessionStorage, 'sgsi_setup_login_response');
+  updateGlobalInfo();
+}
+
+  function normalizeUsername(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function extractDirectUsernames(device) {
+    const fromDirect = Array.isArray(device?.DirectlyUsernames) ? device.DirectlyUsernames : [];
+    const fromDirectLower = Array.isArray(device?.directlyUsernames) ? device.directlyUsernames : [];
+    return [...fromDirect, ...fromDirectLower]
+      .map(normalizeUsername)
+      .filter(Boolean);
+  }
+
+  function extractDeviceUsers(device) {
+    const fromUsers = Array.isArray(device?.Users) ? device.Users : [];
+    const fromUsersLower = Array.isArray(device?.users) ? device.users : [];
+    return [...fromUsers, ...fromUsersLower]
+      .map(normalizeUsername)
+      .filter(Boolean);
+  }
+
+  function extractAllDeviceUsernames(device) {
+    return [...extractDirectUsernames(device), ...extractDeviceUsers(device)]
+      .map(normalizeUsername)
+      .filter(Boolean);
+  }
+
+  function filterDevicesByDirectUsername(devices, username) {
+    const target = normalizeUsername(username);
+    if (!target) return [];
+    return devices.filter(device => extractAllDeviceUsernames(device).includes(target));
+  }
+
+  function extractDriverArray(data) {
+    let drivers =
+      data?.Drivers ??
+      data?.drivers ??
+      data?.Data?.Drivers ??
+      data?.Data?.drivers ??
+      data?.Data ??
+      data ??
+      [];
+
+    if (!Array.isArray(drivers) && drivers !== null && drivers !== undefined && drivers !== '') {
+      drivers = [drivers];
+    }
+
+    return Array.isArray(drivers) ? drivers : [];
+  }
+
+function cleanText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ''); // bỏ khoảng trắng
+}
+
+function stripVietnamese(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+}
+
+function getDriverMnvValue(driver) {
+  return String(
+    driver?.Mnv ??
+    driver?.mnv ??
+    driver?.MNV ??
+    driver?.MaNhanVien ??
+    driver?.maNhanVien ??
+    driver?.EmployeeCode ??
+    driver?.employeeCode ??
+    driver?.Code ??
+    driver?.code ??
+    ''
+  );
+}
+function getDriverGroupValue(driver) {
+  return String(
+    driver?.GroupId ??
+    driver?.groupId ??
+    ''
+  ).trim();
+}
+
+function getDriverCompanyValue(driver) {
+  return String(
+    driver?.CompanyId ??
+    driver?.companyId ??
+    ''
+  ).trim();
+}
+
+function filterDriversForFallback(drivers, companyId, groupId = '') {
+  const list = Array.isArray(drivers) ? drivers : [];
+  const normalizedCompanyId = String(companyId || '').trim();
+  const normalizedGroupId = String(groupId || '').trim();
+
+  if (normalizedGroupId) {
+    const byGroup = list.filter(driver => {
+      return getDriverGroupValue(driver) === normalizedGroupId;
+    });
+    if (byGroup.length > 0) return byGroup;
+  }
+
+  if (normalizedCompanyId) {
+    const byCompany = list.filter(driver => {
+      return getDriverCompanyValue(driver) === normalizedCompanyId;
+    });
+    if (byCompany.length > 0) return byCompany;
+  }
+
+  return list;
+}
+function normalizeMnvStrict(value) {
+  return cleanText(stripVietnamese(value));
+}
+
+function filterDriversByMnv(drivers, username) {
+  const target = normalizeMnvStrict(username);
+  if (!target) return [];
+
+  return (Array.isArray(drivers) ? drivers : []).filter(driver => {
+    const mnv = normalizeMnvStrict(getDriverMnvValue(driver));
+    return mnv !== '' && mnv === target;
+  });
+}
+
+  function formatDateTimeLocalToIso(value) {
+    if (!value) return null;
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return null;
+    return d.toISOString();
+  }
+
+  function setDefaultDates() {
+    const now = new Date();
+    const future = new Date();
+    future.setFullYear(now.getFullYear() + 5);
+
+    const toLocalInput = (d) => {
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    };
+
+    if (!$('createDateOfGplx').value) $('createDateOfGplx').value = toLocalInput(now);
+    if (!$('endDateOfGplx').value) $('endDateOfGplx').value = toLocalInput(future);
+  }
+
+  $('baseUrl').addEventListener('input', saveConfig);
+  $('apiKey').addEventListener('input', saveConfig);
+  $('companyId').addEventListener('input', saveConfig);
+  $('groupId').addEventListener('input', () => {
+  $('groupId').value = '';
+  localStorage.removeItem('sgsi_group_id');
+});
+
+  if ($('groupDeviceCompanyId')) {
+    $('groupDeviceCompanyId').addEventListener('input', () => {
+      localStorage.setItem('sgsi_company_id', $('groupDeviceCompanyId').value.trim());
+      updateApiLabels();
+    });
+
+  }
+
+  if ($('groupDeviceGroupId')) {
+  $('groupDeviceGroupId').addEventListener('input', () => {
+    $('groupDeviceGroupId').value = '';
+    localStorage.removeItem('sgsi_group_id');
+    updateApiLabels();
+  });
+}
+
+  if ($('deviceUsername')) {
+    $('deviceUsername').addEventListener('input', updateApiLabels);
+  }
+
+  if ($('driverListUsername')) {
+    $('driverListUsername').addEventListener('input', () => {
+      updateApiLabels();
+    });
+
+  }
+
+  if ($('driverListCompanyId')) {
+    $('driverListCompanyId').addEventListener('input', () => {
+      localStorage.setItem('sgsi_company_id', $('driverListCompanyId').value.trim());
+      updateApiLabels();
+    });
+
+  }
+
+  if ($('deleteDriverCompanyId')) {
+    $('deleteDriverCompanyId').addEventListener('input', () => {
+      localStorage.setItem('sgsi_company_id', $('deleteDriverCompanyId').value.trim());
+      updateApiLabels();
+    });
+  }
+
+  if ($('deleteDriverUsername')) {
+    $('deleteDriverUsername').addEventListener('input', updateApiLabels);
+  }
+
+  $('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const btn = $('loginBtn');
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  const loginApiKey = getLoginApiKey();
+  const username = $('username').value.trim().toLowerCase();
+  const password = $('password').value;
+
+  const loginUrl = baseUrl + '/Auth/Login?api_key=' + encodeURIComponent(loginApiKey);
+
+  prepareForNewLogin(username);
+  setLoginStatus('');
+
+  btn.disabled = true;
+  btn.classList.remove('success', 'error');
+  btn.classList.add('loading');
+  btn.innerText = 'Đang đăng nhập...';
+
+  try {
+    if (!baseUrl) throw new Error('Thiếu Base URL.');
+    if (!loginApiKey) throw new Error('Thiếu API Key đăng nhập.');
+    if (!username) throw new Error('Chưa nhập tên đăng nhập.');
+    if (!password) throw new Error('Chưa nhập mật khẩu.');
+
+    const response = await fetchWithTimeout(loginUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      cache: 'no-store',
+      body: JSON.stringify({
+        Username: username,
+        Pwd: password
+      })
+    });
+
+    const { rawText, data } = await readResponseSmart(response);
+
+    if (!response.ok) {
+      throw new Error('Sai tên đăng nhập hoặc mật khẩu');
+    }
+
+    if (isExplicitApiFailure(data)) {
+      throw new Error('Sai tên đăng nhập hoặc mật khẩu');
+    }
+
+    const token = extractToken(data);
+    if (!token || !String(token).trim()) {
+      throw new Error('Sai tên đăng nhập hoặc mật khẩu');
+    }
+
+    safeStorageSet(localStorage, 'sgsi_username', username);
+    safeStorageSet(localStorage, 'sgsi_api_key_login', loginApiKey);
+    safeStorageSet(sessionStorage, 'sgsi_login_response', JSON.stringify(data));
+
+    const rememberAccount = !!$('rememberAccount')?.checked;
+    safeStorageSet(localStorage, 'sgsi_remember_account', rememberAccount ? '1' : '0');
+
+    if (rememberAccount) {
+      safeStorageSet(localStorage, 'sgsi_saved_username', username);
+      safeStorageSet(localStorage, 'sgsi_saved_password', password);
+    } else {
+      safeStorageRemove(localStorage, 'sgsi_saved_username');
+      safeStorageRemove(localStorage, 'sgsi_saved_password');
+    }
+
+    clearApiCache();
+
+    if ($('driverListUsername')) $('driverListUsername').value = username;
+    if ($('deleteDriverUsername')) $('deleteDriverUsername').value = username;
+    if ($('setupUsername')) $('setupUsername').value = username;
+    if ($('mnv')) $('mnv').value = username;
+
+    safeStorageSet(sessionStorage, 'sgsi_token', String(token).trim());
+
+    const loginCompanyGroup = findCompanyGroupInfoDeep(data);
+    if (loginCompanyGroup?.companyId) {
+      safeStorageSet(sessionStorage, 'sgsi_primary_company_id', String(loginCompanyGroup.companyId || '').trim());
+      setDriverFlowMode('primary');
+      applyCompanyGroupToGroupTab(loginCompanyGroup);
+    }
+
+    btn.classList.remove('loading');
+    btn.classList.add('success');
+    btn.innerText = '✔ Thành công';
+
+    setLoginStatus('Đăng nhập thành công.', 'ok');
+
+    state.hasAutoLoadedAfterLogin = false;
+    await runAutoLoginTasksOnce();
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('success');
+      btn.innerText = 'Đăng nhập';
+    }, 1500);
+
+  } catch (error) {
+    const errMsg = getErrorMessage(error, 'Không xác định được lỗi đăng nhập.');
+
+    btn.classList.remove('loading');
+    btn.classList.add('error');
+    btn.innerText = '✖ Lỗi';
+
+    setLoginStatus(errMsg || 'Sai tên đăng nhập hoặc mật khẩu', 'err');
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('error');
+      btn.innerText = 'Đăng nhập';
+    }, 2000);
+  }
+});
+
+  async function loadGroupDevices(forceRefresh = false) {
+  if (state.isLoadingGroupDevices) {
+    return { ok: false, matchedDevices: [], devices: [] };
+  }
+
+  state.isLoadingGroupDevices = true;
+
+  try {
+    saveConfig();
+
+    const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+    let apiKey = getRuntimeApiKey();
+    const companyId = (($('groupDeviceCompanyId').value || $('companyId').value || '')).trim();
+
+
+    if (!baseUrl || !apiKey || !companyId) {
+      setGroupDeviceStatus('Thiếu Base URL, API Key hoặc Company ID.', 'err');
+      return { ok: false, matchedDevices: [], devices: [] };
+    }
+
+    const cacheParams = { baseUrl, companyId };
+    const cached = !forceRefresh ? readApiCache('groupDevices', cacheParams) : null;
+
+    const url = `${baseUrl}/api/Device/GetByCompanyIdEx?companyId=${encodeURIComponent(companyId)}&api_key=${encodeURIComponent(apiKey)}`;
+
+    $('groupDeviceUrlBox').textContent = url;
+    $('groupDeviceBox').textContent = '';
+    $('groupDeviceBsBox').textContent = '';
+    $('groupDeviceMatchedBox').textContent = '';
+    $('groupDeviceRawBox').textContent = '';
+    if ($('groupDeviceListBox')) $('groupDeviceListBox').innerHTML = '';
+    setGroupDeviceStatus(cached ? 'Đang dùng dữ liệu xe đã lưu tạm...' : 'Đang lấy danh sách xe...', 'info');
+
+    let data;
+    let devices;
+
+    if (cached) {
+      data = cached.data;
+      devices = Array.isArray(cached.devices) ? cached.devices : [];
+    } else {
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      const rawText = await res.text();
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        data = { raw: rawText };
+      }
+
+      $('groupDeviceRawBox').textContent = JSON.stringify(data, null, 2);
+
+      if (!res.ok) {
+        setGroupDeviceStatus('API trả lỗi HTTP: ' + res.status, 'err');
+        return { ok: false, matchedDevices: [], devices: [] };
+      }
+
+      devices =
+        data?.Devices ??
+        data?.devices ??
+        data?.Data?.Devices ??
+        data?.Data?.devices ??
+        data?.Data ??
+        [];
+
+      if (!Array.isArray(devices) && devices !== null && devices !== undefined && devices !== '') {
+        devices = [devices];
+      }
+
+      writeApiCache('groupDevices', cacheParams, { data, devices });
+    }
+
+    $('groupDeviceRawBox').textContent = JSON.stringify(data, null, 2);
+    $('groupDeviceBox').textContent = JSON.stringify(devices, null, 2);
+
+    const currentUsername = normalizeUsername(
+      localStorage.getItem('sgsi_username') ||
+      $('username')?.value ||
+      $('setupUsername')?.value ||
+      ''
+    );
+
+    let matchedDevices = filterDevicesByDirectUsername(devices, currentUsername);
+    let usedFallbackAllCompanyVehicles = false;
+
+    if (matchedDevices.length === 0) {
+  try {
+    const fallbackCompanyId = await getFallbackCompanyFromFirstDebug(true);
+    const finalFallbackCompanyId = String(fallbackCompanyId || companyId || '').trim();
+
+    if (finalFallbackCompanyId) {
+      applyFallbackCompanyToAllTabs(finalFallbackCompanyId);
+
+      const fallbackUrl = `${baseUrl}/api/Device/GetByCompanyIdEx?companyId=${encodeURIComponent(finalFallbackCompanyId)}&api_key=${encodeURIComponent(apiKey)}`;
+      const fallbackRes = await fetch(fallbackUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      const fallbackRawText = await fallbackRes.text();
+      let fallbackData;
+      try {
+        fallbackData = JSON.parse(fallbackRawText);
+      } catch {
+        fallbackData = { raw: fallbackRawText };
+      }
+
+      if (fallbackRes.ok) {
+        const fallbackDevices =
+          fallbackData?.Devices ??
+          fallbackData?.devices ??
+          fallbackData?.Data?.Devices ??
+          fallbackData?.Data?.devices ??
+          fallbackData?.Data ??
+          [];
+
+        devices = Array.isArray(fallbackDevices)
+          ? fallbackDevices
+          : (fallbackDevices !== null && fallbackDevices !== undefined && fallbackDevices !== '' ? [fallbackDevices] : []);
+
+        $('groupDeviceUrlBox').textContent = fallbackUrl;
+        $('groupDeviceRawBox').textContent = JSON.stringify(fallbackData, null, 2);
+        $('groupDeviceBox').textContent = JSON.stringify(devices, null, 2);
+
+        matchedDevices = Array.isArray(devices) ? devices.slice() : [];
+        usedFallbackAllCompanyVehicles = matchedDevices.length > 0;
+
+        if (usedFallbackAllCompanyVehicles) {
+          setDriverFlowMode('fallback');
+          if ($('driverListCompanyId')) $('driverListCompanyId').value = finalFallbackCompanyId;
+          if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = finalFallbackCompanyId;
+          if ($('setupCompanyId')) $('setupCompanyId').value = finalFallbackCompanyId;
+          if ($('companyId')) $('companyId').value = finalFallbackCompanyId;
+        }
+      }
+    }
+  } catch (fallbackErr) {
+    console.warn('Fallback company flow error:', fallbackErr);
+  }
+}
+    if (!usedFallbackAllCompanyVehicles) {
+      setDriverFlowMode('primary');
+    }
+
+    fillSetupDeviceList(matchedDevices);
+    applyDriverFormCompanyGroupFromDevices(matchedDevices.length ? matchedDevices : devices);
+
+    if ($('setupUsername')) $('setupUsername').value = currentUsername;
+    if ($('setupCompanyId') && !$('setupCompanyId').value.trim()) $('setupCompanyId').value = (($('groupDeviceCompanyId')?.value) || companyId);
+
+    const bsList = matchedDevices
+      .map(device => ({
+        Bs: device?.Bs ?? device?.bs ?? '',
+        Id: device?.Id ?? device?.id ?? '',
+        Serial: device?.Serial ?? device?.serial ?? '',
+        CompanyName: device?.CompanyName ?? device?.companyName ?? '',
+        GroupName: device?.GroupName ?? device?.groupName ?? '',
+        DirectlyUsernames: extractDirectUsernames(device),
+        Users: extractDeviceUsers(device),
+        MatchedUsernames: extractAllDeviceUsernames(device)
+      }))
+      .filter(item => item.Bs || item.Id || item.Serial);
+
+    $('groupDeviceMatchedBox').textContent = '';
+    $('groupDeviceBsBox').textContent = '';
+
+    if (bsList.length > 0) {
+      let html = '<div style="padding:10px">';
+      bsList.forEach((item) => {
+        const bs = item.Bs || '(chưa có biển số)';
+        html += `
+          <div style="padding:8px; border-bottom:1px solid #ddd">
+            <b>${bs}</b>
+          </div>
+        `;
+      });
+      html += '</div>';
+      $('groupDeviceListBox').innerHTML = html;
+    } else {
+      $('groupDeviceListBox').innerHTML = '<div></div>';
+    }
+
+    if (devices.length > 0) {
+  if (matchedDevices.length > 0) {
+    setGroupDeviceStatus(
+      `Tìm thấy ${matchedDevices.length} xe`,
+      'ok'
+    );
+  } else {
+    setGroupDeviceStatus('Không có xe nào', 'err');
+  }
+} else {
+  setGroupDeviceStatus('Không thấy danh sách xe.', 'err');
+}
+
+    updateApiLabels();
+    return { ok: true, matchedDevices, devices };
+
+  } catch (err) {
+    $('groupDeviceBox').textContent = 'Lỗi: ' + err.message;
+    setGroupDeviceStatus('Không gọi được API.\nChi tiết: ' + err.message, 'err');
+    return { ok: false, matchedDevices: [], devices: [] };
+
+  } finally {
+    state.isLoadingGroupDevices = false;
+  }
+}
+  async function loadDriverList(forceRefresh = false) {
+  if (state.isLoadingDriverList) {
+    return { ok: false, drivers: [], matchedDrivers: [], shownDrivers: [] };
+  }
+
+  state.isLoadingDriverList = true;
+
+  try {
+    saveConfig();
+
+    const companyId = (($('driverListCompanyId').value || $('companyId').value || '')).trim();
+    const username = normalizeUsername(
+      $('driverListUsername').value ||
+      localStorage.getItem('sgsi_username') ||
+      $('username').value ||
+      ''
+    );
+
+    $('driverListUrlBox').textContent = '';
+    $('driverListMatchedBox').textContent = '';
+    $('driverListSimpleBox').innerHTML = '';
+    $('driverListRawBox').textContent = '';
+    setDriverListStatus(shouldFilterDriversByUsername(companyId) ? 'Đang lấy danh sách tài xế và lọc theo Mnv...' : 'Đang lấy toàn bộ tài xế theo company (luồng phụ)...', 'info');
+
+    const result = await fetchFilteredDrivers(companyId, username, forceRefresh);
+    const { url, data, drivers, matchedDrivers, shownDrivers, useUserFilter } = result;
+
+    state.allDrivers = drivers;
+
+    $('driverListUrlBox').textContent = url;
+    $('driverListRawBox').textContent = JSON.stringify(data, null, 2);
+    fillSetupDriverList(shownDrivers);
+
+    if ($('setupUsername')) $('setupUsername').value = username;
+    if ($('setupCompanyId')) $('setupCompanyId').value = companyId;
+    if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = companyId;
+    if ($('deleteDriverUsername')) $('deleteDriverUsername').value = username;
+
+    if (shownDrivers.length > 0) {
+      const html = shownDrivers.map(driver => {
+        const name = escapeHtml(driver?.Name ?? driver?.name ?? 'Chưa có tên');
+        const gplx = escapeHtml(driver?.Gplx ?? driver?.gplx ?? '');
+        return `
+          <div style="padding:10px; border-bottom:1px solid #ddd">
+            <div style="font-weight:bold; font-size:16px">${name}</div>
+            <div style="color:#555; margin-top:2px">GPLX: ${gplx}</div>
+          </div>
+        `;
+      }).join('');
+      $('driverListSimpleBox').innerHTML = `<div>${html}</div>`;
+    } else {
+      $('driverListSimpleBox').innerHTML = '<div>Không có tài xế</div>';
+    }
+
+    if (shownDrivers.length > 0) {
+  setDriverListStatus(`Tìm thấy ${shownDrivers.length} tài xế`, 'ok');
+  setDeleteDriverStatus(`Tìm thấy ${shownDrivers.length} tài xế`, 'ok');
+} else {
+  setDriverListStatus('Không tìm thấy tài xế', 'err');
+  setDeleteDriverStatus('Không tìm thấy tài xế', 'err');
+}
+
+    fillDeleteDriverList(shownDrivers);
+    $('deleteDriverMatchedBox').textContent = JSON.stringify({
+      filterUsername: useUserFilter ? username : '',
+      normalizedUsername: useUserFilter ? normalizeMnvStrict(username) : '',
+      companyId: companyId,
+      useUserFilter: useUserFilter,
+      matchedCount: matchedDrivers.length,
+      first10MnvFromApi: drivers.slice(0, 10).map(d => ({
+        Name: d?.Name,
+        Mnv: getDriverMnvValue(d)
+      })),
+      matchedDrivers: matchedDrivers
+    }, null, 2);
+    $('deleteDriverUrlBox').textContent = url;
+
+    updateApiLabels();
+    return { ok: true, drivers, matchedDrivers, shownDrivers };
+
+  } catch (err) {
+    $('driverListMatchedBox').textContent = 'Lỗi: ' + err.message;
+    $('driverListSimpleBox').innerHTML = '<div>Không có tài xế</div>';
+    setDriverListStatus(err.message || 'Không gọi được API danh sách tài xế.', 'err');
+    setDeleteDriverStatus(err.message || 'Không gọi được API danh sách tài xế.', 'err');
+    return { ok: false, drivers: [], matchedDrivers: [], shownDrivers: [] };
+
+  } finally {
+    state.isLoadingDriverList = false;
+  }
+}
+$('btnLoadGroupDevice').addEventListener('click', async () => {
+  await loadGroupDevices();
+});
+
+$('btnLoadDriverList').addEventListener('click', async () => {
+  await loadDriverList();
+});
+
+  async function loadDeleteDriverList(forceRefresh = false) {
+  if (state.isLoadingDeleteDriverList) {
+    return [];
+  }
+
+  state.isLoadingDeleteDriverList = true;
+
+  try {
+    saveConfig();
+
+    const companyId = (($('deleteDriverCompanyId').value || $('companyId').value || '')).trim();
+    const username = normalizeUsername(
+      $('deleteDriverUsername').value ||
+      localStorage.getItem('sgsi_username') ||
+      $('username').value ||
+      ''
+    );
+
+    $('deleteDriverMatchedBox').textContent = '';
+    $('deleteDriverResponseBox').textContent = '';
+    setDeleteDriverStatus(shouldFilterDriversByUsername(companyId) ? 'Đang lấy danh sách tài xế để xoá...' : 'Đang lấy toàn bộ tài xế theo company để xoá...', 'info');
+
+    const result = await fetchFilteredDrivers(companyId, username, forceRefresh);
+    const { url, drivers, matchedDrivers, shownDrivers, useUserFilter } = result;
+
+    $('deleteDriverUrlBox').textContent = url;
+    fillDeleteDriverList(shownDrivers);
+
+    $('deleteDriverMatchedBox').textContent = JSON.stringify({
+      filterUsername: useUserFilter ? username : '',
+      normalizedUsername: useUserFilter ? normalizeMnvStrict(username) : '',
+      companyId: companyId,
+      useUserFilter: useUserFilter,
+      matchedCount: matchedDrivers.length,
+      first10MnvFromApi: drivers.slice(0, 10).map(d => ({
+        Name: d?.Name,
+        Mnv: getDriverMnvValue(d)
+      })),
+      matchedDrivers: matchedDrivers
+    }, null, 2);
+
+    if (useUserFilter) {
+      if (matchedDrivers.length > 0) {
+        setDeleteDriverStatus(`Tìm thấy ${matchedDrivers.length} tài xế để xoá.`, 'ok');
+      } else {
+        setDeleteDriverStatus('Không tìm thấy tài xế', 'err');
+      }
+    } else {
+      setDeleteDriverStatus(shownDrivers.length ? `Lấy toàn bộ ${shownDrivers.length} tài xế để xoá.` : 'Không có tài xế', shownDrivers.length ? 'ok' : 'err');
+    }
+
+    return shownDrivers;
+
+  } catch (err) {
+    $('deleteDriverMatchedBox').textContent = 'Lỗi: ' + err.message;
+    setDeleteDriverStatus(err.message || 'Không gọi được API xoá tài xế.', 'err');
+    return [];
+
+  } finally {
+    state.isLoadingDeleteDriverList = false;
+  }
+}
+  $('btnLoadDeleteDriverList').addEventListener('click', async () => {
+    await loadDriverList();
+    await loadDeleteDriverList();
+  });
+
+  function isDuplicateDriver(drivers, name, gplx) {
+  const nameClean = cleanText(stripVietnamese(name));
+  const gplxClean = cleanText(gplx);
+
+  return drivers.some(d => {
+    const dName = cleanText(stripVietnamese(d?.Name || ''));
+    const dGplx = cleanText(d?.Gplx || '');
+
+    return dName === nameClean || dGplx === gplxClean;
+  });
+}
+
+  function findDriverForImmediateSync(drivers, addedDriver) {
+    const list = Array.isArray(drivers) ? drivers : [];
+    if (!list.length || !addedDriver) return null;
+
+    const addedId = String(addedDriver?.Id ?? '').trim();
+    const addedName = cleanText(stripVietnamese(addedDriver?.Name ?? ''));
+    const addedGplx = cleanText(String(addedDriver?.Gplx ?? ''));
+    const addedMnv = cleanText(stripVietnamese(addedDriver?.Mnv ?? ''));
+
+    if (addedId) {
+      const byId = list.find(driver => String(driver?.Id ?? '').trim() === addedId);
+      if (byId) return byId;
+    }
+
+    const byExact = list.find(driver => {
+      const name = cleanText(stripVietnamese(driver?.Name ?? ''));
+      const gplx = cleanText(String(driver?.Gplx ?? ''));
+      const mnv = cleanText(stripVietnamese(driver?.Mnv ?? ''));
+      return (!!addedName && name === addedName) && (!!addedGplx && gplx === addedGplx) && (!addedMnv || mnv === addedMnv);
+    });
+    if (byExact) return byExact;
+
+    return list.find(driver => {
+      const gplx = cleanText(String(driver?.Gplx ?? ''));
+      return !!addedGplx && gplx === addedGplx;
+    }) || null;
+  }
+
+  function selectSetupDriverFromObject(driver) {
+  if (!driver) return;
+  const id = String(driver?.Id ?? '').trim();
+  const name = String(driver?.Name ?? 'Chưa có tên');
+  const gplx = String(driver?.Gplx ?? '');
+
+  if ($('setupDriverId')) $('setupDriverId').value = id;
+  if ($('setupDriverSelectedText')) {
+    $('setupDriverSelectedText').textContent = `${name}${gplx ? ' - GPLX: ' + gplx : ''}`;
+  }
+
+  renderSetupDriverList(state.setupDriverData || []);
+}
+  async function refreshDriverListsAfterAdd(companyId, usernameForFilter, addedDriver = null) {
+  const normalizedUser = normalizeUsername(
+    usernameForFilter ||
+    localStorage.getItem('sgsi_username') ||
+    $('username')?.value ||
+    ''
+  );
+
+  const finalCompanyId = String(
+    $('driverListCompanyId')?.value ||
+    $('deleteDriverCompanyId')?.value ||
+    $('setupCompanyId')?.value ||
+    companyId ||
+    $('companyId')?.value ||
+    '1'
+  ).trim();
+
+  if ($('driverListCompanyId')) $('driverListCompanyId').value = finalCompanyId;
+  if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = finalCompanyId;
+  if ($('setupCompanyId')) $('setupCompanyId').value = finalCompanyId;
+  if ($('companyId')) $('companyId').value = finalCompanyId;
+
+  if (normalizedUser) {
+    if ($('driverListUsername')) $('driverListUsername').value = normalizedUser;
+    if ($('deleteDriverUsername')) $('deleteDriverUsername').value = normalizedUser;
+    if ($('setupUsername')) $('setupUsername').value = normalizedUser;
+  }
+
+  clearApiCache();
+
+  try {
+    const result = await loadDriverList(true);
+    await loadDeleteDriverList(true);
+
+    const sourceDrivers = result?.shownDrivers?.length
+      ? result.shownDrivers
+      : (result?.drivers || []);
+
+    const syncedDriver = findDriverForImmediateSync(sourceDrivers, addedDriver);
+
+    if (syncedDriver) {
+      selectSetupDriverFromObject(syncedDriver);
+      setSetupDriverStatus('Đã đồng bộ ngay tài xế mới thêm sang mục gắn tài xế vào thẻ.', 'ok');
+    } else {
+      setSetupDriverStatus('Đã tải lại danh sách tài xế mới.', 'ok');
+    }
+
+    return result;
+  } catch (err) {
+    setSetupDriverStatus('Chưa đồng bộ ngay được, hãy mở lại danh sách tài xế.', 'err');
+    return null;
+  }
+}
+
+$('btnAdd').addEventListener('click', async () => {
+  const btn = $('btnAdd');
+
+  if (state.isAddingDriver) return;
+  state.isAddingDriver = true;
+
+  btn.classList.add('loading');
+  btn.innerText = 'Đang thêm...';
+
+  try {
+    saveConfig();
+
+    const baseUrl = getValue('baseUrl').replace(/\/$/, '');
+    const companyId = String(
+      $('driverListCompanyId')?.value ||
+      $('deleteDriverCompanyId')?.value ||
+      $('setupCompanyId')?.value ||
+      getValue('companyId') ||
+      '1'
+    ).trim();
+
+    const groupId = String(
+      $('groupId')?.value ||
+      $('groupDeviceGroupId')?.value ||
+      localStorage.getItem('sgsi_group_id') ||
+      ''
+    ).trim();
+
+    let apiKey = getRuntimeApiKey();
+    const name = getValue('name');
+    const gplx = getValue('gplx');
+
+    const existingDrivers = state.allDrivers || [];
+
+    if (isDuplicateDriver(existingDrivers, name, gplx)) {
+      btn.classList.remove('loading');
+      btn.classList.add('error');
+      btn.innerText = '✖ Trùng';
+
+      setDriverStatus('Tên hoặc GPLX đã tồn tại', 'err');
+
+      setTimeout(() => {
+        btn.classList.remove('error');
+        btn.innerText = 'Thêm tài xế';
+      }, 2000);
+
+      return;
+    }
+
+    const mnv = (
+      localStorage.getItem('sgsi_username') ||
+      $('username')?.value ||
+      ''
+    ).trim().toLowerCase();
+
+    if ($('mnv')) $('mnv').value = mnv;
+    if ($('companyId')) $('companyId').value = companyId;
+    if ($('groupId') && groupId) $('groupId').value = groupId;
+
+    const phone = getValue('phone');
+    const cmnd = getValue('cmnd');
+    const born = getValue('born');
+    const sex = getValue('sex');
+    const address = getValue('address');
+    const addressOfGplx = getValue('addressOfGplx');
+    const createDateOfGplx = formatDateTimeLocalToIso(getValue('createDateOfGplx'));
+    const endDateOfGplx = formatDateTimeLocalToIso(getValue('endDateOfGplx'));
+
+    if (!baseUrl || !companyId || !apiKey) {
+      throw new Error('Thiếu cấu hình');
+    }
+
+    if (!name) {
+      throw new Error('Chưa nhập tên');
+    }
+
+    if (!gplx) {
+      throw new Error('Chưa nhập GPLX');
+    }
+
+    apiKey = await loginSetupPrivilegedUser();
+
+    const url = `${baseUrl}/api/Driver/Add?companyId=${encodeURIComponent(companyId)}&api_key=${encodeURIComponent(apiKey)}`;
+
+    const body = {
+      Id: 0,
+      Name: name,
+      Gplx: gplx,
+      Mnv: mnv,
+      CompanyId: Number(companyId),
+      GroupId: Number(groupId || 0),
+      Born: Number(born || 0),
+      Cmnd: cmnd,
+      Address: address,
+      Sex: Number(sex || 0),
+      CreateDateOfGplx: createDateOfGplx,
+      EndDateOfGplx: endDateOfGplx,
+      AddressOfGplx: addressOfGplx,
+      Phone: phone
+    };
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const rawText = await res.text();
+    let addResult;
+
+    try {
+      addResult = JSON.parse(rawText);
+    } catch {
+      addResult = { raw: rawText };
+    }
+
+    $('urlBox').textContent = url;
+    $('requestBox').textContent = JSON.stringify(body, null, 2);
+    $('responseBox').textContent =
+      typeof addResult === 'string' ? addResult : JSON.stringify(addResult, null, 2);
+
+    if (!res.ok) {
+      const apiMsg = extractApiMessage(addResult, rawText);
+      throw new Error(`Thêm tài xế thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`);
+    }
+
+    const addedDriver = {
+      Id: addResult?.Id ?? addResult?.Data?.Id ?? addResult?.DriverId ?? addResult?.data?.Id ?? '',
+      Name: addResult?.Name ?? addResult?.Data?.Name ?? body.Name,
+      Gplx: addResult?.Gplx ?? addResult?.Data?.Gplx ?? body.Gplx,
+      Mnv: addResult?.Mnv ?? addResult?.Data?.Mnv ?? body.Mnv
+    };
+
+    btn.classList.remove('loading');
+    btn.classList.add('success');
+    btn.innerText = '✔ Thành công';
+
+    setDriverStatus('Thêm tài xế thành công', 'ok');
+
+    await refreshDriverListsAfterAdd(companyId, mnv, addedDriver);
+
+    setTimeout(() => {
+      btn.classList.remove('success');
+      btn.innerText = 'Thêm tài xế';
+    }, 2000);
+
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.classList.add('error');
+    btn.innerText = '✖ Lỗi';
+
+    setDriverStatus(err.message, 'err');
+
+    setTimeout(() => {
+      btn.classList.remove('error');
+      btn.innerText = 'Thêm tài xế';
+    }, 2000);
+
+  } finally {
+    state.isAddingDriver = false;
+  }
+});
+async function runAutoLoginTasksOnce() {
+  if (state.autoLoginRunInProgress || state.hasAutoLoadedAfterLogin) return;
+
+  state.autoLoginRunInProgress = true;
+  state.hasAutoLoadedAfterLogin = true;
+
+  try {
+    const autoCompanyId = String(
+  $('groupDeviceCompanyId')?.value ||
+  $('companyId')?.value ||
+  ''
+).trim();
+
+if (autoCompanyId) {
+  setGroupDeviceStatus('Đang tự động lấy danh sách xe theo công ty sau đăng nhập...', 'info');
+  await loadGroupDevices();
+}
+
+    const companyId = String(
+      $('groupDeviceCompanyId')?.value ||
+      $('driverListCompanyId')?.value ||
+      $('deleteDriverCompanyId')?.value ||
+      $('companyId')?.value ||
+      ''
+    ).trim();
+
+    const username = normalizeUsername(
+      $('deviceUsername')?.value ||
+      $('driverListUsername')?.value ||
+      $('deleteDriverUsername')?.value ||
+      localStorage.getItem('sgsi_username') ||
+      $('username')?.value ||
+      ''
+    );
+
+    if ($('driverListCompanyId') && companyId) $('driverListCompanyId').value = companyId;
+    if ($('deleteDriverCompanyId') && companyId) $('deleteDriverCompanyId').value = companyId;
+    if ($('driverListUsername') && username) $('driverListUsername').value = username;
+    if ($('deleteDriverUsername') && username) $('deleteDriverUsername').value = username;
+    if ($('setupCompanyId') && companyId) $('setupCompanyId').value = companyId;
+    if ($('setupUsername') && username) $('setupUsername').value = username;
+
+    if (companyId && username) {
+      await autoLoadDriversAndSetup();
+      await loadDeleteDriverList();
+    }
+  } catch (err) {
+    state.hasAutoLoadedAfterLogin = false;
+    console.error('Auto login error:', err);
+    setSetupDriverStatus('Hệ thống sẵn sàng', 'ok');
+
+  } finally {
+    state.autoLoginRunInProgress = false;
+  }
+}
+async function autoLoadDriversAndSetup() {
+  const companyId = (($('setupCompanyId')?.value || $('companyId')?.value || '1')).trim();
+  const username = normalizeUsername(
+    $('setupUsername')?.value ||
+    localStorage.getItem('sgsi_username') ||
+    $('username')?.value ||
+    ''
+  );
+
+  if (!companyId || !username) {
+    setDriverListStatus('Auto driver: thiếu Company ID hoặc Username.', 'err');
+    return;
+  }
+
+  const result = await loadDriverList();
+  const matchedDrivers = result?.matchedDrivers || [];
+
+  if (result?.useUserFilter && matchedDrivers.length <= 0) {
+    setDriverListStatus(`Không tìm thấy tài xế trong user: ${username}`, 'err');
+    return;
+  }
+
+  if ($('setupDriverId')) $('setupDriverId').value = '';
+  if ($('setupDriverSelectedText')) $('setupDriverSelectedText').textContent = '-- Chưa chọn tài xế --';
+  if ($('setupVehicleSearch')) $('setupVehicleSearch').value = '';
+
+  if (result?.shownDrivers?.length > 0) {
+  setDriverListStatus(`Tìm thấy ${result.shownDrivers.length} tài xế`, 'ok');
+} else {
+  setDriverListStatus('Không tìm thấy tài xế', 'err');
+}
+setSetupDriverStatus('Đã tải danh sách. Hãy tự chọn tài xế và xe trước khi gắn.', 'info');
+}
+async function setupDriverManual() {
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  let apiKey = getRuntimeApiKey();
+  const companyId = (($('setupCompanyId')?.value || $('companyId')?.value || '1')).trim();
+  const driverId = (($('setupDriverId')?.value || '')).trim();
+  const serial = (($('setupSerial')?.value || '')).trim();
+  const username = normalizeUsername(
+    $('setupUsername')?.value ||
+    localStorage.getItem('sgsi_username') ||
+    $('username')?.value ||
+    ''
+  );
+
+  if (!baseUrl || !apiKey || !companyId || !driverId || !serial || !username) {
+    setSetupDriverStatus('Thiếu dữ liệu để gắn tài xế.', 'err');
+    return;
+  }
+
+  apiKey = await loginSetupPrivilegedUser();
+
+  const url = `${baseUrl}/api/DeviceSetup/SetupDriver?companyId=${encodeURIComponent(companyId)}&api_key=${encodeURIComponent(apiKey)}`;
+  const body = {
+    DriverId: Number(driverId),
+    Username: username,
+    Serial: Number(serial)
+  };
+
+  $('setupDriverUrlBox').textContent = url;
+  $('setupDriverRequestBox').textContent = JSON.stringify(body, null, 2);
+  $('setupDriverResponseBox').textContent = '';
+  setSetupDriverStatus('Đang gắn tài xế vào thẻ...', 'info');
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    const rawText = await res.text();
+    let dataText = rawText;
+    try {
+      dataText = JSON.stringify(JSON.parse(rawText), null, 2);
+    } catch {}
+
+    $('setupDriverResponseBox').textContent = dataText || '(API không trả nội dung)';
+
+    if (res.ok) {
+      clearSetupPrivilegedToken();
+      setSetupDriverStatus('Gắn tài xế thành công', 'ok');
+    } else {
+      const apiMsg = extractApiMessage(rawText, rawText);
+      setSetupDriverStatus(`Gắn tài xế thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`, 'err');
+    }
+  } catch (err) {
+    $('setupDriverResponseBox').textContent = err.message;
+    setSetupDriverStatus('Lỗi gắn tài xế: ' + err.message, 'err');
+  }
+}
+
+$('btnSetupDriver').addEventListener('click', async () => {
+  const btn = $('btnSetupDriver');
+
+  if (state.isSettingUpDriver) return;
+  state.isSettingUpDriver = true;
+
+  btn.disabled = true;
+  btn.classList.remove('success', 'error');
+  btn.classList.add('loading');
+  btn.innerText = 'Đang gắn...';
+
+  setSetupDriverStatus('Đang xử lý gắn tài xế...', 'info');
+
+  try {
+    await setupDriverManual();
+
+    const statusText = String($('setupDriverStatus')?.textContent || '').toLowerCase();
+    const isSuccess = statusText.includes('thành công');
+
+    btn.classList.remove('loading');
+
+    if (isSuccess) {
+      btn.classList.add('success');
+      btn.innerText = '✔ Thành công';
+    } else {
+      btn.classList.add('error');
+      btn.innerText = '✖ Lỗi';
+    }
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('loading', 'success', 'error');
+      btn.innerText = 'Gắn tài xế vào thẻ';
+    }, 2000);
+
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.classList.add('error');
+    btn.innerText = '✖ Lỗi';
+
+    setSetupDriverStatus('Lỗi gắn tài xế', 'err');
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('loading', 'success', 'error');
+      btn.innerText = 'Gắn tài xế vào thẻ';
+    }, 2000);
+
+  } finally {
+    state.isSettingUpDriver = false;
+  }
+});
+
+async function sendOpcode210ToDevice() {
+  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+  const serial = String($('opcode210Serial')?.value || '').trim();
+  const username = String($('opcode210Username')?.value || '1').trim() || '1';
+  let apiKey = await loginSetupPrivilegedUser();
+
+  if (!baseUrl || !apiKey || !serial) {
+    setOpcode210Status('Thiếu Base URL, API Key hoặc Serial xe.', 'err');
+    return false;
+  }
+
+  apiKey = await loginSetupPrivilegedUser();
+
+  const url = `${baseUrl}/api/DeviceSetup/SetupDeviceNoParams?serials=${encodeURIComponent(serial)}&opcode=210&username=${encodeURIComponent(username)}&api_key=${encodeURIComponent(apiKey)}`;
+
+  $('opcode210UrlBox').textContent = url;
+  $('opcode210ResponseBox').textContent = '';
+  setOpcode210Status('Đang gửi mã 210 xuống thiết bị...', 'info');
+
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
+    });
+
+    const rawText = await res.text();
+    let dataText = rawText;
+    try {
+      dataText = JSON.stringify(JSON.parse(rawText), null, 2);
+    } catch {}
+
+    $('opcode210ResponseBox').textContent = dataText || '(API không trả nội dung)';
+
+    if (!res.ok) {
+      const apiMsg = extractApiMessage(rawText, rawText);
+      throw new Error(`Gửi mã 210 thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`);
+    }
+
+    clearSetupPrivilegedToken();
+    setOpcode210Status('Đã gửi mã 210 xoá tài xế của xe thành công.', 'ok');
+    return true;
+  } catch (err) {
+    $('opcode210ResponseBox').textContent = err.message;
+    setOpcode210Status('Lỗi gửi mã 210: ' + err.message, 'err');
+    return false;
+  }
+}
+
+$('btnSendOpcode210').addEventListener('click', () => {
+  if (state.isSendingOpcode210 || state.opcode210CountdownTimer) return;
+
+  const serial = String($('opcode210Serial')?.value || '').trim();
+  if (!serial) {
+    setOpcode210Status('Chưa chọn xe để gửi mã 210.', 'err');
+    return;
+  }
+
+  showOpcode210ConfirmBox(serial);
+  setOpcode210Status('Đang chờ xác nhận xoá tài xế trên xe.', 'info');
+});
+
+$('btnDeleteDriver').addEventListener('click', async () => {
+  const btn = $('btnDeleteDriver');
+
+  if (state.isDeletingDriver) return;
+  state.isDeletingDriver = true;
+
+  try {
+    const confirmDelete = confirm('Bạn có chắc muốn xoá tài xế này không?');
+    if (!confirmDelete) return;
+
+    btn.classList.add('loading');
+    btn.innerText = 'Đang xoá...';
+
+    saveConfig();
+
+    const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
+    let apiKey = await loginSetupPrivilegedUser();
+    const companyId = (($('deleteDriverCompanyId')?.value || $('companyId')?.value || '1')).trim();
+    const driverId = (($('deleteDriverId')?.value || '')).trim();
+
+    if (!baseUrl || !apiKey || !companyId) {
+      throw new Error('Thiếu cấu hình');
+    }
+
+    if (!driverId) {
+      throw new Error('Chưa chọn tài xế');
+    }
+
+    apiKey = await loginSetupPrivilegedUser();
+
+    const url = `${baseUrl}/api/Driver/Del/${encodeURIComponent(driverId)}?companyId=${encodeURIComponent(companyId)}&api_key=${encodeURIComponent(apiKey)}`;
+
+    let res = await fetch(url, {
+      method: 'DELETE',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.status === 405) {
+      res = await fetch(url, { method: 'POST' });
+    }
+
+    if (res.status === 405) {
+      res = await fetch(url, { method: 'GET' });
+    }
+
+    const rawDeleteText = await res.text();
+    let deleteResult;
+    try {
+      deleteResult = JSON.parse(rawDeleteText);
+    } catch {
+      deleteResult = { raw: rawDeleteText };
+    }
+
+    $('deleteDriverResponseBox').textContent = JSON.stringify(deleteResult, null, 2);
+
+    if (!res.ok) {
+      const apiMsg = extractApiMessage(deleteResult, rawDeleteText);
+      throw new Error(`Xoá thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`);
+    }
+
+    btn.classList.remove('loading');
+    btn.classList.add('success');
+    btn.innerText = '✔ Đã xoá';
+
+    setDeleteDriverStatus('Xoá tài xế thành công', 'ok');
+
+    clearApiCache();
+
+    state.allDrivers = [];
+    state.deleteDriverData = [];
+    state.setupDriverData = [];
+
+    if ($('deleteDriverId')) $('deleteDriverId').value = '';
+    if ($('deleteDriverSelectedText')) $('deleteDriverSelectedText').textContent = '-- Chưa chọn tài xế --';
+    if ($('deleteDriverSearch')) $('deleteDriverSearch').value = '';
+    if ($('deleteDriverListBox')) $('deleteDriverListBox').innerHTML = '<div style="padding:10px">Đang cập nhật danh sách...</div>';
+
+    if ($('setupDriverId')) $('setupDriverId').value = '';
+    if ($('setupDriverSelectedText')) $('setupDriverSelectedText').textContent = '-- Chưa chọn tài xế --';
+    if ($('setupDriverSearch')) $('setupDriverSearch').value = '';
+    if ($('setupDriverListBox')) $('setupDriverListBox').innerHTML = '<div style="padding:10px">Đang cập nhật danh sách...</div>';
+
+    await loadDriverList(true);
+    await loadDeleteDriverList(true);
+
+    setTimeout(() => {
+      btn.classList.remove('success');
+      btn.innerText = 'Xoá tài xế đã chọn';
+    }, 2000);
+
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.classList.add('error');
+    btn.innerText = '✖ Lỗi';
+
+    setDeleteDriverStatus(err.message, 'err');
+
+    setTimeout(() => {
+      btn.classList.remove('error');
+      btn.innerText = 'Xoá tài xế đã chọn';
+    }, 2000);
+
+  } finally {
+    state.isDeletingDriver = false;
+  }
+});
+$('btnOpcode210Cancel')?.addEventListener('click', () => {
+  hideOpcode210ConfirmBox();
+  setOpcode210Status('Đã huỷ thao tác xoá tài xế trên xe.', 'info');
+});
+
+$('btnOpcode210Confirm')?.addEventListener('click', async () => {
+  const btn = $('btnSendOpcode210');
+
+  if (state.isSendingOpcode210 || state.opcode210CountdownTimer) return;
+  state.isSendingOpcode210 = true;
+
+  hideOpcode210ConfirmBox();
+
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.remove('success', 'error', 'done');
+  }
+
+  try {
+    const ok = await sendOpcode210ToDevice();
+
+    if (ok) {
+      startOpcode210Countdown(130);
+    } else {
+      setOpcode210CircleError('Không gửi được mã 210');
+    }
+  } catch (err) {
+    setOpcode210CircleError('Không gửi được mã 210');
+    setOpcode210Status('Lỗi gửi mã 210.', 'err');
+  } finally {
+    state.isSendingOpcode210 = false;
+  }
+});
+function initPasswordToggle() {
+  const toggle = $('togglePassword');
+  const pwd = $('password');
+  if (!toggle || !pwd) return;
+
+  toggle.addEventListener('click', () => {
+    const showing = pwd.type === 'text';
+    pwd.type = showing ? 'password' : 'text';
+    toggle.textContent = showing ? '👁️' : '🙈';
+  });
+}
+
+  loadConfig();
+  setDefaultDates();
+  initPasswordToggle();
   updateApiLabels();
   updateGlobalInfo();
 </script>
