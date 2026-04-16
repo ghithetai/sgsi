@@ -126,56 +126,38 @@
       min-width: 0;
     }
     .panel-back-btn {
-  border: none;
-  background: #fee2e2;        /* nền đỏ rất nhẹ */
-  color: #dc2626;             /* chữ đỏ dễ nhìn */
-  border-radius: 12px;
-  padding: 10px 14px;
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #22c55e;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  /* chớp nhanh */
+  animation: softBlink 1.2s infinite;
 }
 
-/* Hover nhìn rõ hơn */
+/* hover */
 .panel-back-btn:hover {
-  background: #fecaca;
-  color: #b91c1c;
+  background: #bbf7d0;
+  color: #16a34a;
 }
 
-/* Khi bấm */
+/* khi bấm */
 .panel-back-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
-    .panel-mini-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-    }
-    .panel-mini-subtitle {
-      margin-top: 4px;
-      color: #64748b;
-      font-size: 13px;
-    }
-    .login-tab-standalone {
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    .app-only-panel {
-      display: none;
-    }
-    body.app-mode .app-only-panel.active {
-      display: block;
-    }
-    @media (max-width: 700px) {
-      .app-dashboard {
-        grid-template-columns: 1fr;
-      }
-      .panel-topbar {
-        align-items: flex-start;
-      }
-    }
 
+/* chớp */
+@keyframes softBlink {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}
     .tab-btn {
       border: none;
       padding: 12px 16px;
@@ -1260,7 +1242,7 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
             <button class="app-tile" type="button" data-app-panel="opcode210Tab">
               <div class="app-tile-icon">🚫</div>
               <div class="app-tile-title">Xoá tài xế trên xe</div>
-              <div class="app-tile-desc">Gửi lệnh xoá tài xế trực tiếp xuống thiết bị trên xe.</div>
+              <div class="app-tile-desc">lưu ý chỉ sự dụng khi ghi thẻ nhiều lần không được.</div>
             </button>
           </div>
         </div>
@@ -1442,7 +1424,7 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
   animation: blink 1s infinite;
 ">
   👇 BẤM VÀO ĐÂY ĐỂ XOÁ TÀI XẾ
-(chức năng xoá toàn bộ tài xế trong xe - chỉ sử dụng khi nạp tài xế nhiều lần mà thiết bị không phát tín hiệu chờ ghi thẻ )
+(sau khi xoá toàn bộ tài xế trên xe sẽ trống)
 </div>
 <div id="opcode210ConfirmBox" style="
   display:none;
@@ -1799,6 +1781,29 @@ function safeStorageRemove(storage, key) {
   }
 }
 
+function getRuntimeUsername() {
+  return normalizeUsername(safeStorageGet(sessionStorage, 'sgsi_username', ''));
+}
+
+function clearRuntimeSessionData() {
+  [
+    'sgsi_token',
+    'sgsi_setup_token',
+    'sgsi_setup_token_expire_at',
+    'sgsi_login_response',
+    'sgsi_setup_login_response',
+    'sgsi_username',
+    'sgsi_primary_company_id',
+    'sgsi_driver_flow_mode'
+  ].forEach(key => safeStorageRemove(sessionStorage, key));
+
+  [
+    'sgsi_username',
+    'sgsi_company_id',
+    'sgsi_group_id'
+  ].forEach(key => safeStorageRemove(localStorage, key));
+}
+
 function safeJsonParse(text, fallback = null) {
   try {
     return JSON.parse(text);
@@ -2019,6 +2024,8 @@ hideOpcode210ConfirmBox();
   safeStorageRemove(localStorage, 'sgsi_group_id');
   safeStorageRemove(sessionStorage, 'sgsi_primary_company_id');
   safeStorageRemove(sessionStorage, 'sgsi_driver_flow_mode');
+  safeStorageRemove(sessionStorage, 'sgsi_company_id');
+  safeStorageRemove(sessionStorage, 'sgsi_group_id');
 
   if ($('driverListUsername')) $('driverListUsername').value = normalized;
   if ($('deleteDriverUsername')) $('deleteDriverUsername').value = normalized;
@@ -2093,12 +2100,6 @@ function getSetupRuntimeApiKey() {
   function saveConfig() {
   safeStorageSet(localStorage, 'sgsi_base_url', $('baseUrl')?.value.trim() || '');
   safeStorageSet(localStorage, 'sgsi_api_key_login', $('apiKey')?.value.trim() || '');
-  safeStorageSet(localStorage, 'sgsi_company_id', $('companyId')?.value.trim() || '');
-
-  const currentGroupId = String($('groupId')?.value || '').trim();
-  if (currentGroupId) {
-    safeStorageSet(localStorage, 'sgsi_group_id', currentGroupId);
-  }
 
   const rememberAccount = !!$('rememberAccount')?.checked;
   safeStorageSet(localStorage, 'sgsi_remember_account', rememberAccount ? '1' : '0');
@@ -2117,63 +2118,29 @@ function getSetupRuntimeApiKey() {
 function loadConfig() {
   $('baseUrl').value = safeStorageGet(localStorage, 'sgsi_base_url', $('baseUrl').value || '');
   $('apiKey').value = safeStorageGet(localStorage, 'sgsi_api_key_login', $('apiKey').value || '');
-  $('companyId').value = safeStorageGet(localStorage, 'sgsi_company_id', $('companyId').value || '');
 
-  if ($('groupId')) {
-    $('groupId').value = safeStorageGet(localStorage, 'sgsi_group_id', $('groupId').value || '');
-  }
+  if ($('companyId')) $('companyId').value = '1';
+  if ($('groupId')) $('groupId').value = '';
 
   const rememberAccount = safeStorageGet(localStorage, 'sgsi_remember_account', '0') === '1';
   const savedUsername = safeStorageGet(localStorage, 'sgsi_saved_username', '');
   const savedPassword = safeStorageGet(localStorage, 'sgsi_saved_password', '');
-  const lastUsername = safeStorageGet(localStorage, 'sgsi_username', '');
 
   if ($('rememberAccount')) $('rememberAccount').checked = rememberAccount;
-  $('username').value = (rememberAccount ? savedUsername : lastUsername) || $('username').value;
+  $('username').value = rememberAccount ? savedUsername : '';
 
-  if (rememberAccount && $('password')) {
-    $('password').value = savedPassword;
+  if ($('password')) {
+    $('password').value = rememberAccount ? savedPassword : '';
   }
 
-  if ($('deviceUsername')) {
-    $('deviceUsername').value =
-      (safeStorageGet(localStorage, 'sgsi_username', '') || $('deviceUsername').value || '').toLowerCase();
-  }
-
-  if ($('groupDeviceCompanyId')) {
-    $('groupDeviceCompanyId').value =
-      safeStorageGet(localStorage, 'sgsi_company_id', $('groupDeviceCompanyId').value || '');
-  }
-
-  if ($('groupDeviceGroupId')) {
-    $('groupDeviceGroupId').value =
-      safeStorageGet(localStorage, 'sgsi_group_id', $('groupDeviceGroupId').value || '');
-  }
-
-  if ($('driverListCompanyId')) {
-    $('driverListCompanyId').value =
-      safeStorageGet(localStorage, 'sgsi_company_id', $('driverListCompanyId').value || '');
-  }
-
-  if ($('driverListUsername')) {
-    $('driverListUsername').value =
-      (safeStorageGet(localStorage, 'sgsi_username', '') || $('driverListUsername').value || '').toLowerCase();
-  }
-
-  if ($('deleteDriverUsername')) {
-    $('deleteDriverUsername').value =
-      (safeStorageGet(localStorage, 'sgsi_username', '') || $('deleteDriverUsername').value || '').toLowerCase();
-  }
-
-  if ($('setupUsername')) {
-    $('setupUsername').value =
-      (safeStorageGet(localStorage, 'sgsi_username', '') || $('setupUsername').value || '').toLowerCase();
-  }
-
-  if ($('setupCompanyId')) {
-    $('setupCompanyId').value =
-      safeStorageGet(localStorage, 'sgsi_company_id', $('setupCompanyId').value || '1');
-  }
+  if ($('groupDeviceCompanyId')) $('groupDeviceCompanyId').value = '1';
+  if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = '';
+  if ($('driverListCompanyId')) $('driverListCompanyId').value = '1';
+  if ($('driverListUsername')) $('driverListUsername').value = '';
+  if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = '1';
+  if ($('deleteDriverUsername')) $('deleteDriverUsername').value = '';
+  if ($('setupUsername')) $('setupUsername').value = '';
+  if ($('setupCompanyId')) $('setupCompanyId').value = '1';
 }
 
   function updateApiLabels() {
@@ -2183,7 +2150,7 @@ function loadConfig() {
 
   const currentUser = (
     $('deviceUsername')?.value ||
-    localStorage.getItem('sgsi_username') ||
+    getRuntimeUsername() ||
     '{username}'
   ).trim().toLowerCase();
 
@@ -2200,13 +2167,16 @@ function loadConfig() {
     el.innerHTML = '';
   }
 
-  
-
   function getCacheTtlMs(type) {
-    if (type === 'groupDevices') return 10 * 1000;
-    if (type === 'drivers') return 45 * 1000;
-    return 30 * 1000;
-  }
+  // Danh sách xe: 20 phút
+  if (type === 'groupDevices') return 20 * 60 * 1000;
+
+  // Danh sách tài xế: 20 phút
+  if (type === 'drivers') return 20 * 60 * 1000;
+
+  // mặc định giữ nguyên (có thể để 30s hoặc tăng nếu muốn)
+  return 30 * 1000;
+}
 
   function getCacheKey(type, params = {}) {
     return 'sgsi_cache_' + type + '_' + btoa(unescape(encodeURIComponent(JSON.stringify(params))));
@@ -2379,7 +2349,7 @@ ${details}` : message;
   const normalizedGroupId = String(
     $('groupId')?.value ||
     $('groupDeviceGroupId')?.value ||
-    localStorage.getItem('sgsi_group_id') ||
+    safeStorageGet(sessionStorage, 'sgsi_group_id', '') ||
     ''
   ).trim();
 
@@ -2608,13 +2578,13 @@ function extractCompanyGroupInfo(userObj) {
     if ($('companyId')) $('companyId').value = companyId;
     if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = companyId;
     if ($('setupCompanyId')) $('setupCompanyId').value = companyId;
-    localStorage.setItem('sgsi_company_id', companyId);
+    safeStorageSet(sessionStorage, 'sgsi_company_id', companyId);
   }
 
   if (groupId) {
     if ($('groupId')) $('groupId').value = groupId;
     if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = groupId;
-    localStorage.setItem('sgsi_group_id', groupId);
+    safeStorageSet(sessionStorage, 'sgsi_group_id', groupId);
   }
 
   updateApiLabels();
@@ -2659,7 +2629,7 @@ function applyFallbackCompanyToAllTabs(companyId) {
     if ($('setupCompanyId')) $('setupCompanyId').value = company;
     if ($('companyId')) $('companyId').value = company;
 
-    localStorage.setItem('sgsi_company_id', company);
+    safeStorageSet(sessionStorage, 'sgsi_company_id', company);
     updateApiLabels();
     updateGlobalInfo();
   }
@@ -2668,7 +2638,7 @@ function applyFallbackCompanyToAllTabs(companyId) {
     const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
     const token = getCurrentLoginToken();
     const currentUser = normalizeUsername(
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username')?.value ||
       ''
     );
@@ -2741,7 +2711,7 @@ function applyFallbackCompanyToAllTabs(companyId) {
     const username = normalizeUsername(
       $('driverListUsername')?.value ||
       $('setupUsername')?.value ||
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username')?.value ||
       ''
     );
@@ -3138,13 +3108,13 @@ function applyDriverFormCompanyGroupFromDevices(devices) {
     if ($('deleteDriverCompanyId')) $('deleteDriverCompanyId').value = companyId;
     if ($('setupCompanyId')) $('setupCompanyId').value = companyId;
     if ($('companyId')) $('companyId').value = companyId;
-    localStorage.setItem('sgsi_company_id', companyId);
+    safeStorageSet(sessionStorage, 'sgsi_company_id', companyId);
   }
 
   if (groupId) {
     if ($('groupDeviceGroupId')) $('groupDeviceGroupId').value = groupId;
     if ($('groupId')) $('groupId').value = groupId;
-    localStorage.setItem('sgsi_group_id', groupId);
+    safeStorageSet(sessionStorage, 'sgsi_group_id', groupId);
   }
 
   updateApiLabels();
@@ -3471,12 +3441,12 @@ function filterDriversByMnv(drivers, username) {
   $('companyId').addEventListener('input', saveConfig);
   $('groupId').addEventListener('input', () => {
   $('groupId').value = '';
-  localStorage.removeItem('sgsi_group_id');
+  safeStorageRemove(sessionStorage, 'sgsi_group_id');
 });
 
   if ($('groupDeviceCompanyId')) {
     $('groupDeviceCompanyId').addEventListener('input', () => {
-      localStorage.setItem('sgsi_company_id', $('groupDeviceCompanyId').value.trim());
+      safeStorageSet(sessionStorage, 'sgsi_company_id', $('groupDeviceCompanyId').value.trim());
       updateApiLabels();
     });
 
@@ -3485,7 +3455,7 @@ function filterDriversByMnv(drivers, username) {
   if ($('groupDeviceGroupId')) {
   $('groupDeviceGroupId').addEventListener('input', () => {
     $('groupDeviceGroupId').value = '';
-    localStorage.removeItem('sgsi_group_id');
+    safeStorageRemove(sessionStorage, 'sgsi_group_id');
     updateApiLabels();
   });
 }
@@ -3503,7 +3473,7 @@ function filterDriversByMnv(drivers, username) {
 
   if ($('driverListCompanyId')) {
     $('driverListCompanyId').addEventListener('input', () => {
-      localStorage.setItem('sgsi_company_id', $('driverListCompanyId').value.trim());
+      safeStorageSet(sessionStorage, 'sgsi_company_id', $('driverListCompanyId').value.trim());
       updateApiLabels();
     });
 
@@ -3511,7 +3481,7 @@ function filterDriversByMnv(drivers, username) {
 
   if ($('deleteDriverCompanyId')) {
     $('deleteDriverCompanyId').addEventListener('input', () => {
-      localStorage.setItem('sgsi_company_id', $('deleteDriverCompanyId').value.trim());
+      safeStorageSet(sessionStorage, 'sgsi_company_id', $('deleteDriverCompanyId').value.trim());
       updateApiLabels();
     });
   }
@@ -3574,7 +3544,7 @@ function filterDriversByMnv(drivers, username) {
       throw new Error('Sai tên đăng nhập hoặc mật khẩu');
     }
 
-    safeStorageSet(localStorage, 'sgsi_username', username);
+    safeStorageSet(sessionStorage, 'sgsi_username', username);
     safeStorageSet(localStorage, 'sgsi_api_key_login', loginApiKey);
     safeStorageSet(sessionStorage, 'sgsi_login_response', JSON.stringify(data));
 
@@ -3612,8 +3582,16 @@ function filterDriversByMnv(drivers, username) {
     setLoginStatus('Đăng nhập thành công.', 'ok');
 
     state.hasAutoLoadedAfterLogin = false;
-    await runAutoLoginTasksOnce();
-    setAppView('app', 'appHomeTab');
+
+// 👉 vào app ngay (không chờ API)
+setAppView('app', 'appHomeTab');
+
+// 👉 gọi API nền sau (không block login)
+setTimeout(() => {
+  if (!state.autoLoginRunInProgress) {
+    runAutoLoginTasksOnce();
+  }
+}, 100);
 
     setTimeout(() => {
       btn.disabled = false;
@@ -3716,7 +3694,7 @@ function filterDriversByMnv(drivers, username) {
     $('groupDeviceBox').textContent = JSON.stringify(devices, null, 2);
 
     const currentUsername = normalizeUsername(
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username')?.value ||
       $('setupUsername')?.value ||
       ''
@@ -3867,7 +3845,7 @@ function filterDriversByMnv(drivers, username) {
     const companyId = (($('driverListCompanyId').value || $('companyId').value || '')).trim();
     const username = normalizeUsername(
       $('driverListUsername').value ||
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username').value ||
       ''
     );
@@ -3969,7 +3947,7 @@ $('btnLoadDriverList').addEventListener('click', async () => {
     const companyId = (($('deleteDriverCompanyId').value || $('companyId').value || '')).trim();
     const username = normalizeUsername(
       $('deleteDriverUsername').value ||
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username').value ||
       ''
     );
@@ -4079,7 +4057,7 @@ $('btnLoadDriverList').addEventListener('click', async () => {
   async function refreshDriverListsAfterAdd(companyId, usernameForFilter, addedDriver = null) {
   const normalizedUser = normalizeUsername(
     usernameForFilter ||
-    localStorage.getItem('sgsi_username') ||
+    getRuntimeUsername() ||
     $('username')?.value ||
     ''
   );
@@ -4154,7 +4132,7 @@ $('btnAdd').addEventListener('click', async () => {
     const groupId = String(
       $('groupId')?.value ||
       $('groupDeviceGroupId')?.value ||
-      localStorage.getItem('sgsi_group_id') ||
+      safeStorageGet(sessionStorage, 'sgsi_group_id', '') ||
       ''
     ).trim();
 
@@ -4180,7 +4158,7 @@ $('btnAdd').addEventListener('click', async () => {
     }
 
     const mnv = (
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username')?.value ||
       ''
     ).trim().toLowerCase();
@@ -4322,7 +4300,7 @@ if (autoCompanyId) {
       $('deviceUsername')?.value ||
       $('driverListUsername')?.value ||
       $('deleteDriverUsername')?.value ||
-      localStorage.getItem('sgsi_username') ||
+      getRuntimeUsername() ||
       $('username')?.value ||
       ''
     );
@@ -4335,9 +4313,12 @@ if (autoCompanyId) {
     if ($('setupUsername') && username) $('setupUsername').value = username;
 
     if (companyId && username) {
-      await autoLoadDriversAndSetup();
-      await loadDeleteDriverList();
-    }
+  // 👉 load tài xế sau 200ms (không block UI)
+  setTimeout(() => {
+    autoLoadDriversAndSetup();
+    loadDeleteDriverList();
+  }, 200);
+}
   } catch (err) {
     state.hasAutoLoadedAfterLogin = false;
     console.error('Auto login error:', err);
@@ -4351,7 +4332,7 @@ async function autoLoadDriversAndSetup() {
   const companyId = (($('setupCompanyId')?.value || $('companyId')?.value || '1')).trim();
   const username = normalizeUsername(
     $('setupUsername')?.value ||
-    localStorage.getItem('sgsi_username') ||
+    getRuntimeUsername() ||
     $('username')?.value ||
     ''
   );
@@ -4388,7 +4369,7 @@ async function setupDriverManual() {
   const serial = (($('setupSerial')?.value || '')).trim();
   const username = normalizeUsername(
     $('setupUsername')?.value ||
-    localStorage.getItem('sgsi_username') ||
+    getRuntimeUsername() ||
     $('username')?.value ||
     ''
   );
@@ -4723,6 +4704,9 @@ function initBackToLoginButton() {
     if ($('password')) $('password').focus();
   });
 }
+
+  window.addEventListener('pagehide', clearRuntimeSessionData);
+  window.addEventListener('beforeunload', clearRuntimeSessionData);
 
   setAppView('login');
   loadConfig();
