@@ -4001,11 +4001,19 @@ $('btnLoadDriverList').addEventListener('click', async () => {
     await loadDeleteDriverList();
   });
 
-  function isDuplicateDriver(drivers, name, gplx) {
+  function isDuplicateDriver(drivers, name, gplx, username) {
   const nameClean = cleanText(stripVietnamese(name));
   const gplxClean = cleanText(gplx);
+  const userClean = normalizeMnvStrict(username);
 
-  return drivers.some(d => {
+  if (!userClean) return false;
+
+  return (Array.isArray(drivers) ? drivers : []).some(d => {
+    const dMnv = normalizeMnvStrict(getDriverMnvValue(d));
+
+    // Chỉ chống trùng trong tài xế có MNV gắn đúng user lẻ
+    if (!dMnv || dMnv !== userClean) return false;
+
     const dName = cleanText(stripVietnamese(d?.Name || ''));
     const dGplx = cleanText(d?.Gplx || '');
 
@@ -4141,8 +4149,13 @@ $('btnAdd').addEventListener('click', async () => {
     const gplx = getValue('gplx');
 
     const existingDrivers = state.allDrivers || [];
+const currentMnvForDuplicate = (
+  getRuntimeUsername() ||
+  $('username')?.value ||
+  ''
+).trim().toLowerCase();
 
-    if (isDuplicateDriver(existingDrivers, name, gplx)) {
+if (isDuplicateDriver(existingDrivers, name, gplx, currentMnvForDuplicate)) {
       btn.classList.remove('loading');
       btn.classList.add('error');
       btn.innerText = '✖ Trùng';
