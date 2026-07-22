@@ -387,7 +387,7 @@
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0,0,0,.12);
   z-index: 100;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .custom-select-dropdown.show {
@@ -445,9 +445,15 @@
   font-size: 14px;
 }
 
-#setupVehicleListBox {
-  max-height: 260px;
+#setupVehicleListBox,
+#opcodeVehicleListBox {
+  display: block;
+  max-height: 320px;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 .setup-vehicle-item {
@@ -1131,7 +1137,29 @@ body.app-mode .tabs{
 body.app-mode .tab-btn[data-tab="loginTab"]{
   display:none !important;
 }
+@media (max-width: 600px) {
+  #setupVehicleDropdown,
+  #opcodeVehicleDropdown {
+    position: fixed;
+    top: 15%;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 70vh;
+    z-index: 9999;
+    overflow: hidden;
+  }
 
+  #setupVehicleListBox,
+  #opcodeVehicleListBox {
+    max-height: calc(70vh - 70px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+}
 </style>
 </head>
 <body>
@@ -4440,7 +4468,9 @@ async function setupDriverManual() {
 $('btnSetupDriver').addEventListener('click', async () => {
   const btn = $('btnSetupDriver');
 
-  if (state.isSettingUpDriver) return;
+  // Đang xử lý hoặc đang trong thời gian khóa 60 giây thì không cho bấm tiếp
+  if (state.isSettingUpDriver || btn.disabled) return;
+
   state.isSettingUpDriver = true;
 
   btn.disabled = true;
@@ -4453,23 +4483,51 @@ $('btnSetupDriver').addEventListener('click', async () => {
   try {
     await setupDriverManual();
 
-    const statusText = String($('setupDriverStatus')?.textContent || '').toLowerCase();
+    const statusText = String(
+      $('setupDriverStatus')?.textContent || ''
+    ).toLowerCase();
+
     const isSuccess = statusText.includes('thành công');
 
     btn.classList.remove('loading');
 
     if (isSuccess) {
+      // Gắn thành công: giữ nút khóa và chữ thành công trong 60 giây
       btn.classList.add('success');
       btn.innerText = '✔ Thành công';
-    } else {
-      btn.classList.add('error');
-      btn.innerText = '✖ Lỗi';
+
+      setSetupDriverStatus(
+        'Gắn tài xế thành công. Vui lòng chờ 60 giây trước khi thao tác tiếp.',
+        'ok'
+      );
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('loading', 'success', 'error');
+        btn.innerText = 'Gắn tài xế vào thẻ';
+
+        state.isSettingUpDriver = false;
+
+        setSetupDriverStatus(
+          'Đã hết thời gian chờ. Có thể tiếp tục gắn tài xế vào thẻ.',
+          'info'
+        );
+      }, 60000);
+
+      // Không chạy finally để mở khóa sớm
+      return;
     }
+
+    // API báo không thành công: chỉ khóa 2 giây
+    btn.classList.add('error');
+    btn.innerText = '✖ Lỗi';
 
     setTimeout(() => {
       btn.disabled = false;
       btn.classList.remove('loading', 'success', 'error');
       btn.innerText = 'Gắn tài xế vào thẻ';
+
+      state.isSettingUpDriver = false;
     }, 2000);
 
   } catch (err) {
@@ -4477,16 +4535,18 @@ $('btnSetupDriver').addEventListener('click', async () => {
     btn.classList.add('error');
     btn.innerText = '✖ Lỗi';
 
-    setSetupDriverStatus('Lỗi gắn tài xế', 'err');
+    setSetupDriverStatus(
+      'Lỗi gắn tài xế: ' + (err?.message || 'Không xác định'),
+      'err'
+    );
 
     setTimeout(() => {
       btn.disabled = false;
       btn.classList.remove('loading', 'success', 'error');
       btn.innerText = 'Gắn tài xế vào thẻ';
-    }, 2000);
 
-  } finally {
-    state.isSettingUpDriver = false;
+      state.isSettingUpDriver = false;
+    }, 2000);
   }
 });
 
