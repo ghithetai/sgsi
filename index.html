@@ -1161,7 +1161,7 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
   }
 }
 </style>
-</head>
+<style>@media(max-width:600px){#downloadVideoTab{padding:0!important;min-width:0}#cameraDownloadFrame{border-radius:12px!important;width:100%!important}.tabs{overflow-x:auto;flex-wrap:nowrap}.tab-btn{flex-shrink:0}}</style></head>
 <body>
   <div class="wrap">
   <div class="card">
@@ -1187,7 +1187,10 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
 </div>
 </div>
 
-<div class="tabs" aria-hidden="true"></div>
+<div class="tabs" role="navigation" aria-label="Chức năng">
+  <button class="tab-btn" type="button" data-tab="appHomeTab">TRANG CHỦ</button>
+  <button class="tab-btn" type="button" data-tab="downloadVideoTab">TẢI VIDEO</button>
+</div>
 
       <div class="body">
         <div class="statusbar" id="globalInfo" style="display:none !important"></div>
@@ -1242,6 +1245,12 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
             </div>
           </div>
           <div class="app-dashboard">
+            <button class="app-tile" type="button" data-app-panel="downloadVideoTab">
+              <div class="app-tile-icon">🎥</div>
+              <div class="app-tile-title">TẢI VIDEO</div>
+              <div class="app-tile-desc">Tìm bản ghi, chọn kênh và giờ rồi tải MP4.</div>
+            </button>
+
             <button class="app-tile" type="button" data-app-panel="driverTab">
               <div class="app-tile-icon">➕</div>
               <div class="app-tile-title">Thêm tài xế</div>
@@ -1275,7 +1284,503 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
           </div>
         </div>
 
-        <div id="groupDeviceTab" class="tab-panel app-only-panel">
+        <div id="downloadVideoTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left" style="display:none"><div class="panel-mini-title">TẢI VIDEO</div></div>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
+  <iframe id="cameraDownloadFrame" title="TẢI VIDEO — Camera B MP4" style="width:100%;height:2200px;border:0;display:block;border-radius:12px" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;vi&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Camera B — Kiểm tra API&lt;/title&gt;&lt;style&gt;body{font:16px Arial;background:#edf2f8;color:#14223c;margin:0}main{max-width:1050px;margin:30px auto;padding:20px}section{background:white;padding:22px;border:1px solid #d3deeb;border-radius:12px;margin:18px 0}h1{font-size:26px}h2{font-size:19px}label{display:block;font-size:14px;margin-bottom:6px}input,select,button{font:inherit;padding:11px;border:1px solid #b8c9df;border-radius:7px;box-sizing:border-box;width:100%}button{background:#195bdb;color:white;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.wide{grid-column:1/-1}p{line-height:1.5}small{color:#52637b}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#14223c;color:#dceaff;padding:16px;max-height:400px;overflow:auto}#status{padding:15px;background:#e4efff;border-radius:8px}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:12px;border-bottom:1px solid #d3deeb;text-align:left;overflow-wrap:anywhere}td button{width:auto}.scroll{overflow:auto}@media(max-width:700px){.grid{grid-template-columns:1fr}main{margin:0}section{padding:16px}}main{margin:0 auto;padding:12px}body{background:#f8fafc}[hidden]{display:none!important}#results th:first-child,#results td:first-child{display:none}
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,&quot;Segoe UI&quot;,sans-serif}main{width:100%;padding:16px;max-width:1050px}h1{font-size:24px;line-height:1.3;margin:8px 0 18px}h2{margin:0 0 14px;font-size:19px}section{margin:14px 0;padding:20px;border-color:#e2e8f0;border-radius:16px}input,select{min-width:0;min-height:46px;background:#fff;border-radius:10px}input:focus,select:focus{outline:2px solid #93c5fd;outline-offset:1px}button{min-height:44px;touch-action:manipulation;border-radius:10px}#serialMatchInfo{font-size:14px;line-height:1.6;margin:0 0 14px}#cameraInitStatus,#status{font-size:14px;line-height:1.5;overflow-wrap:anywhere}#vehicleColorList{padding:4px 2px;overscroll-behavior:contain}#vehicleColorList button{min-height:40px}#begin,#end{font-variant-numeric:tabular-nums;letter-spacing:.5px}#tasks{overflow-wrap:anywhere}#videoProgressText{font-size:14px;line-height:1.5}
+@media(max-width:600px){
+ main{padding:8px}h1{font-size:21px;margin:6px 2px 12px}section{padding:14px;margin:10px 0;border-radius:14px}h2{font-size:17px}p{margin:10px 0}label{font-size:13px;font-weight:600;color:#334155}input,select{font-size:16px;padding:10px;max-width:100%}.grid{gap:12px}#searchForm{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#searchForm&gt;div:first-child{grid-column:1/-1}#searchForm&gt;div{min-width:0}#searchForm&gt;.wide{grid-column:1/-1}#vehiclePlate{font-size:18px}#vehicleColorList{max-height:140px!important;gap:8px!important}#vehicleColorList button{flex:0 1 calc(50% - 4px);font-size:14px!important;min-width:0;overflow-wrap:anywhere;padding:8px!important}small{font-size:12px;line-height:1.6}#searchForm&gt;.wide&gt;button{font-size:16px;font-weight:700;min-height:48px}#results{overflow:visible}#results table,#results tbody{display:block;width:100%}#results thead{display:none}#results tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;padding:14px;margin:10px 0;border:1px solid #dbe4f0;border-radius:12px;background:#f8fafc}#results td{display:block;border:0;padding:0;font-size:14px;min-width:0}#results td:nth-child(2):before{content:&quot;Kênh&quot;}#results td:nth-child(3):before{content:&quot;Thời gian&quot;}#results td:nth-child(4):before{content:&quot;Dung lượng&quot;}#results td:nth-child(2):before,#results td:nth-child(3):before,#results td:nth-child(4):before{display:block;font-size:12px;color:#64748b;margin-bottom:4px}#results td:nth-child(3){grid-column:1/-1;grid-row:2}#results td:last-child{grid-column:1/-1}#results td button{width:100%;margin-top:4px;min-height:44px}#previewPlayer{max-height:45vh!important}#tasksButton{background:#eef4ff;color:#1d4ed8;border-color:#cbdcff;margin-top:10px!important}#tasks table{font-size:12px}#tasks th,#tasks td{padding:7px}
+}
+@media(max-width:350px){#vehicleColorList button{flex-basis:100%}#searchForm{grid-template-columns:minmax(0,1fr)}}
+
+.time-adjust{display:flex;gap:8px;margin-top:8px}.time-adjust button{font-size:13px;min-height:36px;padding:6px;background:#f1f5f9;color:#334155;border-color:#e2e8f0}.time-presets{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px}.time-presets&gt;span{font-size:13px;color:#475569;font-weight:600}.duration-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.duration-buttons button{width:auto;flex:1;white-space:nowrap;background:white;color:#1d4ed8;border-color:#cbd5e1;padding:8px 10px;font-size:13px;min-height:38px}.duration-buttons button.selected{background:#1d4ed8;color:white;border-color:#1d4ed8}#rangeTimeSummary{font-size:14px;line-height:1.5;font-weight:600;color:#1e40af;font-variant-numeric:tabular-nums}#rangeTimeSummary.invalid{color:#b91c1c}.time-field input{min-height:50px;font-size:18px;font-weight:600;color:#0f172a}@media(max-width:600px){.duration-buttons button{flex:1 0 26%}.time-adjust{gap:5px}.time-adjust button{font-size:12px}.time-field input{padding:8px;font-size:16px}}
+.download-notice{padding:12px 14px;border:1px solid #fed7aa;border-radius:10px;background:#fff7ed;color:#7c2d12;font-size:14px;line-height:1.6;margin:0 0 14px}&lt;/style&gt;
+&lt;main&gt;&lt;div id=&quot;cameraInitStatus&quot; role=&quot;status&quot; style=&quot;padding:12px;background:#e4efff;border-radius:8px;margin-bottom:10px&quot;&gt;Mở tab Tải video để bắt đầu chuẩn bị.&lt;/div&gt;&lt;h1 hidden&gt;Tải video &lt;/h1&gt;&lt;section hidden&gt;&lt;h2&gt;1. Đăng nhập&lt;/h2&gt;&lt;form id=&quot;loginForm&quot; class=&quot;grid&quot;&gt;&lt;div class=&quot;wide&quot;&gt;&lt;label for=&quot;base&quot;&gt;Máy chủ API&lt;/label&gt;&lt;input id=&quot;base&quot; value=&quot;http://cam.gpssaigon.vn:88&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;account&quot;&gt;Tài khoản&lt;/label&gt;&lt;input id=&quot;account&quot; autocomplete=&quot;username&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;password&quot;&gt;Mật khẩu&lt;/label&gt;&lt;input id=&quot;password&quot; type=&quot;password&quot; autocomplete=&quot;current-password&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;method&quot;&gt;Phương thức thử&lt;/label&gt;&lt;select id=&quot;method&quot;&gt;&lt;option&gt;POST&lt;/option&gt;&lt;option&gt;GET&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Đăng nhập và lấy thiết bị&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Ưu tiên POST. GET đưa mật khẩu vào địa chỉ yêu cầu và có thể vào nhật ký máy chủ. Máy chủ gốc hiện dùng HTTP.&lt;/small&gt;&lt;/p&gt;&lt;details&gt;&lt;summary&gt;Dùng phiên có sẵn để kiểm tra riêng phần tìm video&lt;/summary&gt;&lt;p&gt;Nếu đăng nhập API lỗi, có thể nhập jsession còn hiệu lực lấy từ web gốc. Không gửi phiên này cho người khác.&lt;/p&gt;&lt;input id=&quot;sessionInput&quot; type=&quot;password&quot; placeholder=&quot;jsession còn hiệu lực&quot; autocomplete=&quot;off&quot;&gt;&lt;button id=&quot;useSession&quot; style=&quot;margin-top:10px&quot;&gt;Dùng phiên và lấy thiết bị&lt;/button&gt;&lt;/details&gt;&lt;/section&gt;
+&lt;div id=&quot;status&quot; hidden role=&quot;status&quot;&gt;Chờ tải video.&lt;/div&gt;
+&lt;section&gt;&lt;h2&gt;Chọn xe và thời gian&lt;/h2&gt;&lt;small style=&quot;display:block;color:#64748b;margin-bottom:8px&quot;&gt;&lt;/small&gt;&lt;p id=&quot;serialMatchInfo&quot; hidden&gt;Đang đối chiếu serial với tab Danh sách xe…&lt;/p&gt;&lt;p class=&quot;download-notice&quot; role=&quot;note&quot;&gt;&lt;strong&gt;Chú ý:&lt;/strong&gt; Biển số xe màu &lt;strong style=&quot;color:#111827&quot;&gt;ĐEN&lt;/strong&gt; và màu &lt;strong style=&quot;color:#dc2626&quot;&gt;ĐỎ&lt;/strong&gt; sẽ không tải được video-mở khoá xe trước khi tải.&lt;/p&gt;&lt;form id=&quot;searchForm&quot; class=&quot;grid&quot;&gt;&lt;div&gt;&lt;label for=&quot;vehiclePlate&quot;&gt;Biển số xe&lt;/label&gt;&lt;input id=&quot;vehiclePlate&quot; list=&quot;devices&quot; placeholder=&quot;Nhập hoặc chọn biển số xe&quot; autocomplete=&quot;off&quot; required&gt;&lt;input id=&quot;serial&quot; type=&quot;hidden&quot;&gt;&lt;datalist id=&quot;devices&quot;&gt;&lt;/datalist&gt;&lt;small id=&quot;plate&quot;&gt;&lt;/small&gt;&lt;small id=&quot;vehicleColorStatus&quot; role=&quot;status&quot; style=&quot;display:block;margin-top:6px&quot;&gt;&lt;/small&gt;&lt;div id=&quot;vehicleColorList&quot; style=&quot;display:flex;flex-wrap:wrap;gap:6px;max-height:180px;overflow:auto;margin-top:8px&quot;&gt;&lt;/div&gt;&lt;small style=&quot;display:block;margin-top:6px&quot; hidden&gt;Xanh lá: chạy&lt;/small&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;channel&quot;&gt;Kênh&lt;/label&gt;&lt;select id=&quot;channel&quot;&gt;&lt;option value=&quot;0&quot;&gt;Kênh 1&lt;/option&gt;&lt;option value=&quot;1&quot;&gt;Kênh 2&lt;/option&gt;&lt;option value=&quot;2&quot;&gt;Kênh 3&lt;/option&gt;&lt;option value=&quot;-1&quot;&gt;Tất cả kênh&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;input id=&quot;loc&quot; type=&quot;hidden&quot; value=&quot;1&quot;&gt;&lt;div&gt;&lt;label for=&quot;date&quot;&gt;Ngày&lt;/label&gt;&lt;input id=&quot;date&quot; type=&quot;date&quot; required&gt;&lt;/div&gt;&lt;div class=&quot;time-field&quot;&gt;&lt;label for=&quot;begin&quot;&gt;Bắt đầu&lt;/label&gt;&lt;input id=&quot;begin&quot; type=&quot;time&quot; step=&quot;1&quot; value=&quot;00:00:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ bắt đầu một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ bắt đầu một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;time-field&quot;&gt;&lt;label for=&quot;end&quot;&gt;Kết thúc&lt;/label&gt;&lt;input id=&quot;end&quot; type=&quot;time&quot; step=&quot;1&quot; value=&quot;00:10:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ kết thúc một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ kết thúc một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide time-presets&quot;&gt;&lt;span&gt;Độ dài từ giờ bắt đầu&lt;/span&gt;&lt;p role=&quot;note&quot; style=&quot;margin:8px 0;color:#b45309;font-weight:600&quot;&gt;Chú ý: Chỉ nên tải tối đa 10 phút mỗi lần để tiết kiệm data 4G.&lt;/p&gt;&lt;div class=&quot;duration-buttons&quot;&gt;&lt;button type=&quot;button&quot; data-duration=&quot;30&quot;&gt;30 giây&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;60&quot;&gt;1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;120&quot;&gt;2 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;300&quot;&gt;5 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;600&quot;&gt;10 phút&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;rangeTimeSummary&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot; hidden&gt;&lt;label for=&quot;idMode&quot;&gt;Giá trị gửi khi tìm trên máy chủ&lt;/label&gt;&lt;select id=&quot;idMode&quot;&gt;&lt;option value=&quot;plate&quot;&gt;Biển số từ danh sách xe (theo tài liệu API)&lt;/option&gt;&lt;option value=&quot;serial&quot;&gt;Serial (để đối chiếu hệ thống thực tế)&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Tìm video&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Chạm vào ô giờ để chọn; có thể chỉnh đến từng giây.&lt;/small&gt;&lt;/p&gt;&lt;/section&gt;
+&lt;section id=&quot;videoProgressBox&quot; hidden aria-live=&quot;polite&quot;&gt;&lt;strong id=&quot;videoProgressText&quot;&gt;0%&lt;/strong&gt;&lt;progress id=&quot;videoProgressBar&quot; max=&quot;100&quot; value=&quot;0&quot; style=&quot;display:block;width:100%;height:22px;margin-top:10px&quot;&gt;&lt;/progress&gt;&lt;small id=&quot;videoProgressBytes&quot;&gt;&lt;/small&gt;&lt;/section&gt;&lt;section id=&quot;previewSection&quot; hidden&gt;&lt;h2&gt;Xem trước video&lt;/h2&gt;&lt;p id=&quot;previewInfo&quot; hidden&gt;&lt;/p&gt;&lt;video id=&quot;previewPlayer&quot; controls playsinline preload=&quot;metadata&quot; style=&quot;width:100%;max-height:65vh;background:#000;border-radius:8px&quot;&gt;&lt;/video&gt;&lt;p&gt;&lt;button id=&quot;savePreview&quot; type=&quot;button&quot;&gt;Tải video đang xem&lt;/button&gt;&lt;/p&gt;&lt;small&gt;Xem trước cần tải dữ liệu gốc và chuyển sang MP4 trong trình duyệt. Video không có âm thanh.&lt;/small&gt;&lt;/section&gt;&lt;section&gt;&lt;h2&gt;Video tìm được&lt;/h2&gt;&lt;div id=&quot;results&quot; class=&quot;scroll&quot;&gt;Chưa tìm video.&lt;/div&gt;&lt;button id=&quot;tasksButton&quot; hidden style=&quot;margin-top:20px&quot;&gt;Kiểm tra tác vụ tải&lt;/button&gt;&lt;div id=&quot;tasks&quot;&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;section hidden&gt;&lt;h2&gt;Thông tin kiểm tra&lt;/h2&gt;&lt;p&gt;Chuyển đổi chạy trên máy bạn. Hiện hỗ trợ định dạng DVSMEDIADATA đã kiểm tra; mỗi nút xuất một tệp, không tự ghép nhiều bản ghi. Nếu thiếu khung hình khởi tạo, video bắt đầu tại khung hình có thể giải mã đầu tiên. Tệp lớn cần nhiều bộ nhớ.&lt;/p&gt;&lt;p&gt;Nếu hiện “Failed to fetch”, file HTML có thể bị chặn bởi CORS, kết nối hoặc địa chỉ máy chủ. Không thể sửa CORS chỉ bằng HTML. Không tắt bảo mật trình duyệt; dùng máy chủ trung gian nếu cần.&lt;/p&gt;&lt;pre id=&quot;debug&quot;&gt;Chưa có yêu cầu.&lt;/pre&gt;&lt;/section&gt;&lt;/main&gt;
+&lt;script&gt;
+function join(...parts){const n=parts.reduce((s,p)=&gt;s+p.length,0),b=new Uint8Array(n);let o=0;for(const p of parts){b.set(p,o);o+=p.length;}return b;}
+function u32(...v){const b=new Uint8Array(v.length*4),d=new DataView(b.buffer);v.forEach((x,i)=&gt;d.setUint32(i*4,x));return b;}function u16(...v){const b=new Uint8Array(v.length*2),d=new DataView(b.buffer);v.forEach((x,i)=&gt;d.setUint16(i*2,x));return b;}function ascii(s){return new TextEncoder().encode(s);}function box(t,...p){const b=join(...p);return join(u32(b.length+8),ascii(t),b);}function full(t,ver,flags,...p){return box(t,new Uint8Array([ver,flags&gt;&gt;16&amp;255,flags&gt;&gt;8&amp;255,flags&amp;255]),...p);}
+function nals(data){let found=[],start=-1;for(let i=0;i+3&lt;=data.length;i++){let n=0;if(data[i]===0&amp;&amp;data[i+1]===0){if(data[i+2]===1)n=3;else if(data[i+2]===0&amp;&amp;data[i+3]===1)n=4;}if(n){if(start&gt;=0)found.push(data.subarray(start,i));start=i+n;i+=n-1;}}if(start&gt;=0)found.push(data.subarray(start));return found.filter(x=&gt;x.length);}
+function dimensions(sps){const raw=[];for(let i=1;i&lt;sps.length;i++){if(i&gt;=3&amp;&amp;sps[i]===3&amp;&amp;sps[i-1]===0&amp;&amp;sps[i-2]===0)continue;raw.push(sps[i]);}let p=0;const bit=()=&gt;{if(p&gt;=raw.length*8)throw Error(&#x27;SPS không hợp lệ.&#x27;);return raw[p&gt;&gt;3]&gt;&gt;(7-(p++%8))&amp;1;};const bits=n=&gt;{let v=0;while(n--)v=v*2+bit();return v;};const ue=()=&gt;{let z=0;while(!bit()){if(++z&gt;30)throw Error(&#x27;SPS quá lớn.&#x27;);}return 2**z-1+bits(z);};const se=()=&gt;{const v=ue();return v%2?(v+1)/2:-v/2;};const profile=bits(8);bits(16);ue();let chroma=1,separate=0;if([100,110,122,244,44,83,86,118,128,138,139,134,135].includes(profile)){chroma=ue();if(chroma===3)separate=bit();ue();ue();bit();if(bit())for(let i=0;i&lt;(chroma===3?12:8);i++)if(bit()){let last=8,next=8;for(let j=0;j&lt;(i&lt;6?16:64);j++){if(next)next=(last+se()+256)%256;last=next||last;}}}ue();const poc=ue();if(poc===0)ue();else if(poc===1){bit();se();se();for(let n=ue();n;n--)se();}ue();bit();const w=(ue()+1)*16;const hmap=ue()+1;const frame=bit();if(!frame)bit();bit();let l=0,r=0,t=0,b=0;if(bit()){l=ue();r=ue();t=ue();b=ue();}const ca=separate?0:chroma;const cx=ca===0?1:ca===3?1:2,cy=(ca===0?1:ca===1?2:1)*(2-frame);return {width:w-(l+r)*cx,height:hmap*16*(2-frame)-(t+b)*cy};}
+function hevcConfig(sps,vps,pps){
+ const raw=[];for(let i=2;i&lt;sps.length;i++){if(i&gt;=4&amp;&amp;sps[i]===3&amp;&amp;sps[i-1]===0&amp;&amp;sps[i-2]===0)continue;raw.push(sps[i]);}
+ let p=0;const bits=n=&gt;{let v=0;while(n--){if(p&gt;=raw.length*8)throw Error(&#x27;SPS H.265 bị thiếu.&#x27;);v=v*2+((raw[p&gt;&gt;3]&gt;&gt;(7-p%8))&amp;1);p++;}return v;};
+ const ue=()=&gt;{let z=0;while(!bits(1)){if(++z&gt;30)throw Error(&#x27;SPS H.265 không hợp lệ.&#x27;);}return 2**z-1+bits(z);};
+ bits(4);const layers=bits(3),nested=bits(1),profile=bits(8),compat=bits(32),constraint=Array.from({length:6},()=&gt;bits(8)),level=bits(8);
+ const flags=[];for(let i=0;i&lt;layers;i++)flags.push([bits(1),bits(1)]);if(layers)for(let i=layers;i&lt;8;i++)bits(2);
+ for(const [profilePresent,levelPresent] of flags){if(profilePresent){bits(32);bits(32);bits(24);}if(levelPresent)bits(8);}
+ ue();const chroma=ue();let separate=0;if(chroma===3)separate=bits(1);const width=ue(),height=ue();let l=0,r=0,t=0,b=0;if(bits(1)){l=ue();r=ue();t=ue();b=ue();}const depthL=ue(),depthC=ue();
+ const subW=chroma===1||chroma===2?2:1,subH=chroma===1?2:1;
+ const config=join(new Uint8Array([1,profile]),u32(compat),new Uint8Array(constraint),new Uint8Array([level,240,0,252,252|chroma,248|depthL,248|depthC,0,0,((layers+1)&lt;&lt;3)|(nested&lt;&lt;2)|3,3]),...[[32,vps],[33,sps],[34,pps]].map(([type,n])=&gt;join(new Uint8Array([128|type]),u16(1,n.length),n)));
+ return {width:width-(l+r)*(separate?1:subW),height:height-(t+b)*(separate?1:subH),config};
+}
+function legacyToDVS(buffer,apiStart){
+ const bytes=new Uint8Array(buffer),view=new DataView(buffer);
+ if(bytes.length&lt;544)throw Error(&#x27;Dữ liệu video thiết bị bị thiếu.&#x27;);
+ const start=Number.isFinite(apiStart)?apiStart:Date.UTC(2000+bytes[37],bytes[38]-1,bytes[39],bytes[40],bytes[41],bytes[42])/1000;
+ const chunks=[join(ascii(&#x27;DVSMEDIADATA&#x27;),new Uint8Array(32))];let firstTick=null,count=0;
+ for(let pos=512;pos+32&lt;=bytes.length;pos++){
+  if(bytes[pos]!==0||![48,49].includes(bytes[pos+1])||bytes[pos+2]!==100||bytes[pos+3]!==99)continue;
+  const len=view.getUint32(pos+4,true);if(!len||len&gt;16*1024*1024)continue;
+  // A record must start with Annex B video data, not merely resemble a marker.
+  const q=pos+32;if(q+4&gt;bytes.length)break;
+  if(bytes[q]!==0||bytes[q+1]!==0||!(bytes[q+2]===1||(bytes[q+2]===0&amp;&amp;bytes[q+3]===1)))continue;
+  if(pos+32+len&gt;bytes.length){if(count)break;throw Error(&#x27;Không có khung hình hoàn chỉnh. Dữ liệu tải bị thiếu.&#x27;);}
+  const payload=bytes.subarray(pos+32,pos+32+len);
+  if(!nals(payload).some(n=&gt;((n[0]&gt;&gt;1)&amp;63)&lt;=31))continue;
+  const tick=view.getUint32(pos+16,true);if(firstTick===null)firstTick=tick;
+  const ts=start+((tick-firstTick)&gt;&gt;&gt;0)/1e6;
+  const header=new Uint8Array(16),hv=new DataView(header.buffer);header.set([80,72,16,0]);hv.setUint32(4,len,true);hv.setBigUint64(8,BigInt(Math.round(ts*1e6)),true);
+  chunks.push(header,payload);count++;pos+=31+len;
+ }
+ if(!count)throw Error(&#x27;Không tìm thấy khung hình H.265 trong dữ liệu thiết bị.&#x27;);
+ return join(...chunks).buffer;
+}
+function remuxDVS(buffer,channel,begin,end,apiStart){
+ const magic=new Uint8Array(buffer);if(magic[0]===120&amp;&amp;magic[1]===86&amp;&amp;magic[2]===52&amp;&amp;magic[3]===18){buffer=legacyToDVS(buffer,apiStart);channel=0;}
+ const bytes=new Uint8Array(buffer),view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);if(ascii(&#x27;DVSMEDIADATA&#x27;).some((x,i)=&gt;bytes[i]!==x))throw Error(&#x27;File không phải định dạng DVSMEDIADATA đã kiểm tra.&#x27;);if(!Number.isInteger(channel)||channel&lt;0||channel&gt;15)throw Error(&#x27;Kênh không hợp lệ.&#x27;);let pos=44,frames=[],sps=null,pps=null,vps=null,hevc=false;
+ while(pos&lt;bytes.length){if(pos+16&gt;bytes.length||bytes[pos]!==80||bytes[pos+1]!==72)throw Error(&#x27;File bị thiếu hoặc cấu trúc chưa hỗ trợ tại byte &#x27;+pos);const type=bytes[pos+2],len=view.getUint32(pos+4,true),ts=Number(view.getBigUint64(pos+8,true))/1e6;if(pos+16+len&gt;bytes.length)throw Error(&#x27;File tải chưa đủ dữ liệu.&#x27;);if(type===16+channel){const ns=nals(bytes.subarray(pos+16,pos+16+len));for(const n of ns){if(((n[0]&gt;&gt;1)&amp;63)===32){vps=n;hevc=true;}if(hevc){if(((n[0]&gt;&gt;1)&amp;63)===33)sps=n;if(((n[0]&gt;&gt;1)&amp;63)===34)pps=n;}else{if((n[0]&amp;31)===7)sps=n;if((n[0]&amp;31)===8)pps=n;}}
+ const picture=ns.some(n=&gt;hevc?((n[0]&gt;&gt;1)&amp;63)&lt;=31:[1,5].includes(n[0]&amp;31));
+ if(picture)frames.push({ts,key:ns.some(n=&gt;hevc?[16,17,18,19,20,21].includes((n[0]&gt;&gt;1)&amp;63):(n[0]&amp;31)===5),data:join(...ns.filter(n=&gt;hevc?((n[0]&gt;&gt;1)&amp;63)&lt;=31:![7,8,9].includes(n[0]&amp;31)).map(n=&gt;join(u32(n.length),n)))});}pos+=16+len;}
+ if(!frames.length||!sps||!pps)throw Error(&#x27;Không có hình có thể giải mã ở kênh &#x27;+(channel+1)+&#x27;.&#x27;);if(!(begin&lt;end))throw Error(&#x27;Khoảng giờ không hợp lệ.&#x27;);const before=frames.map((f,i)=&gt;f.key&amp;&amp;f.ts&lt;=begin?i:-1).filter(i=&gt;i&gt;=0);let first=before.at(-1);if(first===undefined)first=frames.findIndex(f=&gt;f.key&amp;&amp;f.ts&lt;end);if(first===undefined||first&lt;0)throw Error(&#x27;Không có khung hình khởi tạo trong khoảng chọn.&#x27;);const selected=frames.slice(first).filter(f=&gt;f.ts&lt;end);if(!selected.length)throw Error(&#x27;Không có hình trong khoảng chọn.&#x27;);const mediaStart=selected[0].ts;const actualBegin=Math.max(begin,mediaStart),actualEnd=Math.min(end,frames.at(-1).ts+0.04);if(actualBegin&gt;=actualEnd)throw Error(&#x27;Khoảng chọn nằm ngoài bản ghi.&#x27;);const durations=selected.map((f,i)=&gt;Math.max(1,Math.round(((selected[i+1]?.ts??Math.min(f.ts+0.04,actualEnd))-f.ts)*1e6)));const duration=Math.round((actualEnd-actualBegin)*1000),mediaDuration=durations.reduce((a,b)=&gt;a+b,0),mediaOffset=Math.round((actualBegin-mediaStart)*1e6);const dim=hevc?hevcConfig(sps,vps,pps):dimensions(sps);const avcC=hevc?box(&#x27;hvcC&#x27;,dim.config):box(&#x27;avcC&#x27;,new Uint8Array([1,sps[1],sps[2],sps[3],255,225]),u16(sps.length),sps,new Uint8Array([1]),u16(pps.length),pps);const matrix=u32(65536,0,0,0,65536,0,0,0,1073741824);
+ const mvhd=full(&#x27;mvhd&#x27;,0,0,u32(0,0,1000,duration,65536),u16(256,0),u32(0,0),matrix,new Uint8Array(24),u32(2));const tkhd=full(&#x27;tkhd&#x27;,0,7,u32(0,0,1,0,duration,0,0),u16(0,0,0,0),matrix,u32(dim.width*65536,dim.height*65536));const edts=box(&#x27;edts&#x27;,full(&#x27;elst&#x27;,0,0,u32(1,duration,mediaOffset),u16(1,0)));const mdhd=full(&#x27;mdhd&#x27;,0,0,u32(0,0,1000000,mediaDuration),u16(0x55c4,0));const hdlr=full(&#x27;hdlr&#x27;,0,0,u32(0),ascii(&#x27;vide&#x27;),new Uint8Array(12),ascii(&#x27;Video\0&#x27;));const avc1=box(hevc?&#x27;hvc1&#x27;:&#x27;avc1&#x27;,new Uint8Array(6),u16(1),new Uint8Array(16),u16(dim.width,dim.height),u32(0x480000,0x480000,0),u16(1),new Uint8Array(32),u16(24,65535),avcC);const stsd=full(&#x27;stsd&#x27;,0,0,u32(1),avc1);const runs=[];for(const d of durations){const prev=runs.at(-1);if(prev&amp;&amp;prev[1]===d)prev[0]++;else runs.push([1,d]);}const stts=full(&#x27;stts&#x27;,0,0,u32(runs.length),...runs.map(r=&gt;u32(...r)));const stsc=full(&#x27;stsc&#x27;,0,0,u32(1,1,selected.length,1));const stsz=full(&#x27;stsz&#x27;,0,0,u32(0,selected.length),...selected.map(f=&gt;u32(f.data.length)));const stss=full(&#x27;stss&#x27;,0,0,u32(selected.filter(f=&gt;f.key).length),...selected.map((f,i)=&gt;f.key?u32(i+1):new Uint8Array()));const ftyp=box(&#x27;ftyp&#x27;,ascii(&#x27;isom&#x27;),u32(512),ascii(hevc?&#x27;isomiso2hvc1mp41&#x27;:&#x27;isomiso2avc1mp41&#x27;));const makeMoov=offset=&gt;box(&#x27;moov&#x27;,mvhd,box(&#x27;trak&#x27;,tkhd,edts,box(&#x27;mdia&#x27;,mdhd,hdlr,box(&#x27;minf&#x27;,full(&#x27;vmhd&#x27;,0,1,u16(0,0,0,0)),box(&#x27;dinf&#x27;,full(&#x27;dref&#x27;,0,0,u32(1),full(&#x27;url &#x27;,0,1))),box(&#x27;stbl&#x27;,stsd,stts,stsc,stsz,full(&#x27;stco&#x27;,0,0,u32(1,offset)),stss)))));const moov=makeMoov(0);const result=join(ftyp,makeMoov(ftyp.length+moov.length+8),box(&#x27;mdat&#x27;,...selected.map(f=&gt;f.data)));return {bytes:result,actualBegin,actualEnd,duration:duration/1000,width:dim.width,height:dim.height};
+}
+
+
+&#x27;use strict&#x27;;
+const $=id=&gt;document.getElementById(id);let session=&#x27;&#x27;,vehicles=[],files=[],searchCriteria=null;
+$(&#x27;date&#x27;).value=new Intl.DateTimeFormat(&#x27;en-CA&#x27;,{timeZone:&#x27;Asia/Ho_Chi_Minh&#x27;,year:&#x27;numeric&#x27;,month:&#x27;2-digit&#x27;,day:&#x27;2-digit&#x27;}).format(new Date());
+const show=(s,error=false)=&gt;{$(&#x27;status&#x27;).textContent=s;$(&#x27;status&#x27;).style.background=error?&#x27;#ffe5e8&#x27;:&#x27;#e4efff&#x27;;};
+function scrub(v){if(Array.isArray(v))return v.map(scrub);if(v&amp;&amp;typeof v===&#x27;object&#x27;)return Object.fromEntries(Object.entries(v).map(([k,x])=&gt;[k,/password|jsession|JSESSIONID/i.test(k)?&#x27;[ẩn]&#x27;:scrub(x)]));return typeof v===&#x27;string&#x27;?v.replace(/([?&amp;](?:jsession|password)=)[^&amp;\s]*/gi,&#x27;$1[ẩn]&#x27;):v;}
+async function api(name,params,method=$(&#x27;method&#x27;).value){const base=new URL($(&#x27;base&#x27;).value);if(![&#x27;http:&#x27;,&#x27;https:&#x27;].includes(base.protocol)||base.username||base.password)throw Error(&#x27;Địa chỉ máy chủ không hợp lệ.&#x27;);const url=new URL(&#x27;/StandardApiAction_&#x27;+name+&#x27;.action&#x27;,base);const body=new URLSearchParams(params);const started=Date.now();$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,method,params:scrub(params)},null,2);let response;try{response=await fetch(method===&#x27;GET&#x27;?url+&#x27;?&#x27;+body:url,{method, ...(method===&#x27;POST&#x27;?{headers:{&#x27;Content-Type&#x27;:&#x27;application/x-www-form-urlencoded&#x27;},body}:{}),signal:AbortSignal.timeout(60000)});}catch(e){throw Error(&#x27;Không nhận được phản hồi API &#x27;+name+&#x27;. Có thể bị CORS, mất kết nối hoặc hết thời gian. Chi tiết: &#x27;+e.message);}const text=await response.text();let data;try{data=JSON.parse(text);}catch{$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,response:text.slice(0,2000)},null,2);throw Error(&#x27;HTTP &#x27;+response.status+&#x27;: phản hồi không phải JSON.&#x27;);}$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,elapsedMs:Date.now()-started,response:scrub(data)},null,2);if(!response.ok||String(data.result)!==&#x27;0&#x27;)throw Error(&#x27;API &#x27;+name+&#x27; trả mã &#x27;+(data.result??response.status)+&#x27;.&#x27;);return data;}
+async function run(fn){document.querySelectorAll(&#x27;button&#x27;).forEach(x=&gt;x.disabled=true);show(&#x27;Đang gửi yêu cầu…&#x27;);try{await fn();}catch(e){failVideoProgress(e.message);show(e.message,true);}finally{document.querySelectorAll(&#x27;button&#x27;).forEach(x=&gt;x.disabled=false);}}
+let allowedVehicleSerials=new Map(),lastAllowedSerials=&#x27;&#x27;;
+function normalizeVehicleSerial(value){const serial=String(value??&#x27;&#x27;).trim();return /^\d{8,}$/.test(serial)?serial.slice(-8):serial;}
+let matchedDevicesCache=null;
+function list(){return matchedDevicesCache??(matchedDevicesCache=vehicles.flatMap(v=&gt;(v.dl||[]).map(d=&gt;({...d,plate:v.nm}))).filter(d=&gt;allowedVehicleSerials.has(normalizeVehicleSerial(d.id))).map(d=&gt;({...d,matchedPlate:allowedVehicleSerials.get(normalizeVehicleSerial(d.id))})));}
+function refreshMatchedDevices(){
+matchedDevicesCache=null;
+$(&#x27;devices&#x27;).replaceChildren();
+for(const d of list()){const o=document.createElement(&#x27;option&#x27;);o.value=d.matchedPlate;o.label=d.matchedPlate;$(&#x27;devices&#x27;).append(o);}
+if(!selected()){$(&#x27;vehiclePlate&#x27;).value=&#x27;&#x27;;$(&#x27;serial&#x27;).value=&#x27;&#x27;;$(&#x27;channel&#x27;).replaceChildren();files=[];searchCriteria=null;$(&#x27;results&#x27;).textContent=&#x27;Chưa có video .&#x27;;clearPreview();}
+$(&#x27;vehiclePlate&#x27;).dispatchEvent(new Event(&#x27;input&#x27;));
+$(&#x27;serialMatchInfo&#x27;).textContent=&#x27;Có &#x27;+list().length+&#x27; thiết bị trùng serial. Thiết bị không trùng đã bị ẩn. Nếu chưa có thiết bị, hãy mở tab Danh sách xe để lấy danh sách rồi đăng nhập camera.&#x27;;
+}
+window.addEventListener(&#x27;message&#x27;,event=&gt;{
+if(event.source!==parent||event.data?.type!==&#x27;V13_VIDEO_VEHICLE_SERIALS&#x27;)return;
+const serialSignature=JSON.stringify(event.data.vehicles||[]);
+if(serialSignature===lastAllowedSerials)return;lastAllowedSerials=serialSignature;
+allowedVehicleSerials=new Map((event.data.vehicles||[]).map(d=&gt;[normalizeVehicleSerial(d.serial),String(d.plate||&#x27;&#x27;)]).filter(([serial,plate])=&gt;serial&amp;&amp;plate));
+refreshMatchedDevices();
+});
+let cameraMainActive=false,cameraPanelVisible=false,cameraAuthGeneration=0,cameraInitBusy=false,cameraInitTimer=null;
+const nextCameraPaint=()=&gt;new Promise(resolve=&gt;requestAnimationFrame(()=&gt;setTimeout(resolve,0)));
+function cameraInitStep(text){
+ clearInterval(cameraInitTimer);const started=Date.now();
+ $(&#x27;cameraInitStatus&#x27;).hidden=false;
+ $(&#x27;cameraInitStatus&#x27;).textContent=text;
+ cameraInitTimer=setInterval(()=&gt;{const seconds=Math.floor((Date.now()-started)/1000);$(&#x27;cameraInitStatus&#x27;).textContent=text+&#x27; · &#x27;+seconds+&#x27; giây&#x27;+(seconds&gt;=3?&#x27; · Đang xử lý, vui lòng chờ…&#x27;:&#x27;&#x27;);},1000);
+}
+async function prepareCameraPanel(){
+ if(cameraInitBusy||!cameraMainActive||!cameraPanelVisible)return;
+ cameraInitBusy=true;const generation=cameraAuthGeneration;
+ const check=()=&gt;{if(generation!==cameraAuthGeneration||!cameraMainActive||!cameraPanelVisible)throw Error(&#x27;CAMERA_INIT_CANCELLED&#x27;);};
+ try{
+  cameraInitStep(&#x27;Bước 1/4: Chuẩn bị giao diện tải video…&#x27;);await nextCameraPaint();check();
+  cameraInitStep(&#x27;Bước 2/4: Đăng nhập camera…&#x27;);await nextCameraPaint();check();
+  if(!session){
+   const data=await api(&#x27;login&#x27;,{account:&#x27;CTYSAIGON1&#x27;,password:&#x27;0933330018&#x27;},&#x27;POST&#x27;);check();
+   session=data.jsession||data.JSESSIONID||&#x27;&#x27;;if(!session)throw Error(&#x27;Đăng nhập camera không trả jsession.&#x27;);
+  }
+  cameraInitStep(&#x27;Bước 3/4: Lấy thiết bị và đối chiếu danh sách xe…&#x27;);await nextCameraPaint();check();
+  if(!vehicles.length){const data=await api(&#x27;queryUserVehicle&#x27;,{jsession:session},&#x27;POST&#x27;);check();vehicles=data.vehicles||[];}
+  refreshMatchedDevices();$(&#x27;account&#x27;).value=&#x27;CTYSAIGON1&#x27;;$(&#x27;password&#x27;).value=&#x27;&#x27;;
+  cameraInitStep(&#x27;Bước 4/4: Lấy trạng thái và cập nhật màu biển số…&#x27;);await nextCameraPaint();check();
+  const ok=await startVehicleStatusPoll();check();
+  clearInterval(cameraInitTimer);
+  $(&#x27;cameraInitStatus&#x27;).hidden=ok!==false;
+  $(&#x27;cameraInitStatus&#x27;).textContent=ok===false?&#x27;Đã lấy thiết bị. Chưa lấy được trạng thái màu; hệ thống sẽ thử lại sau 15 giây.&#x27;:&#x27;Sẵn sàng · &#x27;+list().length+&#x27; thiết bị trùng danh sách xe.&#x27;;
+ }catch(e){
+  if(generation===cameraAuthGeneration){clearInterval(cameraInitTimer);if(e.message!==&#x27;CAMERA_INIT_CANCELLED&#x27;){$(&#x27;cameraInitStatus&#x27;).hidden=false;$(&#x27;cameraInitStatus&#x27;).textContent=&#x27;Không hoàn thành bước chuẩn bị: &#x27;+e.message+&#x27; · Mở lại tab để thử lại hoặc mở lại trang.&#x27;;}}
+ }finally{cameraInitBusy=false;if(generation!==cameraAuthGeneration&amp;&amp;cameraPanelVisible&amp;&amp;cameraMainActive)setTimeout(prepareCameraPanel,0);}
+}
+window.addEventListener(&#x27;message&#x27;,event=&gt;{
+ if(event.source!==parent)return;
+ if(event.data?.type===&#x27;V14_VIDEO_MAIN_AUTH&#x27;){
+  const active=event.data.active===true;if(active===cameraMainActive)return;cameraMainActive=active;
+  ++cameraAuthGeneration;clearInterval(cameraInitTimer);stopVehicleStatusPoll();
+  if(!active){session=&#x27;&#x27;;vehicles=[];files=[];searchCriteria=null;clearPreview();refreshMatchedDevices();$(&#x27;cameraInitStatus&#x27;).textContent=&#x27;User chính đã đăng xuất. Phiên camera đã được xóa.&#x27;;}
+  else if(cameraPanelVisible)prepareCameraPanel();
+ }
+ if(event.data?.type===&#x27;V14_VIDEO_PANEL_VISIBLE&#x27;){
+  const visible=event.data.visible===true;if(visible===cameraPanelVisible)return;cameraPanelVisible=visible;
+  if(visible)prepareCameraPanel();else{++cameraAuthGeneration;clearInterval(cameraInitTimer);pauseVehicleStatusPoll();}
+ }
+});
+parent.postMessage({type:&#x27;V13_VIDEO_REQUEST_SERIALS&#x27;},&#x27;*&#x27;);
+
+const vehicleLiveStates=new Map();
+let vehiclePollTimer=null,vehiclePollAbort=null,vehiclePollEpoch=0;
+function vehicleColorState(d){
+ const x=vehicleLiveStates.get(String(d.id));
+ if(!x)return {color:&#x27;#64748b&#x27;,text:&#x27;Chưa có trạng thái&#x27;};
+ if(Date.now()-x.receivedAt&gt;45000)return {color:&#x27;#64748b&#x27;,text:&#x27;Trạng thái chưa cập nhật&#x27;};
+ const v=x.value;
+ if(v.ol===undefined||v.ol===null)return {color:&#x27;#64748b&#x27;,text:&#x27;Thiếu trạng thái kết nối&#x27;};
+ if(Number(v.ol)!==1)return {color:&#x27;#111827&#x27;,text:&#x27;Offline&#x27;};
+ if(v.s1===undefined||v.s1===null)return {color:&#x27;#64748b&#x27;,text:&#x27;Thiếu dữ liệu trạng thái&#x27;};
+ const s1=Number(v.s1)&gt;&gt;&gt;0,storage=(s1&gt;&gt;&gt;8)&amp;3;
+ if(!(s1&gt;&gt;&gt;31)&amp;&amp;storage===0)return {color:&#x27;#dc2626&#x27;,text:&#x27;Thiếu SD hoặc SD lỗi&#x27;};
+ if(!(s1&amp;1))return {color:&#x27;#a21caf&#x27;,text:&#x27;Mất kết nối GPS&#x27;};
+ if(!(s1&amp;2))return {color:&#x27;#a16207&#x27;,text:&#x27;ACC tắt&#x27;};
+ if(v.sp===undefined||v.sp===null)return {color:&#x27;#64748b&#x27;,text:&#x27;Thiếu dữ liệu tốc độ&#x27;};
+ const speed=Number(v.sp)/10;
+ return speed&gt;0?{color:&#x27;#15803d&#x27;,text:&#x27;Đang chạy · &#x27;+speed+&#x27; km/h&#x27;}:{color:&#x27;#2563eb&#x27;,text:&#x27;Dừng · ACC bật&#x27;};
+}
+const vehicleColorButtons=new Map();
+function renderVehicleColors(){
+ const current=selected(),input=$(&#x27;vehiclePlate&#x27;),status=$(&#x27;vehicleColorStatus&#x27;);
+ const color=current?vehicleColorState(current):{color:&#x27;#14223c&#x27;,text:&#x27;&#x27;};
+ if(input.style.color!==color.color){input.style.color=color.color;input.style.borderColor=color.color;}
+ input.style.fontWeight=&#x27;700&#x27;;status.style.color=color.color;
+ if(status.textContent!==color.text)status.textContent=color.text;
+ const box=$(&#x27;vehicleColorList&#x27;),keep=new Set(),fragment=document.createDocumentFragment();
+ for(const d of list()){
+  const id=String(d.id),c=vehicleColorState(d);keep.add(id);
+  let button=vehicleColorButtons.get(id);
+  if(!button){
+   button=document.createElement(&#x27;button&#x27;);button.type=&#x27;button&#x27;;
+   button.style.cssText=&#x27;width:auto;padding:6px 10px;background:white;font-size:14px;font-weight:700&#x27;;
+   button.onclick=()=&gt;{input.value=button.dataset.plate;input.dispatchEvent(new Event(&#x27;input&#x27;));};
+   vehicleColorButtons.set(id,button);fragment.append(button);
+  }
+  button.dataset.plate=d.matchedPlate;
+  if(button.textContent!==d.matchedPlate)button.textContent=d.matchedPlate;
+  if(button.title!==c.text)button.title=c.text;
+  if(button.dataset.color!==c.color){button.dataset.color=c.color;button.style.color=c.color;button.style.borderColor=c.color;}
+ }
+ for(const [id,button] of vehicleColorButtons)if(!keep.has(id)){button.remove();vehicleColorButtons.delete(id);}
+ if(fragment.childNodes.length)box.append(fragment);
+}
+function pauseVehicleStatusPoll(){++vehiclePollEpoch;clearTimeout(vehiclePollTimer);vehiclePollAbort?.abort();}
+function stopVehicleStatusPoll(){
+ ++vehiclePollEpoch;clearTimeout(vehiclePollTimer);vehiclePollAbort?.abort();vehicleLiveStates.clear();renderVehicleColors();
+}
+function startVehicleStatusPoll(){
+ pauseVehicleStatusPoll();const epoch=vehiclePollEpoch;
+ async function poll(){
+  if(epoch!==vehiclePollEpoch||!session||!cameraPanelVisible)return;
+  if(document.hidden){vehiclePollTimer=setTimeout(poll,15000);return;}
+  const token=session,ids=list().map(d=&gt;String(d.id));
+  try{
+   for(let i=0;i&lt;ids.length;i+=50){
+    if(epoch!==vehiclePollEpoch||session!==token)return;
+    const controller=new AbortController();vehiclePollAbort=controller;const timeout=setTimeout(()=&gt;controller.abort(),15000);
+    try{
+     const response=await fetch(new URL(&#x27;/StandardApiAction_getDeviceStatus.action&#x27;,$(&#x27;base&#x27;).value),{method:&#x27;POST&#x27;,headers:{&#x27;Content-Type&#x27;:&#x27;application/x-www-form-urlencoded&#x27;},body:new URLSearchParams({jsession:token,devIdno:ids.slice(i,i+50).join(&#x27;,&#x27;),geoaddress:&#x27;0&#x27;}),signal:vehiclePollAbort.signal});
+     const data=await response.json();if(!response.ok||String(data.result)!==&#x27;0&#x27;||!Array.isArray(data.status))throw Error(&#x27;Không lấy được trạng thái xe&#x27;);
+     if(epoch!==vehiclePollEpoch||session!==token)return;
+     for(const v of data.status)vehicleLiveStates.set(String(v.id),{value:v,receivedAt:Date.now()});
+    }finally{clearTimeout(timeout);}
+   }
+  return true;
+  }catch(e){if(epoch===vehiclePollEpoch)$(&#x27;vehicleColorStatus&#x27;).textContent=&#x27;Chưa cập nhật được trạng thái xe. Hệ thống sẽ thử lại.&#x27;;return false;}
+  finally{if(epoch===vehiclePollEpoch&amp;&amp;session===token&amp;&amp;cameraPanelVisible){renderVehicleColors();vehiclePollTimer=setTimeout(poll,15000);}}
+ }
+ return poll();
+}
+$(&#x27;vehiclePlate&#x27;).addEventListener(&#x27;input&#x27;,renderVehicleColors);
+
+function normalizePlate(value){return String(value||&#x27;&#x27;).toUpperCase().replace(/[^A-Z0-9]/g,&#x27;&#x27;);}
+function selected(){const wanted=normalizePlate($(&#x27;vehiclePlate&#x27;).value);if(!wanted)return undefined;const matches=list().filter(d=&gt;normalizePlate(d.matchedPlate)===wanted);return matches.length===1?matches[0]:undefined;}
+async function load(){const d=await api(&#x27;queryUserVehicle&#x27;,{jsession:session});vehicles=d.vehicles||[];refreshMatchedDevices();startVehicleStatusPoll();show(&#x27;Đã lấy &#x27;+list().length+&#x27; thiết bị. Chọn biển số xe để tìm video.&#x27;);}
+$(&#x27;loginForm&#x27;).onsubmit=e=&gt;{e.preventDefault();run(async()=&gt;{const d=await api(&#x27;login&#x27;,{account:$(&#x27;account&#x27;).value.trim(),password:$(&#x27;password&#x27;).value});session=d.jsession||d.JSESSIONID||&#x27;&#x27;;if(!session)throw Error(&#x27;Đăng nhập không trả jsession.&#x27;);$(&#x27;password&#x27;).value=&#x27;&#x27;;show(&#x27;Đăng nhập thành công. Đang lấy thiết bị…&#x27;);await load();});};
+$(&#x27;useSession&#x27;).onclick=()=&gt;run(async()=&gt;{session=$(&#x27;sessionInput&#x27;).value.trim();$(&#x27;sessionInput&#x27;).value=&#x27;&#x27;;if(!session)throw Error(&#x27;Nhập jsession.&#x27;);await load();});
+$(&#x27;vehiclePlate&#x27;).oninput=()=&gt;{const d=selected();$(&#x27;serial&#x27;).value=d?String(d.id):&#x27;&#x27;;$(&#x27;plate&#x27;).textContent=d?d.cc+&#x27; kênh&#x27;:&#x27;&#x27;;if(d){$(&#x27;channel&#x27;).replaceChildren();for(let i=0;i&lt;Math.min(Number(d.cc)||0,64);i++){const o=document.createElement(&#x27;option&#x27;);o.value=i;o.textContent=&#x27;Kênh &#x27;+(i+1)+&#x27; · &#x27;+(d.cn?.split(&#x27;,&#x27;)[i]||&#x27;&#x27;);$(&#x27;channel&#x27;).append(o);}const o=document.createElement(&#x27;option&#x27;);o.value=&#x27;-1&#x27;;o.textContent=&#x27;Tất cả kênh&#x27;;$(&#x27;channel&#x27;).append(o);}};
+function seconds(v){if(!/^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/.test(v))throw Error(&#x27;Chọn thời gian hợp lệ.&#x27;);const a=v.split(&#x27;:&#x27;).map(Number);return a[0]*3600+a[1]*60+(a[2]||0);}function time(n){return new Date((Number(n)%86400)*1000).toISOString().slice(11,19)+(Number(n)&gt;=86400?&#x27; (+ngày)&#x27;:&#x27;&#x27;);}
+
+function inputClock(n){return [Math.floor(n/3600),Math.floor(n%3600/60),n%60].map(v=&gt;String(v).padStart(2,&#x27;0&#x27;)).join(&#x27;:&#x27;);}
+let videoProgressActive=false,lastVideoSelection=&#x27;&#x27;;
+function resetVideoProgress(){
+ videoProgressActive=false;
+ $(&#x27;videoProgressBox&#x27;).hidden=true;
+ $(&#x27;videoProgressBar&#x27;).value=0;
+ $(&#x27;videoProgressText&#x27;).textContent=&#x27;0%&#x27;;
+ $(&#x27;videoProgressBytes&#x27;).textContent=&#x27;&#x27;;
+}
+function resetProgressOnSelectionChange(){
+ const key=JSON.stringify([&#x27;vehiclePlate&#x27;,&#x27;date&#x27;,&#x27;channel&#x27;,&#x27;begin&#x27;,&#x27;end&#x27;].map(id=&gt;$(id).value));
+ if(key!==lastVideoSelection){lastVideoSelection=key;resetVideoProgress();}
+}
+for(const id of [&#x27;vehiclePlate&#x27;,&#x27;date&#x27;,&#x27;channel&#x27;,&#x27;begin&#x27;,&#x27;end&#x27;]){
+ $(id).addEventListener(&#x27;input&#x27;,resetProgressOnSelectionChange);
+ $(id).addEventListener(&#x27;change&#x27;,resetProgressOnSelectionChange);
+}
+const MAX_VIDEO_SECONDS=600;
+function validateVideoRange(begin,end){
+ const duration=seconds(end)-seconds(begin);
+ if(duration&lt;=0)throw Error(&#x27;Giờ kết thúc phải sau giờ bắt đầu.&#x27;);
+ if(duration&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Chỉ nên tải tối đa 10 phút mỗi lần. Hãy giảm giờ kết thúc.&#x27;);
+ return duration;
+}
+function updateTimeSummary(){
+ resetProgressOnSelectionChange();
+ const summary=$(&#x27;rangeTimeSummary&#x27;);
+ try{
+  const begin=seconds($(&#x27;begin&#x27;).value),end=seconds($(&#x27;end&#x27;).value),duration=end-begin;
+  const rangeError=duration&lt;=0?&#x27;Giờ kết thúc phải sau giờ bắt đầu.&#x27;:duration&gt;MAX_VIDEO_SECONDS?&#x27;Chỉ nên tải tối đa 10 phút mỗi lần. Hãy giảm giờ kết thúc.&#x27;:&#x27;&#x27;;
+  $(&#x27;end&#x27;).setCustomValidity(rangeError);
+  summary.classList.toggle(&#x27;invalid&#x27;,Boolean(rangeError));
+  summary.textContent=rangeError?rangeError:inputClock(begin)+&#x27; → &#x27;+inputClock(end)+&#x27; · &#x27;+(Math.floor(duration/60)?Math.floor(duration/60)+&#x27; phút &#x27;:&#x27;&#x27;)+(duration%60?duration%60+&#x27; giây&#x27;:&#x27;&#x27;);
+  document.querySelectorAll(&#x27;[data-duration]&#x27;).forEach(button=&gt;{const active=duration===Number(button.dataset.duration);button.classList.toggle(&#x27;selected&#x27;,active);button.setAttribute(&#x27;aria-pressed&#x27;,String(active));});
+ }catch(e){$(&#x27;end&#x27;).setCustomValidity(&#x27;&#x27;);summary.textContent=&#x27;Chọn đầy đủ giờ bắt đầu và kết thúc.&#x27;;}
+}
+document.querySelectorAll(&#x27;[data-time-target]&#x27;).forEach(button=&gt;button.addEventListener(&#x27;click&#x27;,()=&gt;{
+ const input=$(button.dataset.timeTarget);try{input.value=inputClock(Math.max(0,Math.min(86399,seconds(input.value)+Number(button.dataset.timeDelta))));updateTimeSummary();}catch(e){input.focus();}
+}));
+document.querySelectorAll(&#x27;[data-duration]&#x27;).forEach(button=&gt;button.addEventListener(&#x27;click&#x27;,()=&gt;{
+ try{const end=seconds($(&#x27;begin&#x27;).value)+Number(button.dataset.duration);if(end&gt;86399){$(&#x27;rangeTimeSummary&#x27;).textContent=&#x27;Đoạn đã chọn vượt qua cuối ngày. Hãy giảm độ dài hoặc đổi giờ bắt đầu.&#x27;;return;}$(&#x27;end&#x27;).value=inputClock(end);updateTimeSummary();}catch(e){$(&#x27;begin&#x27;).focus();}
+}));
+for(const id of [&#x27;begin&#x27;,&#x27;end&#x27;])$(id).addEventListener(&#x27;input&#x27;,updateTimeSummary);
+updateTimeSummary();
+
+$(&#x27;searchForm&#x27;).onsubmit=e=&gt;{e.preventDefault();resetVideoProgress();run(async()=&gt;{if(!session)throw Error(&#x27;Đăng nhập hoặc nhập phiên trước.&#x27;);const d=selected();if(!d)throw Error(&#x27;Biển số chưa có trong danh sách hoặc có nhiều thiết bị trùng biển số. Hãy chọn xe đã đối chiếu.&#x27;);const loc=&#x27;1&#x27;;if(loc!==&#x27;1&#x27;&amp;&amp;$(&#x27;idMode&#x27;).value===&#x27;plate&#x27;&amp;&amp;!d)throw Error(&#x27;Chưa tìm được biển số cho serial. Lấy danh sách xe hoặc thử chế độ serial.&#x27;);const BEG=seconds($(&#x27;begin&#x27;).value),END=seconds($(&#x27;end&#x27;).value);validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const [YEAR,MON,DAY]=$(&#x27;date&#x27;).value.split(&#x27;-&#x27;);const data=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:loc===&#x27;1&#x27;||$(&#x27;idMode&#x27;).value===&#x27;serial&#x27;?$(&#x27;serial&#x27;).value.trim():d.plate,LOC:loc,CHN:$(&#x27;channel&#x27;).value,YEAR,MON,DAY,BEG,END,RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:0,STORE:0});files=data.files||[];searchCriteria={date:$(&#x27;date&#x27;).value,begin:$(&#x27;begin&#x27;).value,end:$(&#x27;end&#x27;).value,channel:Number($(&#x27;channel&#x27;).value),serial:String(d.id),plate:d.matchedPlate,apiPlate:d.plate};render();show(&#x27;Tìm thấy &#x27;+files.length+&#x27; tệp.&#x27;);});};
+function downloadURL(raw){
+ const u=new URL(raw,$(&#x27;base&#x27;).value);
+ if(![&#x27;http:&#x27;,&#x27;https:&#x27;].includes(u.protocol)||u.username||u.password)throw Error(&#x27;Liên kết tải không hợp lệ.&#x27;);
+ // Preserve identifiers and file paths returned by the camera server.
+ return u;
+}
+let lastVideoProgressPaint=0,lastVideoProgressMessage=&#x27;&#x27;;
+function updateVideoProgress(percent,message,bytes=&#x27;&#x27;){
+const now=performance.now();if(videoProgressActive&amp;&amp;message===lastVideoProgressMessage&amp;&amp;percent!==100&amp;&amp;now-lastVideoProgressPaint&lt;120)return;
+lastVideoProgressPaint=now;lastVideoProgressMessage=message;
+videoProgressActive=true;$(&#x27;videoProgressBox&#x27;).hidden=false;
+const bar=$(&#x27;videoProgressBar&#x27;);
+if(percent===null){bar.removeAttribute(&#x27;value&#x27;);$(&#x27;videoProgressText&#x27;).textContent=message;}
+else{const value=Math.max(0,Math.min(100,Math.floor(percent)));bar.value=value;$(&#x27;videoProgressText&#x27;).textContent=value+&#x27;% · &#x27;+message;}
+$(&#x27;videoProgressBytes&#x27;).textContent=bytes;
+}
+function finishVideoProgress(message){updateVideoProgress(100,message);videoProgressActive=false;}
+function failVideoProgress(message){if(videoProgressActive){$(&#x27;videoProgressText&#x27;).textContent=&#x27;Dừng: &#x27;+message;videoProgressActive=false;}}
+function validateVideoHeader(bytes){
+ if(!bytes.length)throw Error(&#x27;Máy chủ trả dữ liệu rỗng, không có video.&#x27;);
+ const signature=new TextDecoder().decode(bytes.subarray(0,12));
+ if((bytes[0]===120&amp;&amp;bytes[1]===86&amp;&amp;bytes[2]===52&amp;&amp;bytes[3]===18)||signature===&#x27;DVSMEDIADATA&#x27;||new TextDecoder().decode(bytes.subarray(4,8))===&#x27;ftyp&#x27;)return;
+ const hex=Array.from(bytes.subarray(0,32),b=&gt;b.toString(16).padStart(2,&#x27;0&#x27;)).join(&#x27; &#x27;);
+ const text=new TextDecoder().decode(bytes.subarray(0,64)).trimStart();
+ let format=&#x27;dữ liệu nhị phân khác&#x27;;
+ if(text.startsWith(&#x27;{&#x27;)||text.startsWith(&#x27;[&#x27;))format=&#x27;phản hồi JSON của máy chủ&#x27;;
+ else if(text.startsWith(&#x27;&lt;&#x27;))format=&#x27;trang HTML của máy chủ&#x27;;
+ else if(new TextDecoder().decode(bytes.subarray(4,8))===&#x27;ftyp&#x27;)format=&#x27;MP4&#x27;;
+ else if(signature.startsWith(&#x27;GREC&#x27;))format=&#x27;GREC&#x27;;
+ $(&#x27;results&#x27;).querySelector(&#x27;[data-format-error]&#x27;)?.remove();
+ const note=document.createElement(&#x27;p&#x27;);note.dataset.formatError=&#x27;1&#x27;;note.style.cssText=&#x27;color:#b91c1c;overflow-wrap:anywhere&#x27;;
+ note.textContent=&#x27;Dữ liệu nhận được: &#x27;+format+&#x27;. 32 byte đầu: &#x27;+hex;
+ $(&#x27;results&#x27;).prepend(note);
+ let apiDetail=&#x27;&#x27;;
+ if(format===&#x27;phản hồi JSON của máy chủ&#x27;){try{const data=JSON.parse(new TextDecoder().decode(bytes));apiDetail=&#x27; · Mã API: &#x27;+String(data.result??data.code??&#x27;không có&#x27;);}catch{}}
+ throw Error(&#x27;Máy chủ trả &#x27;+format+apiDetail+&#x27;. 32 byte đầu: &#x27;+hex+&#x27;. Không thể chuyển MP4 từ phản hồi này.&#x27;);
+}
+function offerVideoSample(chunks){
+ const limit=262144;let remaining=limit;const parts=[];
+ for(const chunk of chunks){const part=chunk.subarray(0,remaining);parts.push(part);remaining-=part.length;if(!remaining)break;}
+ const blob=new Blob(parts,{type:&#x27;application/octet-stream&#x27;});
+ $(&#x27;results&#x27;).querySelector(&#x27;[data-video-sample]&#x27;)?.remove();
+ const button=document.createElement(&#x27;button&#x27;);button.type=&#x27;button&#x27;;button.dataset.videoSample=&#x27;1&#x27;;button.textContent=&#x27;Tải mẫu dữ liệu để kiểm tra (&#x27;+Math.ceil(blob.size/1024)+&#x27; KB)&#x27;;
+ button.onclick=()=&gt;{const url=URL.createObjectURL(blob);const a=document.createElement(&#x27;a&#x27;);a.href=url;a.download=&#x27;Mau-video-camera.bin&#x27;;document.body.append(a);a.click();a.remove();setTimeout(()=&gt;URL.revokeObjectURL(url),60000);};
+ $(&#x27;results&#x27;).prepend(button);
+}
+async function readVideoWithProgress(response,expectedSize){
+const headerSize=Number(response.headers.get(&#x27;Content-Length&#x27;));
+const total=headerSize&gt;0?headerSize:(Number(expectedSize)&gt;0?Number(expectedSize):0);
+const approximate=!(headerSize&gt;0)&amp;&amp;total&gt;0;
+if(!response.body){updateVideoProgress(null,&#x27;Đang nhận dữ liệu…&#x27;);const buffer=await response.arrayBuffer();validateVideoHeader(new Uint8Array(buffer));return buffer;}
+const reader=response.body.getReader(),chunks=[];let received=0,headerChecked=false;
+try{while(true){const part=await reader.read();if(part.done)break;chunks.push(part.value);received+=part.value.byteLength;
+if(!headerChecked&amp;&amp;received&gt;=16){const header=new Uint8Array(Math.min(received,64));let offset=0;for(const chunk of chunks){const n=Math.min(chunk.length,header.length-offset);header.set(chunk.subarray(0,n),offset);offset+=n;if(offset===header.length)break;}validateVideoHeader(header);headerChecked=true;}
+const detail=(received/1048576).toFixed(1)+&#x27; MB&#x27;+(total?&#x27; / &#x27;+(total/1048576).toFixed(1)+&#x27; MB&#x27;:&#x27;&#x27;)+(approximate?&#x27; (dung lượng dự kiến)&#x27;:&#x27;&#x27;);
+updateVideoProgress(total?Math.min(89,received/total*90):null,&#x27;Đang tải dữ liệu video&#x27;,detail);
+}}catch(error){
+ if(received&gt;0&amp;&amp;received&lt;262144){try{const deadline=Date.now()+10000;while(received&lt;262144&amp;&amp;Date.now()&lt;deadline){let timer;const next=await Promise.race([reader.read(),new Promise(resolve=&gt;{timer=setTimeout(()=&gt;resolve(null),2000);})]);clearTimeout(timer);if(!next||next.done)break;chunks.push(next.value);received+=next.value.byteLength;}}catch{}}
+ if(received&gt;0)offerVideoSample(chunks);
+ try{await reader.cancel();}catch{}throw error;
+}finally{reader.releaseLock();}
+updateVideoProgress(90,&#x27;Đã nhận dữ liệu, chuẩn bị chuyển MP4&#x27;);
+await new Promise(resolve=&gt;setTimeout(resolve,30));
+const buffer=new Uint8Array(received);let offset=0;for(const chunk of chunks){buffer.set(chunk,offset);offset+=chunk.byteLength;}
+validateVideoHeader(buffer);
+chunks.length=0;
+return buffer.buffer;
+}
+function waitPreviewReady(player){return new Promise((resolve,reject)=&gt;{
+let timer;
+function cleanup(){clearTimeout(timer);player.removeEventListener(&#x27;loadeddata&#x27;,ready);player.removeEventListener(&#x27;canplay&#x27;,ready);player.removeEventListener(&#x27;error&#x27;,error);}
+function ready(){cleanup();resolve();}
+function error(){cleanup();reject(Error(&#x27;Trình duyệt không phát được MP4 này. Bạn vẫn có thể tải để mở bằng VLC.&#x27;));}
+player.addEventListener(&#x27;loadeddata&#x27;,ready);player.addEventListener(&#x27;canplay&#x27;,ready);player.addEventListener(&#x27;error&#x27;,error);
+timer=setTimeout(()=&gt;{cleanup();reject(Error(&#x27;Chờ trình phát quá lâu. Bạn có thể tải video đang xem hoặc thử lại.&#x27;));},60000);
+if(player.readyState&gt;=2)ready();
+});}
+
+let preparedVideo=null, previewObjectURL=null;
+function clearPreview(){
+$(&#x27;previewPlayer&#x27;).pause();$(&#x27;previewPlayer&#x27;).removeAttribute(&#x27;src&#x27;);$(&#x27;previewPlayer&#x27;).load();
+if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);
+previewObjectURL=null;preparedVideo=null;$(&#x27;previewSection&#x27;).hidden=true;
+}
+function savePrepared(item){
+const url=URL.createObjectURL(item.blob),a=document.createElement(&#x27;a&#x27;);
+a.href=url;a.download=item.filename;document.body.append(a);a.click();a.remove();
+setTimeout(()=&gt;URL.revokeObjectURL(url),60000);
+}
+const segmentTasks=new Map();
+function segmentTaskParams(file,criteria){
+ validateVideoRange(criteria.begin,criteria.end);
+ const u=downloadURL(file.DownTaskUrl);
+ if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);
+ const params=Object.fromEntries(u.searchParams);
+ const begin=Math.max(seconds(criteria.begin),Number(file.beg)),end=Math.min(seconds(criteria.end),Number(file.end));
+ if(!(begin&lt;end))throw Error(&#x27;Khoảng chọn không nằm trong tệp này.&#x27;);
+ params.jsession=session;params.dtp=&#x27;2&#x27;;
+ params.fbtm=criteria.date+&#x27; &#x27;+inputClock(begin);params.fetm=criteria.date+&#x27; &#x27;+inputClock(end);
+ // sbtm/setm, did and fph remain the source metadata supplied by the server.
+ return params;
+}
+async function getServerSegment(file,criteria){
+ if(!file.DownTaskUrl)throw Error(&#x27;Máy chủ không trả liên kết tải đoạn. Không tải nguyên tệp để tránh tốn 4G.&#x27;);
+ const params=segmentTaskParams(file,criteria);
+ const key=JSON.stringify([session,params.did,params.fph,params.fbtm,params.fetm,params.chn]);
+ let task=segmentTasks.get(key);
+ if(!task){params.lab=&#x27;CameraB-Segment-&#x27;+Date.now()+&#x27;-&#x27;+Math.random().toString(36).slice(2,8);updateVideoProgress(2,&#x27;Đang yêu cầu xe tải đoạn &#x27;+params.fbtm.slice(11)+&#x27;–&#x27;+params.fetm.slice(11));await api(&#x27;addDownloadTask&#x27;,params);task={label:params.lab,params};segmentTasks.set(key,task);}
+ for(let attempt=0;attempt&lt;36;attempt++){
+  const data=await api(&#x27;downloadTasklist&#x27;,{jsession:session,devIdno:params.did,begintime:criteria.date+&#x27; 00:00:00&#x27;,endtime:criteria.date+&#x27; 23:59:59&#x27;,currentPage:1,pageRecords:100});
+  const current=(data.infos||[]).find(t=&gt;t.lab===task.label);
+  if(Number(current?.stu)===3){segmentTasks.delete(key);throw Error(&#x27;Xe tải đoạn thất bại · Mã lỗi &#x27;+current.err);}
+  if(Number(current?.stu)===4){
+   updateVideoProgress(20,&#x27;Đoạn đã lên máy chủ, đang lấy liên kết…&#x27;);
+   const [YEAR,MON,DAY]=criteria.date.split(&#x27;-&#x27;);
+   const result=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:criteria.apiPlate,LOC:2,CHN:params.chn,YEAR,MON,DAY,BEG:seconds(criteria.begin),END:seconds(criteria.end),RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:-1,STORE:0});
+   const segment=(result.files||[]).find(x=&gt;x.DownUrl&amp;&amp;String(x.devIdno)===String(params.did)&amp;&amp;Number(x.chn)===Number(params.chn)&amp;&amp;Number(x.beg)&gt;=seconds(params.fbtm.slice(11))&amp;&amp;Number(x.end)&lt;=seconds(params.fetm.slice(11))&amp;&amp;Number(x.end)&gt;Number(x.beg));
+   if(segment)return segment;
+   updateVideoProgress(20,&#x27;Đang chờ máy chủ lập danh sách đoạn video…&#x27;);
+  }else updateVideoProgress(5,&#x27;Đang chờ xe gửi đoạn video lên máy chủ…&#x27;,current?&#x27;Trạng thái tác vụ: &#x27;+current.stu:&#x27;Đang chờ tác vụ xuất hiện&#x27;);
+  await new Promise(resolve=&gt;setTimeout(resolve,5000));
+ }
+ throw Error(&#x27;Tác vụ chưa hoàn thành. Bấm lại để tiếp tục kiểm tra tác vụ đã tạo.&#x27;);
+}
+function remuxDVS8(buffer,channel,begin,end){
+ const bytes=new Uint8Array(buffer),view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);if(ascii(&#x27;DVSMEDIADATA&#x27;).some((x,i)=&gt;bytes[i]!==x))throw Error(&#x27;File không phải định dạng DVSMEDIADATA đã kiểm tra.&#x27;);if(!Number.isInteger(channel)||channel&lt;0||channel&gt;15)throw Error(&#x27;Kênh không hợp lệ.&#x27;);let pos=44,frames=[],sps=null,pps=null;
+ while(pos&lt;bytes.length){if(pos+16&gt;bytes.length||bytes[pos]!==80||bytes[pos+1]!==72)throw Error(&#x27;File bị thiếu hoặc cấu trúc chưa hỗ trợ tại byte &#x27;+pos);const type=bytes[pos+2],len=view.getUint32(pos+4,true),ts=Number(view.getBigUint64(pos+8,true))/1e6;if(pos+16+len&gt;bytes.length)throw Error(&#x27;File tải chưa đủ dữ liệu.&#x27;);if(type===16+channel){const ns=nals(bytes.subarray(pos+16,pos+16+len));for(const n of ns){if((n[0]&amp;31)===7)sps=n;if((n[0]&amp;31)===8)pps=n;}const picture=ns.some(n=&gt;[1,5].includes(n[0]&amp;31));if(picture)frames.push({ts,key:ns.some(n=&gt;(n[0]&amp;31)===5),data:join(...ns.filter(n=&gt;![7,8,9].includes(n[0]&amp;31)).map(n=&gt;join(u32(n.length),n)))});}pos+=16+len;}
+ if(!frames.length||!sps||!pps)throw Error(&#x27;Không có hình có thể giải mã ở kênh &#x27;+(channel+1)+&#x27;.&#x27;);if(!(begin&lt;end))throw Error(&#x27;Khoảng giờ không hợp lệ.&#x27;);const before=frames.map((f,i)=&gt;f.key&amp;&amp;f.ts&lt;=begin?i:-1).filter(i=&gt;i&gt;=0);let first=before.at(-1);if(first===undefined)first=frames.findIndex(f=&gt;f.key&amp;&amp;f.ts&lt;end);if(first===undefined||first&lt;0)throw Error(&#x27;Không có khung hình khởi tạo trong khoảng chọn.&#x27;);const selected=frames.slice(first).filter(f=&gt;f.ts&lt;end);if(!selected.length)throw Error(&#x27;Không có hình trong khoảng chọn.&#x27;);const mediaStart=selected[0].ts;const actualBegin=Math.max(begin,mediaStart),actualEnd=Math.min(end,frames.at(-1).ts+0.04);if(actualBegin&gt;=actualEnd)throw Error(&#x27;Khoảng chọn nằm ngoài bản ghi.&#x27;);const durations=selected.map((f,i)=&gt;Math.max(1,Math.round(((selected[i+1]?.ts??Math.min(f.ts+0.04,actualEnd))-f.ts)*1e6)));const duration=Math.round((actualEnd-actualBegin)*1000),mediaDuration=durations.reduce((a,b)=&gt;a+b,0),mediaOffset=Math.round((actualBegin-mediaStart)*1e6);const dim=dimensions(sps);const avcC=box(&#x27;avcC&#x27;,new Uint8Array([1,sps[1],sps[2],sps[3],255,225]),u16(sps.length),sps,new Uint8Array([1]),u16(pps.length),pps);const matrix=u32(65536,0,0,0,65536,0,0,0,1073741824);
+ const mvhd=full(&#x27;mvhd&#x27;,0,0,u32(0,0,1000,duration,65536),u16(256,0),u32(0,0),matrix,new Uint8Array(24),u32(2));const tkhd=full(&#x27;tkhd&#x27;,0,7,u32(0,0,1,0,duration,0,0),u16(0,0,0,0),matrix,u32(dim.width*65536,dim.height*65536));const edts=box(&#x27;edts&#x27;,full(&#x27;elst&#x27;,0,0,u32(1,duration,mediaOffset),u16(1,0)));const mdhd=full(&#x27;mdhd&#x27;,0,0,u32(0,0,1000000,mediaDuration),u16(0x55c4,0));const hdlr=full(&#x27;hdlr&#x27;,0,0,u32(0),ascii(&#x27;vide&#x27;),new Uint8Array(12),ascii(&#x27;Video\0&#x27;));const avc1=box(&#x27;avc1&#x27;,new Uint8Array(6),u16(1),new Uint8Array(16),u16(dim.width,dim.height),u32(0x480000,0x480000,0),u16(1),new Uint8Array(32),u16(24,65535),avcC);const stsd=full(&#x27;stsd&#x27;,0,0,u32(1),avc1);const runs=[];for(const d of durations){const prev=runs.at(-1);if(prev&amp;&amp;prev[1]===d)prev[0]++;else runs.push([1,d]);}const stts=full(&#x27;stts&#x27;,0,0,u32(runs.length),...runs.map(r=&gt;u32(...r)));const stsc=full(&#x27;stsc&#x27;,0,0,u32(1,1,selected.length,1));const stsz=full(&#x27;stsz&#x27;,0,0,u32(0,selected.length),...selected.map(f=&gt;u32(f.data.length)));const stss=full(&#x27;stss&#x27;,0,0,u32(selected.filter(f=&gt;f.key).length),...selected.map((f,i)=&gt;f.key?u32(i+1):new Uint8Array()));const ftyp=box(&#x27;ftyp&#x27;,ascii(&#x27;isom&#x27;),u32(512),ascii(&#x27;isomiso2avc1mp41&#x27;));const makeMoov=offset=&gt;box(&#x27;moov&#x27;,mvhd,box(&#x27;trak&#x27;,tkhd,edts,box(&#x27;mdia&#x27;,mdhd,hdlr,box(&#x27;minf&#x27;,full(&#x27;vmhd&#x27;,0,1,u16(0,0,0,0)),box(&#x27;dinf&#x27;,full(&#x27;dref&#x27;,0,0,u32(1),full(&#x27;url &#x27;,0,1))),box(&#x27;stbl&#x27;,stsd,stts,stsc,stsz,full(&#x27;stco&#x27;,0,0,u32(1,offset)),stss)))));const moov=makeMoov(0);const result=join(ftyp,makeMoov(ftyp.length+moov.length+8),box(&#x27;mdat&#x27;,...selected.map(f=&gt;f.data)));return {bytes:result,actualBegin,actualEnd,duration:duration/1000,width:dim.width,height:dim.height};
+}
+
+
+&#x27;use strict&#x27;;
+async function readVideoWithProgress8(response,expectedSize){
+const headerSize=Number(response.headers.get(&#x27;Content-Length&#x27;));
+const total=headerSize&gt;0?headerSize:(Number(expectedSize)&gt;0?Number(expectedSize):0);
+const approximate=!(headerSize&gt;0)&amp;&amp;total&gt;0;
+if(!response.body){updateVideoProgress(null,&#x27;Đang nhận dữ liệu…&#x27;);return response.arrayBuffer();}
+const reader=response.body.getReader(),chunks=[];let received=0;
+try{while(true){const part=await reader.read();if(part.done)break;chunks.push(part.value);received+=part.value.byteLength;
+const detail=(received/1048576).toFixed(1)+&#x27; MB&#x27;+(total?&#x27; / &#x27;+(total/1048576).toFixed(1)+&#x27; MB&#x27;:&#x27;&#x27;)+(approximate?&#x27; (dung lượng dự kiến)&#x27;:&#x27;&#x27;);
+updateVideoProgress(total?Math.min(89,received/total*90):null,&#x27;Đang tải dữ liệu video&#x27;,detail);
+}}finally{reader.releaseLock();}
+updateVideoProgress(90,&#x27;Đã nhận dữ liệu, chuẩn bị chuyển MP4&#x27;);
+await new Promise(resolve=&gt;setTimeout(resolve,30));
+const buffer=new Uint8Array(received);let offset=0;for(const chunk of chunks){buffer.set(chunk,offset);offset+=chunk.byteLength;}
+chunks.length=0;
+return buffer.buffer;
+}
+
+function buildVideoWorkerSource(){
+ const definitions=[join,u32,u16,ascii,box,full,nals,dimensions,hevcConfig,legacyToDVS,remuxDVS,remuxDVS8].map(fn=&gt;fn.toString()).join(&#x27;\n&#x27;);
+ return definitions+`\nself.onmessage=event=&gt;{try{const {buffer,channel,begin,end,apiStart,flow}=event.data;const result=flow===&#x27;8&#x27;?remuxDVS8(buffer,channel,begin,end):remuxDVS(buffer,channel,begin,end,apiStart);self.postMessage({result},[result.bytes.buffer]);}catch(error){self.postMessage({error:error.message||String(error)});}};`;
+}
+async function remuxVideoOffThread(buffer,channel,begin,end,apiStart,flow){
+ if(typeof Worker===&#x27;undefined&#x27;){await new Promise(resolve=&gt;setTimeout(resolve,0));return flow===&#x27;8&#x27;?remuxDVS8(buffer,channel,begin,end):remuxDVS(buffer,channel,begin,end,apiStart);}
+ return new Promise((resolve,reject)=&gt;{
+  const url=URL.createObjectURL(new Blob([buildVideoWorkerSource()],{type:&#x27;text/javascript&#x27;}));let worker,timer;
+  const cleanup=()=&gt;{clearTimeout(timer);worker?.terminate();URL.revokeObjectURL(url);};
+  try{worker=new Worker(url);worker.onmessage=event=&gt;{cleanup();event.data.error?reject(Error(event.data.error)):resolve(event.data.result);};worker.onerror=()=&gt;{cleanup();reject(Error(&#x27;Không thể xử lý MP4 trong luồng nền.&#x27;));};timer=setTimeout(()=&gt;{cleanup();reject(Error(&#x27;Xử lý MP4 quá thời gian. Hãy chọn đoạn ngắn hơn.&#x27;));},180000);worker.postMessage({buffer,channel,begin,end,apiStart,flow},[buffer]);}catch(error){cleanup();reject(error);}
+ });
+}
+
+async function prepareVideo8(f){
+resetVideoProgress();
+const key=JSON.stringify([session,f.DownUrl,searchCriteria]);
+if(preparedVideo&amp;&amp;preparedVideo.key===key){updateVideoProgress(96,&#x27;MP4 đã có sẵn&#x27;);return preparedVideo;}updateVideoProgress(0,&#x27;Đang kết nối tải video…&#x27;);
+if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang tải dữ liệu gốc để tách kênh &#x27;+(ch+1)+&#x27;…&#x27;);const u=downloadURL(f.DownUrl);u.searchParams.set(&#x27;jsession&#x27;,session);const response=await fetch(u,{signal:AbortSignal.timeout(300000)});if(!response.ok)throw Error(&#x27;Tải dữ liệu thất bại: HTTP &#x27;+response.status);const buffer=await readVideoWithProgress8(response,f.len);updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const result=await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),undefined,&#x27;8&#x27;);
+const filename=criteria.plate.replace(/[^A-Za-z0-9.-]/g,&#x27;_&#x27;)+&#x27;_CH&#x27;+(ch+1)+&#x27;_&#x27;+criteria.date+&#x27;_&#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;-&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;.mp4&#x27;;
+clearPreview();
+preparedVideo={key,blob:new Blob([result.bytes],{type:&#x27;video/mp4&#x27;}),filename,
+info:&#x27;Kênh &#x27;+(ch+1)+&#x27; · &#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,23)+&#x27;–&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,23)+&#x27; · &#x27;+result.duration.toFixed(2)+&#x27; giây · Không có âm thanh.&#x27;+(result.actualBegin&gt;day+seconds(criteria.begin)||result.actualEnd&lt;day+seconds(criteria.end)?&#x27; Tệp này không đủ toàn bộ khoảng thời gian chọn.&#x27;:&#x27;&#x27;)};
+updateVideoProgress(96,&#x27;MP4 đã sẵn sàng&#x27;);return preparedVideo;
+}
+
+function render8(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.beg)+&#x27;–&#x27;+time(f.end),(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownUrl&amp;&amp;Number(f.stream)!==1){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);savePrepared(item);finishVideoProgress(&#x27;Đã chuẩn bị MP4 và gửi đến trình tải xuống&#x27;);show(&#x27;Đã xuất MP4. &#x27;+item.info);});
+const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
+preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
+
+function videoSerialFlow(value){
+ const serial=String(value??&#x27;&#x27;).trim();
+ if(/^\d{8}$/.test(serial))return &#x27;8&#x27;;
+ if(/^0000\d{8}$/.test(serial))return &#x27;12&#x27;;
+ throw Error(&#x27;Serial chưa được hỗ trợ: cần 8 số hoặc 0000 + 8 số.&#x27;);
+}
+async function prepareVideo(file){
+ validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);
+ if(searchCriteria)validateVideoRange(searchCriteria.begin,searchCriteria.end);
+ if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);
+ const flow=videoSerialFlow(searchCriteria.serial);
+ return flow===&#x27;8&#x27;?prepareVideo8(file):prepareVideo12(file);
+}
+function render(){
+ const serial=searchCriteria?.serial??selected()?.id;
+ return videoSerialFlow(serial)===&#x27;8&#x27;?render8():render12();
+}
+
+async function prepareVideo12(f){
+resetVideoProgress();
+const key=JSON.stringify([session,f.DownUrl,searchCriteria]);
+if(preparedVideo&amp;&amp;preparedVideo.key===key){updateVideoProgress(96,&#x27;MP4 đã có sẵn&#x27;);return preparedVideo;}updateVideoProgress(0,&#x27;Đang kết nối tải video…&#x27;);
+if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang chuẩn bị đoạn video kênh &#x27;+(ch+1)+&#x27;…&#x27;);const segment=await getServerSegment(f,criteria);const u=downloadURL(segment.DownUrl);u.searchParams.set(&#x27;jsession&#x27;,session);const response=await fetch(u,{signal:AbortSignal.timeout(300000)});if(!response.ok)throw Error(&#x27;Tải dữ liệu thất bại: HTTP &#x27;+response.status);const buffer=await readVideoWithProgress(response,segment.len);updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const isMP4=new TextDecoder().decode(new Uint8Array(buffer,4,4))===&#x27;ftyp&#x27;;const result=isMP4?{bytes:new Uint8Array(buffer),actualBegin:day+Number(segment.beg),actualEnd:day+Number(segment.end),duration:Number(segment.end)-Number(segment.beg)}:await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),day+Number(segment.beg),&#x27;12&#x27;);
+const filename=criteria.plate.replace(/[^A-Za-z0-9.-]/g,&#x27;_&#x27;)+&#x27;_CH&#x27;+(ch+1)+&#x27;_&#x27;+criteria.date+&#x27;_&#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;-&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;.mp4&#x27;;
+clearPreview();
+preparedVideo={key,blob:new Blob([result.bytes],{type:&#x27;video/mp4&#x27;}),filename,
+info:&#x27;Kênh &#x27;+(ch+1)+&#x27; · &#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,23)+&#x27;–&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,23)+&#x27; · &#x27;+result.duration.toFixed(2)+&#x27; giây · Không có âm thanh.&#x27;+(result.actualBegin&gt;day+seconds(criteria.begin)||result.actualEnd&lt;day+seconds(criteria.end)?&#x27; Tệp này không đủ toàn bộ khoảng thời gian chọn.&#x27;:&#x27;&#x27;)};
+updateVideoProgress(96,result.actualEnd&lt;day+seconds(criteria.end)?&#x27;MP4 sẵn sàng · Video nhận được chưa đủ giờ kết thúc đã chọn&#x27;:&#x27;MP4 đã sẵn sàng&#x27;);return preparedVideo;
+}
+async function previewPrepared(item){
+const player=$(&#x27;previewPlayer&#x27;);player.pause();player.removeAttribute(&#x27;src&#x27;);player.load();
+if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);
+previewObjectURL=URL.createObjectURL(item.blob);player.src=previewObjectURL;updateVideoProgress(98,&#x27;Đang mở trình phát video…&#x27;);const ready=waitPreviewReady(player);
+$(&#x27;previewInfo&#x27;).textContent=item.filename+&#x27; · &#x27;+item.info;
+$(&#x27;previewSection&#x27;).hidden=false;player.load();
+$(&#x27;previewSection&#x27;).scrollIntoView({behavior:&#x27;smooth&#x27;,block:&#x27;start&#x27;});
+await ready;await player.play().catch(()=&gt;{});finishVideoProgress(&#x27;Video đã sẵn sàng để xem&#x27;);show(player.paused?&#x27;Video đã sẵn sàng. Bấm nút phát để xem.&#x27;:&#x27;Đang phát video xem trước.&#x27;);
+}
+$(&#x27;savePreview&#x27;).onclick=()=&gt;{if(preparedVideo){savePrepared(preparedVideo);finishVideoProgress(&#x27;Đã gửi MP4 đến trình tải xuống&#x27;);show(&#x27;Đã gửi MP4 đang xem đến trình tải xuống.&#x27;);}};
+$(&#x27;previewPlayer&#x27;).addEventListener(&#x27;error&#x27;,()=&gt;show(&#x27;Trình duyệt không phát được MP4 này. Bạn vẫn có thể tải video để mở bằng VLC.&#x27;,true));
+window.addEventListener(&#x27;pagehide&#x27;,()=&gt;{if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);});
+
+function render12(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.beg)+&#x27;–&#x27;+time(f.end),(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);savePrepared(item);finishVideoProgress(item.info.includes(&#x27;không đủ&#x27;)?&#x27;Đã tải MP4 · Video nhận được chưa đủ toàn bộ khoảng giờ chọn&#x27;:&#x27;Đã chuẩn bị MP4 và gửi đến trình tải xuống&#x27;);show(&#x27;Đã xuất MP4. &#x27;+item.info);});
+const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
+preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
+$(&#x27;tasksButton&#x27;).onclick=()=&gt;run(async()=&gt;{if(!session)throw Error(&#x27;Đăng nhập trước.&#x27;);if(!selected())throw Error(&#x27;Chọn biển số xe hợp lệ trước.&#x27;);const d=await api(&#x27;downloadTasklist&#x27;,{jsession:session,devIdno:$(&#x27;serial&#x27;).value.trim(),begintime:$(&#x27;date&#x27;).value+&#x27; 00:00:00&#x27;,endtime:$(&#x27;date&#x27;).value+&#x27; 23:59:59&#x27;,currentPage:1,pageRecords:100});$(&#x27;tasks&#x27;).replaceChildren();for(const t of d.infos||[]){const p=document.createElement(&#x27;p&#x27;);p.textContent=(t.fph||t.lab)+&#x27; · &#x27;+({1:&#x27;Chờ tải&#x27;,2:&#x27;Đang tải&#x27;,3:&#x27;Thất bại&#x27;,4:&#x27;Đã tải về máy chủ&#x27;}[t.stu]||t.stu)+(Number(t.stu)===3?&#x27; · Lỗi &#x27;+t.err:&#x27;&#x27;);$(&#x27;tasks&#x27;).append(p);}show(&#x27;Đã cập nhật tác vụ. Tác vụ máy chủ đã cập nhật. Tìm video hiện mặc định từ thiết bị trên xe.&#x27;);});
+&lt;/script&gt;&lt;script&gt;function resizeCameraFrame(){if(window.frameElement)window.frameElement.style.height=Math.ceil(document.documentElement.scrollHeight)+&#x27;px&#x27;;}new ResizeObserver(resizeCameraFrame).observe(document.body);window.addEventListener(&#x27;load&#x27;,resizeCameraFrame);&lt;/script&gt;&lt;/html&gt;
+"></iframe>
+</div>
+
+<div id="groupDeviceTab" class="tab-panel app-only-panel">
   <div class="panel-topbar">
     <div class="panel-topbar-left">
       <div class="panel-mini-title">Danh sách xe</div>
@@ -4790,6 +5295,44 @@ function initBackToLoginButton() {
   updateApiLabels();
   updateGlobalInfo();
   setAppView('login');
+</script>
+
+<!-- Serial comparison bridge: reads displayed vehicle list only -->
+<script>
+(function(){
+'use strict';
+const frame=document.getElementById('cameraDownloadFrame');
+const box=document.getElementById('groupDeviceListBox');
+if(!frame||!box)return;
+let lastCameraMainActive=null,lastVehicleSignature=null,bridgeTimer=null,lastVideoPanelVisible=null;
+function scheduleVehicleSerials(){clearTimeout(bridgeTimer);bridgeTimer=setTimeout(sendVehicleSerials,80);}
+function sendVehicleSerials(){
+const active=document.body.classList.contains('app-mode');
+const visible=active&&document.getElementById('downloadVideoTab')?.classList.contains('active');
+if(visible!==lastVideoPanelVisible){lastVideoPanelVisible=visible;frame.contentWindow?.postMessage({type:'V14_VIDEO_PANEL_VISIBLE',visible},'*');}
+if(active!==lastCameraMainActive){
+lastCameraMainActive=active;
+frame.contentWindow?.postMessage({type:'V14_VIDEO_MAIN_AUTH',active},'*');
+}
+const vehicles=[];
+if(!document.body.classList.contains('login-mode')){
+box.querySelectorAll('.modern-item').forEach(card=>{
+const text=card.querySelector('.modern-item-sub')?.textContent||'';
+const match=text.match(/Serial:\s*(\S+)/);
+const plate=card.querySelector('.modern-item-title')?.textContent.trim()||'';
+if(match&&plate&&plate!=='(chưa có biển số)')vehicles.push({serial:match[1].trim(),plate});
+});
+}
+const signature=JSON.stringify(vehicles);
+if(signature!==lastVehicleSignature){lastVehicleSignature=signature;frame.contentWindow?.postMessage({type:'V13_VIDEO_VEHICLE_SERIALS',vehicles},'*');}
+}
+new MutationObserver(scheduleVehicleSerials).observe(box,{childList:true,subtree:true,characterData:true});
+new MutationObserver(scheduleVehicleSerials).observe(document.getElementById('downloadVideoTab'),{attributes:true,attributeFilter:['class']});
+new MutationObserver(scheduleVehicleSerials).observe(document.body,{attributes:true,attributeFilter:['class']});
+frame.addEventListener('load',()=>{lastCameraMainActive=null;lastVehicleSignature=null;lastVideoPanelVisible=null;sendVehicleSerials();});
+window.addEventListener('message',event=>{if(event.source===frame.contentWindow&&event.data?.type==='V13_VIDEO_REQUEST_SERIALS'){lastCameraMainActive=null;lastVehicleSignature=null;lastVideoPanelVisible=null;sendVehicleSerials();}});
+sendVehicleSerials();
+})();
 </script>
 </body>
 </html>
