@@ -1297,13 +1297,83 @@ body.app-mode .tab-btn[data-tab="loginTab"]{
 @media(max-width:350px){#vehicleColorList button{flex-basis:100%}#searchForm{grid-template-columns:minmax(0,1fr)}}
 
 .time-adjust{display:flex;gap:8px;margin-top:8px}.time-adjust button{font-size:13px;min-height:36px;padding:6px;background:#f1f5f9;color:#334155;border-color:#e2e8f0}.time-presets{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px}.time-presets&gt;span{font-size:13px;color:#475569;font-weight:600}.duration-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.duration-buttons button{width:auto;flex:1;white-space:nowrap;background:white;color:#1d4ed8;border-color:#cbd5e1;padding:8px 10px;font-size:13px;min-height:38px}.duration-buttons button.selected{background:#1d4ed8;color:white;border-color:#1d4ed8}#rangeTimeSummary{font-size:14px;line-height:1.5;font-weight:600;color:#1e40af;font-variant-numeric:tabular-nums}#rangeTimeSummary.invalid{color:#b91c1c}.time-field input{min-height:50px;font-size:18px;font-weight:600;color:#0f172a}@media(max-width:600px){.duration-buttons button{flex:1 0 26%}.time-adjust{gap:5px}.time-adjust button{font-size:12px}.time-field input{padding:8px;font-size:16px}}
-.download-notice{padding:12px 14px;border:1px solid #fed7aa;border-radius:10px;background:#fff7ed;color:#7c2d12;font-size:14px;line-height:1.6;margin:0 0 14px}&lt;/style&gt;
-&lt;main&gt;&lt;div id=&quot;cameraInitStatus&quot; role=&quot;status&quot; style=&quot;padding:12px;background:#e4efff;border-radius:8px;margin-bottom:10px&quot;&gt;Mở tab Tải video để bắt đầu chuẩn bị.&lt;/div&gt;&lt;h1 hidden&gt;Tải video &lt;/h1&gt;&lt;section hidden&gt;&lt;h2&gt;1. Đăng nhập&lt;/h2&gt;&lt;form id=&quot;loginForm&quot; class=&quot;grid&quot;&gt;&lt;div class=&quot;wide&quot;&gt;&lt;label for=&quot;base&quot;&gt;Máy chủ API&lt;/label&gt;&lt;input id=&quot;base&quot; value=&quot;http://cam.gpssaigon.vn:88&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;account&quot;&gt;Tài khoản&lt;/label&gt;&lt;input id=&quot;account&quot; autocomplete=&quot;username&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;password&quot;&gt;Mật khẩu&lt;/label&gt;&lt;input id=&quot;password&quot; type=&quot;password&quot; autocomplete=&quot;current-password&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;method&quot;&gt;Phương thức thử&lt;/label&gt;&lt;select id=&quot;method&quot;&gt;&lt;option&gt;POST&lt;/option&gt;&lt;option&gt;GET&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Đăng nhập và lấy thiết bị&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Ưu tiên POST. GET đưa mật khẩu vào địa chỉ yêu cầu và có thể vào nhật ký máy chủ. Máy chủ gốc hiện dùng HTTP.&lt;/small&gt;&lt;/p&gt;&lt;details&gt;&lt;summary&gt;Dùng phiên có sẵn để kiểm tra riêng phần tìm video&lt;/summary&gt;&lt;p&gt;Nếu đăng nhập API lỗi, có thể nhập jsession còn hiệu lực lấy từ web gốc. Không gửi phiên này cho người khác.&lt;/p&gt;&lt;input id=&quot;sessionInput&quot; type=&quot;password&quot; placeholder=&quot;jsession còn hiệu lực&quot; autocomplete=&quot;off&quot;&gt;&lt;button id=&quot;useSession&quot; style=&quot;margin-top:10px&quot;&gt;Dùng phiên và lấy thiết bị&lt;/button&gt;&lt;/details&gt;&lt;/section&gt;
+.download-notice{padding:12px 14px;border:1px solid #fed7aa;border-radius:10px;background:#fff7ed;color:#7c2d12;font-size:14px;line-height:1.6;margin:0 0 14px}
+/* Mobile replay layout: preserve existing fields and API events. */
+body{background:#f2f6fa;color:#173858}main{padding:12px}section{box-shadow:0 5px 20px #17385808;border:1px solid #e2eaf2;border-radius:20px}h2{color:#102b46;font-size:19px}#cameraInitStatus{background:#e8f5f1!important;color:#087b67;border:1px solid #cce9df;border-radius:12px!important;font-size:13px}.download-notice{font-size:12px;padding:10px 12px;line-height:1.5;border-color:#f0dfbc;background:#fffaf0;color:#7c5821}#vehiclePlate{background:#eef8f5;border-color:#c4e6dc;font-weight:700}input,select{background:#f7f9fc;border-color:#dce5ef;border-radius:12px;min-height:48px}#searchForm&gt;.wide&gt;button,#savePreview{background:#087f71;border:0;box-shadow:0 4px 10px #087f7120;font-weight:700}#vehicleColorList button{border-radius:12px!important;background:#fff!important;min-height:44px}label{color:#526b83;font-size:12px;font-weight:700}.time-presets{background:#f4f8fc;border:0;padding:12px}.time-presets p{font-size:12px}.duration-buttons{gap:6px}.duration-buttons button{flex:1 0 auto;border-radius:20px;min-height:40px}.duration-buttons button.selected{background:#087f71;border-color:#087f71}#rangeTimeSummary{color:#087f71;font-size:13px}#previewPlayer{border-radius:14px!important}#videoProgressBox{border-color:#cce9df}progress{accent-color:#087f71}#results tbody tr{background:#f7fafc;border-radius:14px}#results td button{background:#087f71}
+@media(max-width:600px){section{padding:14px;margin:12px 0}#searchForm{gap:14px 10px}#vehicleColorList{max-height:108px!important}#vehiclePlate{font-size:16px}.time-field input{font-size:16px;min-height:48px}.time-adjust button{min-height:40px;background:#eaf0f6;font-size:12px}.duration-buttons button{flex:1 0 28%;font-size:12px}#searchForm&gt;.wide&gt;button{min-height:50px;border-radius:14px}#searchForm&gt;.wide:last-child{position:sticky;bottom:8px;z-index:2;padding-top:6px;background:linear-gradient(transparent,#fff 30%)} }
+
+.time-field input[readonly]{cursor:pointer;background:#edf8f5;border:1px solid #bddfd5;text-align:center;font-size:20px;color:#0c6357;min-height:54px;letter-spacing:1px}.time-field input:focus{outline:2px solid #18a58d}.time-picker-overlay{position:fixed;inset:0;z-index:10000;background:#102b4670;display:flex;align-items:center;justify-content:center;padding:16px}.time-picker-card{width:100%;max-width:420px;background:#fff;border-radius:22px;padding:22px;box-shadow:0 12px 48px #0003}.time-picker-card h2{margin:0 0 6px}.time-picker-card p{font-size:13px;color:#64748b}.time-picker-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}.time-picker-columns select{font-size:24px;font-weight:700;text-align:center;min-height:64px;padding:8px;border-color:#c4e6dc;background:#eef8f5;color:#0c6357}.time-picker-columns label{text-align:center}.time-picker-actions{display:flex;gap:10px;margin-top:16px}.time-picker-actions button{min-height:48px;font-weight:700}.time-picker-actions button:first-child{background:#eef2f7;color:#475569;border:0}.time-picker-actions button:last-child{background:#087f71;border:0}.time-picker-error{color:#b91c1c!important;min-height:20px}.time-picker-caption{font-size:12px;color:#64748b}
+.vehicle-pager{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:8px}.vehicle-pager button{width:auto;min-height:44px;background:#eef4ff;color:#173858;padding:8px 16px}.vehicle-pager span{font-size:14px;font-weight:600}
+
+/* 151: compact video workspace, vehicle cards and non-blocking progress notice. */
+body{background:#f3f7fa;color:#18344d}main{max-width:800px;padding:10px 12px 110px;margin:auto}section{border-radius:14px;padding:14px;box-shadow:none;margin:10px 0;border-color:#e1eaf0}
+.download-notice{margin:0 0 10px;padding:10px 12px;font-size:12px;line-height:1.5;background:#fff8e9;border:1px solid #f0ddb6;border-radius:11px;color:#7b5722}
+#searchForm{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 10px}#searchForm&gt;div:first-child,#searchForm&gt;.wide{grid-column:1/-1}#searchForm&gt;div{min-width:0}#searchForm input,#searchForm select{width:100%;max-width:100%;min-height:46px;background:#f9fbfd;border:1px solid #dce6ee;border-radius:10px;font-size:15px;color:#173858}#searchForm label{font-size:12px;color:#536e85;margin-bottom:5px}#vehiclePlate{font-size:16px!important;font-weight:600}#plate,#vehicleColorStatus{display:none!important}.picker-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.picker-heading strong{font-size:16px}.picker-heading small{font-size:12px;background:#edf4fc;color:#3d6589;padding:4px 8px;border-radius:12px}
+#vehicleColorList{display:grid!important;grid-template-columns:1fr;gap:7px!important;max-height:320px!important;padding:8px 0 0!important;overflow:auto}
+#vehicleColorList button.vehicle-choice{display:flex;align-items:center;gap:10px;width:100%!important;flex:none!important;min-height:58px!important;padding:9px 11px!important;text-align:left;border-radius:11px!important;border:1px solid #b4cfed!important;background:#e8f2ff!important;font-size:14px!important}
+#vehicleColorList button.vehicle-choice:nth-child(even){background:#e6f5eb!important;border-color:#b4d9c2!important}.vehicle-choice-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;background:#ffffffb3;border-radius:10px}.vehicle-choice-icon svg{width:23px;height:23px}.vehicle-choice-copy{flex:1;min-width:0;display:grid;gap:4px}.vehicle-choice-copy strong{font-size:15px;overflow-wrap:anywhere}.vehicle-choice-copy small{font-size:11px;font-weight:400;color:#536b7c}.vehicle-choice-arrow{font-size:24px;color:#6d899e}.vehicle-pager{margin-top:10px;gap:12px}.vehicle-pager button{min-height:38px;font-size:12px;padding:7px 12px;border-radius:9px}
+#selectedVehicleCard{display:flex;align-items:center;gap:10px;padding:12px 14px;margin:0 0 10px;background:white;border:1px solid #e1eaf0;border-radius:13px}.selected-copy{flex:1;min-width:0;display:grid;gap:4px}#selectedVehiclePlate{font-size:17px}#selectedVehicleMeta{font-size:11px;color:#5b7386;line-height:1.5}#changeVehicle{width:auto;min-height:40px;padding:8px 10px;background:#eef5fb;color:#246193;border:0;font-size:12px;font-weight:700}
+.time-options-heading{font-size:16px;font-weight:750;margin:0 0 -4px}.time-field{border:1px solid #e1e8ee;border-radius:10px;padding:9px 10px}.time-field label:before{content:&#x27;◷ &#x27;;font-size:15px}.time-field input{border:0!important;padding:2px 0!important;min-height:30px!important;background:transparent!important;font-weight:650}.time-adjust{display:none}.time-presets{padding:0;border:0;background:transparent}.time-presets&gt;span{font-size:13px;font-weight:500}.duration-buttons{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:9px 0}.duration-buttons button{width:100%;min-width:0;min-height:36px;padding:7px 2px;font-size:11px;border-radius:7px;background:#f8fafc;color:#47627a;border-color:#e0e8ef;white-space:nowrap}.duration-buttons button.selected{background:#079467;border-color:#079467;color:#fff}.duration-limit{font-size:11px;color:#678197;margin:8px 0 12px}#rangeTimeSummary{padding:11px 12px;background:#e3f5ee;border-radius:9px;color:#15795d;font-size:13px}#rangeTimeSummary.invalid{background:#fff1f2;color:#b4233e}#searchForm&gt;.wide:last-child{position:static;background:none;padding:0}#searchForm&gt;.wide&gt;button{background:#008f65;color:#fff;min-height:46px;border:0;border-radius:10px;font-size:15px;font-weight:700;box-shadow:none}#searchHint{display:none}
+#previewSection{padding:0;border:0;background:transparent}#previewSection&gt;h2{display:none}#previewPlayer{width:100%;aspect-ratio:16/9;max-height:45vh!important;border-radius:12px!important;background:#122b40!important}#previewSection&gt;p{margin:10px 0}#savePreview{background:#008f65;border:0;border-radius:10px;font-weight:700}#previewSection&gt;small{display:block;padding:10px 12px;background:#eaf3ff;border-radius:9px;color:#416788;font-size:12px}.preview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0;font-size:13px}.preview-toolbar button{width:auto;min-height:36px;padding:6px 10px;background:white;color:#276495;border-color:#c8dceb;font-size:12px}.has-preview #searchForm{display:none}.has-preview .video-search-section{padding:0;border:0;background:transparent}.has-preview #selectedVehicleCard{margin:0}
+.result-heading{display:flex;align-items:center;justify-content:space-between}.result-heading h2{margin:0;font-size:17px}.result-heading span{padding:4px 8px;background:#edf4fd;color:#4f7295;border-radius:20px;font-size:12px}.video-results{display:grid;gap:10px;margin-top:12px}.video-result-card{display:grid;grid-template-columns:94px minmax(0,1fr);gap:12px;border:1px solid #e0e9ef;border-radius:12px;padding:10px;background:#fafdff}.video-result-card:nth-child(even){background:#f0f8f3}.result-thumb{display:grid;place-content:center;justify-items:center;gap:5px;min-height:84px;border-radius:9px;background:#e5edf5;color:#466b89}.result-thumb svg{width:30px;height:30px}.result-thumb small{font-size:10px;color:#52738e}.result-copy{min-width:0;display:grid;gap:6px;align-content:start}.result-copy strong{font-size:14px}.result-copy span{font-size:12px;color:#557187}.result-copy .ready{font-size:11px;color:#18815a}.result-actions{display:flex;gap:7px;grid-column:1/-1}.result-actions button{flex:1;min-width:0;min-height:40px;margin:0!important;padding:8px 6px;font-size:12px;border:1px solid #008f65;border-radius:8px;background:#008f65!important;color:white}.result-actions button.preview-action{background:white!important;color:#2475ae;border-color:#8db8d7}.video-empty{text-align:center;padding:26px 12px;color:#71889a;font-size:13px}.video-empty svg{width:36px;height:36px;margin-bottom:9px}.video-empty p{margin:0}
+#videoProgressBox{position:fixed;z-index:30;bottom:max(14px,env(safe-area-inset-bottom));left:12px;right:12px;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1px solid #c8e4d8;border-radius:15px;box-shadow:0 8px 30px #17385822}#videoProgressBar{display:none!important}.progress-ring{--value:0;position:relative;display:grid;place-items:center;width:48px;height:48px;flex:none;border-radius:50%;background:conic-gradient(#079467 calc(var(--value)*1%),#e5f1eb 0)}.progress-ring:before{content:&#x27;&#x27;;position:absolute;inset:4px;border-radius:50%;background:white}.progress-ring span{z-index:1;font-size:12px;font-weight:750;color:#187957}.progress-copy{display:grid;gap:4px;flex:1;min-width:0}#videoProgressText{font-size:13px;font-weight:650;line-height:1.4;color:#214b42}#videoProgressBytes{font-size:11px;line-height:1.4;color:#6b8192}#dismissProgress{width:30px;min-height:32px;padding:0;border:0;background:transparent;color:#728997;font-size:22px}#videoProgressBox[data-state=&quot;busy&quot;] #dismissProgress{display:none}#videoProgressBox[data-state=&quot;error&quot;]{border-color:#efc2c7}#videoProgressBox[data-state=&quot;error&quot;] #videoProgressText{color:#ae3445}.progress-ring.indeterminate{background:conic-gradient(#079467 25%,#e5f1eb 0);animation:video-spin 1s linear infinite}.progress-ring.indeterminate span{display:none}@keyframes video-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.progress-ring.indeterminate{animation:none}}
+#cameraInitStatus{display:none!important}.duration-limit:before{content:&quot;i&quot;;display:inline-grid;place-items:center;width:13px;height:13px;margin-right:5px;border:1px solid currentColor;border-radius:50%;font-size:10px}
+#searchForm+p{display:none}#selectedVehicleCard{border:0;background:#f6fafb;padding:10px}.has-preview #selectedVehicleCard{background:#fff;padding:12px 14px}
+#cameraInitStatus.camera-error{display:block!important;background:#fff5ef!important;color:#a04d2b!important;border-color:#edcab5}
+
+.vehicle-combobox{position:relative;display:flex;align-items:center}.vehicle-combobox #vehiclePlate{padding-right:44px}.vehicle-combobox #toggleVehicleDropdown{position:absolute;right:3px;top:3px;bottom:3px;width:38px;min-height:38px;padding:0;border:0;border-radius:8px;background:transparent;color:#315d80;font-size:25px;line-height:1}.vehicle-combobox #toggleVehicleDropdown[aria-expanded=&quot;true&quot;]{transform:rotate(180deg)}
+#vehicleDropdown{border:1px solid #c7dbea;border-radius:12px;margin-top:7px;padding:7px;background:#fff}#vehicleDropdown[hidden]{display:none!important}#vehicleDropdown #vehicleColorList{margin-top:0!important;padding:0!important;max-height:310px!important}#vehicleDropdown .vehicle-pager{margin:8px 0 0}#vehicleNoMatches{padding:12px 6px;margin:0;text-align:center;font-size:13px;color:#617e92}.vehicle-choice:focus-visible{outline:2px solid #2585b3;outline-offset:-2px}
+&lt;/style&gt;&lt;style&gt;
+/* Soft accents for video playback/download. Keep vehicle status colors intact.
+   night_theme.js adapts these colors along with the existing controls. */
+body { background: #f2f5fb; }
+.video-search-section { background: #fafcff; border-color: #dbe5f3; }
+.picker-heading strong { color: #345f90; }
+.picker-heading small { background: #e5effc; color: #3c6492; }
+#searchForm #vehiclePlate { background: #edf5ff; border-color: #c6daee; }
+#toggleVehicleDropdown { color: #456fa1; }
+.time-options-heading { color: #68518f; }
+#searchForm #channel { background: #edf5ff; border-color: #d0e0f1; }
+#searchForm #date { background: #f3eefa; border-color: #ded4ee; color: #604785; }
+.time-field { background: #eef5ff; border-color: #d1e0f3; }
+.time-field.end-time-field { background: #f5effb; border-color: #e0d5ee; }
+#searchForm .time-field label { color: #4b6c94; }
+#searchForm .time-field.end-time-field label { color: #77598f; }
+#searchForm #begin { color: #355d8a; }
+#searchForm #end { color: #6d4b8e; }
+.time-presets &gt; span { color: #596785; }
+.duration-buttons button { background: #edf3fc; border-color: #d7e2f1; color: #496388; }
+.duration-buttons button:nth-child(even) { background: #f2edf9; border-color: #e0d7ed; color: #70558c; }
+.duration-buttons button.selected { background: #09866a; border-color: #09866a; color: #fff; }
+#rangeTimeSummary { background: #e5f3ef; color: #276e5d; }
+#rangeTimeSummary.invalid { background: #fff1f2; color: #b4233e; }
+#searchForm &gt; .wide &gt; button { background: #09866a; }
+#selectedVehicleCard, .has-preview #selectedVehicleCard { background: #edf5ff; }
+#changeVehicle { background: #e1ebfc; color: #3f6396; }
+.result-heading { background: #eaf5f3; border-radius: 9px; padding: 8px 10px; }
+.result-heading h2 { color: #356f68; }
+.result-heading span { background: #dceeea; color: #426f68; }
+.video-result-card { background: #f0f6ff; border-color: #d6e3f3; }
+.video-result-card:nth-child(even) { background: #f0f7f3; border-color: #d7e8df; }
+.result-thumb { background: #e1ebfb; color: #4f6d9b; }
+.video-result-card:nth-child(even) .result-thumb { background: #dfefe7; color: #4d7a64; }
+.result-actions button.preview-action { background: #edf3ff !important; border-color: #bdcfea; color: #46689c; }
+.preview-toolbar button { background: #f1ebf9; border-color: #dacdea; color: #73538f; }
+#previewSection &gt; small { background: #eef1fc; color: #626b94; }
+.time-picker-card { background: #faf8ff; border-color: #e0d8ee; }
+.time-picker-card h2 { color: #68518f; }
+#timePickerCancel { background: #eee8f7; color: #70578d; border-color: #dbd0e9; }
+
+&lt;/style&gt;
+&lt;main&gt;&lt;p id=&quot;videoDownloadNotice&quot; class=&quot;download-notice&quot; role=&quot;note&quot;&gt;&lt;strong&gt;Chú ý:&lt;/strong&gt; Biển số xe màu &lt;strong style=&quot;color:#111827&quot;&gt;ĐEN&lt;/strong&gt; và màu &lt;strong style=&quot;color:#dc2626&quot;&gt;ĐỎ&lt;/strong&gt; sẽ không tải được video-mở khoá xe trước khi tải.&lt;/p&gt;&lt;div id=&quot;cameraInitStatus&quot; role=&quot;status&quot; style=&quot;padding:12px;background:#e4efff;border-radius:8px;margin-bottom:10px&quot;&gt;Mở tab Tải video để bắt đầu chuẩn bị.&lt;/div&gt;&lt;h1 hidden&gt;Tải video &lt;/h1&gt;&lt;section hidden&gt;&lt;h2&gt;1. Đăng nhập&lt;/h2&gt;&lt;form id=&quot;loginForm&quot; class=&quot;grid&quot;&gt;&lt;div class=&quot;wide&quot;&gt;&lt;label for=&quot;base&quot;&gt;Máy chủ API&lt;/label&gt;&lt;input id=&quot;base&quot; value=&quot;http://cam.gpssaigon.vn:88&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;account&quot;&gt;Tài khoản&lt;/label&gt;&lt;input id=&quot;account&quot; autocomplete=&quot;username&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;password&quot;&gt;Mật khẩu&lt;/label&gt;&lt;input id=&quot;password&quot; type=&quot;password&quot; autocomplete=&quot;current-password&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;method&quot;&gt;Phương thức thử&lt;/label&gt;&lt;select id=&quot;method&quot;&gt;&lt;option&gt;POST&lt;/option&gt;&lt;option&gt;GET&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Đăng nhập và lấy thiết bị&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Ưu tiên POST. GET đưa mật khẩu vào địa chỉ yêu cầu và có thể vào nhật ký máy chủ. Máy chủ gốc hiện dùng HTTP.&lt;/small&gt;&lt;/p&gt;&lt;details&gt;&lt;summary&gt;Dùng phiên có sẵn để kiểm tra riêng phần tìm video&lt;/summary&gt;&lt;p&gt;Nếu đăng nhập API lỗi, có thể nhập jsession còn hiệu lực lấy từ web gốc. Không gửi phiên này cho người khác.&lt;/p&gt;&lt;input id=&quot;sessionInput&quot; type=&quot;password&quot; placeholder=&quot;jsession còn hiệu lực&quot; autocomplete=&quot;off&quot;&gt;&lt;button id=&quot;useSession&quot; style=&quot;margin-top:10px&quot;&gt;Dùng phiên và lấy thiết bị&lt;/button&gt;&lt;/details&gt;&lt;/section&gt;
 &lt;div id=&quot;status&quot; hidden role=&quot;status&quot;&gt;Chờ tải video.&lt;/div&gt;
-&lt;section&gt;&lt;h2&gt;Chọn xe và thời gian&lt;/h2&gt;&lt;small style=&quot;display:block;color:#64748b;margin-bottom:8px&quot;&gt;&lt;/small&gt;&lt;p id=&quot;serialMatchInfo&quot; hidden&gt;Đang đối chiếu serial với tab Danh sách xe…&lt;/p&gt;&lt;p class=&quot;download-notice&quot; role=&quot;note&quot;&gt;&lt;strong&gt;Chú ý:&lt;/strong&gt; Biển số xe màu &lt;strong style=&quot;color:#111827&quot;&gt;ĐEN&lt;/strong&gt; và màu &lt;strong style=&quot;color:#dc2626&quot;&gt;ĐỎ&lt;/strong&gt; sẽ không tải được video-mở khoá xe trước khi tải.&lt;/p&gt;&lt;form id=&quot;searchForm&quot; class=&quot;grid&quot;&gt;&lt;div&gt;&lt;label for=&quot;vehiclePlate&quot;&gt;Biển số xe&lt;/label&gt;&lt;input id=&quot;vehiclePlate&quot; list=&quot;devices&quot; placeholder=&quot;Nhập hoặc chọn biển số xe&quot; autocomplete=&quot;off&quot; required&gt;&lt;input id=&quot;serial&quot; type=&quot;hidden&quot;&gt;&lt;datalist id=&quot;devices&quot;&gt;&lt;/datalist&gt;&lt;small id=&quot;plate&quot;&gt;&lt;/small&gt;&lt;small id=&quot;vehicleColorStatus&quot; role=&quot;status&quot; style=&quot;display:block;margin-top:6px&quot;&gt;&lt;/small&gt;&lt;div id=&quot;vehicleColorList&quot; style=&quot;display:flex;flex-wrap:wrap;gap:6px;max-height:180px;overflow:auto;margin-top:8px&quot;&gt;&lt;/div&gt;&lt;small style=&quot;display:block;margin-top:6px&quot; hidden&gt;Xanh lá: chạy&lt;/small&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;channel&quot;&gt;Kênh&lt;/label&gt;&lt;select id=&quot;channel&quot;&gt;&lt;option value=&quot;0&quot;&gt;Kênh 1&lt;/option&gt;&lt;option value=&quot;1&quot;&gt;Kênh 2&lt;/option&gt;&lt;option value=&quot;2&quot;&gt;Kênh 3&lt;/option&gt;&lt;option value=&quot;-1&quot;&gt;Tất cả kênh&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;input id=&quot;loc&quot; type=&quot;hidden&quot; value=&quot;1&quot;&gt;&lt;div&gt;&lt;label for=&quot;date&quot;&gt;Ngày&lt;/label&gt;&lt;input id=&quot;date&quot; type=&quot;date&quot; required&gt;&lt;/div&gt;&lt;div class=&quot;time-field&quot;&gt;&lt;label for=&quot;begin&quot;&gt;Bắt đầu&lt;/label&gt;&lt;input id=&quot;begin&quot; type=&quot;time&quot; step=&quot;1&quot; value=&quot;00:00:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ bắt đầu một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ bắt đầu một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;time-field&quot;&gt;&lt;label for=&quot;end&quot;&gt;Kết thúc&lt;/label&gt;&lt;input id=&quot;end&quot; type=&quot;time&quot; step=&quot;1&quot; value=&quot;00:10:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ kết thúc một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ kết thúc một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide time-presets&quot;&gt;&lt;span&gt;Độ dài từ giờ bắt đầu&lt;/span&gt;&lt;p role=&quot;note&quot; style=&quot;margin:8px 0;color:#b45309;font-weight:600&quot;&gt;Chú ý: Chỉ nên tải tối đa 10 phút mỗi lần để tiết kiệm data 4G.&lt;/p&gt;&lt;div class=&quot;duration-buttons&quot;&gt;&lt;button type=&quot;button&quot; data-duration=&quot;30&quot;&gt;30 giây&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;60&quot;&gt;1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;120&quot;&gt;2 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;300&quot;&gt;5 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;600&quot;&gt;10 phút&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;rangeTimeSummary&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot; hidden&gt;&lt;label for=&quot;idMode&quot;&gt;Giá trị gửi khi tìm trên máy chủ&lt;/label&gt;&lt;select id=&quot;idMode&quot;&gt;&lt;option value=&quot;plate&quot;&gt;Biển số từ danh sách xe (theo tài liệu API)&lt;/option&gt;&lt;option value=&quot;serial&quot;&gt;Serial (để đối chiếu hệ thống thực tế)&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Tìm video&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Chạm vào ô giờ để chọn; có thể chỉnh đến từng giây.&lt;/small&gt;&lt;/p&gt;&lt;/section&gt;
-&lt;section id=&quot;videoProgressBox&quot; hidden aria-live=&quot;polite&quot;&gt;&lt;strong id=&quot;videoProgressText&quot;&gt;0%&lt;/strong&gt;&lt;progress id=&quot;videoProgressBar&quot; max=&quot;100&quot; value=&quot;0&quot; style=&quot;display:block;width:100%;height:22px;margin-top:10px&quot;&gt;&lt;/progress&gt;&lt;small id=&quot;videoProgressBytes&quot;&gt;&lt;/small&gt;&lt;/section&gt;&lt;section id=&quot;previewSection&quot; hidden&gt;&lt;h2&gt;Xem trước video&lt;/h2&gt;&lt;p id=&quot;previewInfo&quot; hidden&gt;&lt;/p&gt;&lt;video id=&quot;previewPlayer&quot; controls playsinline preload=&quot;metadata&quot; style=&quot;width:100%;max-height:65vh;background:#000;border-radius:8px&quot;&gt;&lt;/video&gt;&lt;p&gt;&lt;button id=&quot;savePreview&quot; type=&quot;button&quot;&gt;Tải video đang xem&lt;/button&gt;&lt;/p&gt;&lt;small&gt;Xem trước cần tải dữ liệu gốc và chuyển sang MP4 trong trình duyệt. Video không có âm thanh.&lt;/small&gt;&lt;/section&gt;&lt;section&gt;&lt;h2&gt;Video tìm được&lt;/h2&gt;&lt;div id=&quot;results&quot; class=&quot;scroll&quot;&gt;Chưa tìm video.&lt;/div&gt;&lt;button id=&quot;tasksButton&quot; hidden style=&quot;margin-top:20px&quot;&gt;Kiểm tra tác vụ tải&lt;/button&gt;&lt;div id=&quot;tasks&quot;&gt;&lt;/div&gt;&lt;/section&gt;
-&lt;section hidden&gt;&lt;h2&gt;Thông tin kiểm tra&lt;/h2&gt;&lt;p&gt;Chuyển đổi chạy trên máy bạn. Hiện hỗ trợ định dạng DVSMEDIADATA đã kiểm tra; mỗi nút xuất một tệp, không tự ghép nhiều bản ghi. Nếu thiếu khung hình khởi tạo, video bắt đầu tại khung hình có thể giải mã đầu tiên. Tệp lớn cần nhiều bộ nhớ.&lt;/p&gt;&lt;p&gt;Nếu hiện “Failed to fetch”, file HTML có thể bị chặn bởi CORS, kết nối hoặc địa chỉ máy chủ. Không thể sửa CORS chỉ bằng HTML. Không tắt bảo mật trình duyệt; dùng máy chủ trung gian nếu cần.&lt;/p&gt;&lt;pre id=&quot;debug&quot;&gt;Chưa có yêu cầu.&lt;/pre&gt;&lt;/section&gt;&lt;/main&gt;
+&lt;section class=&quot;video-search-section&quot;&gt;&lt;h2 hidden&gt;Chọn xe và thời gian&lt;/h2&gt;&lt;small style=&quot;display:block;color:#64748b;margin-bottom:8px&quot;&gt;&lt;/small&gt;&lt;p id=&quot;serialMatchInfo&quot; hidden&gt;Đang đối chiếu serial với tab Danh sách xe…&lt;/p&gt;&lt;div id=&quot;selectedVehicleCard&quot; hidden&gt;&lt;span class=&quot;vehicle-choice-icon&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;m5 7 2-3h10l2 3 2 3v8H3v-8zM3 10h18M7 18v3m10-3v3&quot;/&gt;&lt;circle cx=&quot;7&quot; cy=&quot;14&quot; r=&quot;1&quot;/&gt;&lt;circle cx=&quot;17&quot; cy=&quot;14&quot; r=&quot;1&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div class=&quot;selected-copy&quot;&gt;&lt;strong id=&quot;selectedVehiclePlate&quot;&gt;&lt;/strong&gt;&lt;span id=&quot;selectedVehicleMeta&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;button type=&quot;button&quot; id=&quot;changeVehicle&quot;&gt;Đổi xe&lt;/button&gt;&lt;/div&gt;&lt;form id=&quot;searchForm&quot; class=&quot;grid&quot;&gt;&lt;div id=&quot;vehiclePicker&quot;&gt;&lt;div class=&quot;picker-heading&quot;&gt;&lt;strong&gt;Chọn xe&lt;/strong&gt;&lt;small id=&quot;vehicleCount&quot;&gt;0 xe&lt;/small&gt;&lt;/div&gt;&lt;label for=&quot;vehiclePlate&quot;&gt;Biển số xe hoặc serial camera&lt;/label&gt;&lt;div class=&quot;vehicle-combobox&quot;&gt;&lt;input id=&quot;vehiclePlate&quot; role=&quot;combobox&quot; aria-autocomplete=&quot;list&quot; aria-controls=&quot;vehicleDropdown&quot; aria-expanded=&quot;false&quot; placeholder=&quot;Nhập biển số hoặc serial camera&quot; autocomplete=&quot;off&quot; required&gt;&lt;button type=&quot;button&quot; id=&quot;toggleVehicleDropdown&quot; aria-label=&quot;Mở danh sách xe&quot; aria-controls=&quot;vehicleDropdown&quot; aria-expanded=&quot;false&quot;&gt;⌄&lt;/button&gt;&lt;/div&gt;&lt;input id=&quot;serial&quot; type=&quot;hidden&quot;&gt;&lt;small id=&quot;plate&quot;&gt;&lt;/small&gt;&lt;small id=&quot;vehicleColorStatus&quot; role=&quot;status&quot; style=&quot;display:block;margin-top:6px&quot;&gt;&lt;/small&gt;&lt;div id=&quot;vehicleDropdown&quot; hidden&gt;&lt;div id=&quot;vehicleColorList&quot; role=&quot;listbox&quot; aria-label=&quot;Danh sách xe&quot; style=&quot;display:flex;flex-wrap:wrap;gap:6px;max-height:180px;overflow:auto;margin-top:8px&quot;&gt;&lt;/div&gt;&lt;div id=&quot;vehiclePager&quot; class=&quot;vehicle-pager&quot;&gt;&lt;button type=&quot;button&quot; id=&quot;vehiclePrev&quot;&gt;Trước&lt;/button&gt;&lt;span id=&quot;vehiclePageInfo&quot;&gt;&lt;/span&gt;&lt;button type=&quot;button&quot; id=&quot;vehicleNext&quot;&gt;Sau&lt;/button&gt;&lt;/div&gt;&lt;p id=&quot;vehicleNoMatches&quot; hidden&gt;Không tìm thấy xe phù hợp.&lt;/p&gt;&lt;/div&gt;&lt;small style=&quot;display:block;margin-top:6px&quot; hidden&gt;Xanh lá: chạy&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;wide time-options-heading&quot;&gt;Thời gian &amp;amp; kênh&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;channel&quot;&gt;Kênh&lt;/label&gt;&lt;select id=&quot;channel&quot;&gt;&lt;option value=&quot;0&quot;&gt;Kênh 1&lt;/option&gt;&lt;option value=&quot;1&quot;&gt;Kênh 2&lt;/option&gt;&lt;option value=&quot;2&quot;&gt;Kênh 3&lt;/option&gt;&lt;option value=&quot;-1&quot;&gt;Tất cả kênh&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;input id=&quot;loc&quot; type=&quot;hidden&quot; value=&quot;1&quot;&gt;&lt;div&gt;&lt;label for=&quot;date&quot;&gt;Ngày&lt;/label&gt;&lt;input id=&quot;date&quot; type=&quot;date&quot; required&gt;&lt;/div&gt;&lt;div class=&quot;time-field&quot;&gt;&lt;label for=&quot;begin&quot;&gt;Bắt đầu&lt;/label&gt;&lt;input id=&quot;begin&quot; type=&quot;text&quot; readonly role=&quot;button&quot; aria-haspopup=&quot;dialog&quot; aria-label=&quot;Chọn giờ bắt đầu&quot; value=&quot;00:00:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ bắt đầu một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;begin&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ bắt đầu một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;time-field end-time-field&quot;&gt;&lt;label for=&quot;end&quot;&gt;Kết thúc&lt;/label&gt;&lt;input id=&quot;end&quot; type=&quot;text&quot; readonly role=&quot;button&quot; aria-haspopup=&quot;dialog&quot; aria-label=&quot;Chọn giờ kết thúc&quot; value=&quot;00:10:00&quot; required aria-describedby=&quot;rangeTimeSummary&quot;&gt;&lt;div class=&quot;time-adjust&quot;&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;-60&quot; aria-label=&quot;Giảm giờ kết thúc một phút&quot;&gt;− 1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-time-target=&quot;end&quot; data-time-delta=&quot;60&quot; aria-label=&quot;Tăng giờ kết thúc một phút&quot;&gt;+ 1 phút&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide time-presets&quot;&gt;&lt;span&gt;Chọn nhanh thời lượng&lt;/span&gt;&lt;div class=&quot;duration-buttons&quot;&gt;&lt;button type=&quot;button&quot; data-duration=&quot;30&quot;&gt;30 giây&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;60&quot;&gt;1 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;120&quot;&gt;2 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;300&quot;&gt;5 phút&lt;/button&gt;&lt;button type=&quot;button&quot; data-duration=&quot;600&quot;&gt;10 phút&lt;/button&gt;&lt;/div&gt;&lt;p class=&quot;duration-limit&quot;&gt;Tối đa 10 phút mỗi lần tải&lt;/p&gt;&lt;div id=&quot;rangeTimeSummary&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot; hidden&gt;&lt;label for=&quot;idMode&quot;&gt;Giá trị gửi khi tìm trên máy chủ&lt;/label&gt;&lt;select id=&quot;idMode&quot;&gt;&lt;option value=&quot;plate&quot;&gt;Biển số từ danh sách xe (theo tài liệu API)&lt;/option&gt;&lt;option value=&quot;serial&quot;&gt;Serial (để đối chiếu hệ thống thực tế)&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;wide&quot;&gt;&lt;button&gt;Tìm video&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;p&gt;&lt;small&gt;Chạm ô giờ để chọn giờ–phút–giây. Dùng nút độ dài để chọn nhanh đoạn cần xem.&lt;/small&gt;&lt;/p&gt;&lt;/section&gt;
+&lt;section id=&quot;videoProgressBox&quot; hidden aria-live=&quot;polite&quot; role=&quot;status&quot; data-state=&quot;busy&quot;&gt;&lt;div id=&quot;videoProgressRing&quot; class=&quot;progress-ring&quot;&gt;&lt;span id=&quot;videoProgressPercent&quot;&gt;0%&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;progress-copy&quot;&gt;&lt;strong id=&quot;videoProgressText&quot;&gt;Đang chuẩn bị video&lt;/strong&gt;&lt;small id=&quot;videoProgressBytes&quot;&gt;&lt;/small&gt;&lt;/div&gt;&lt;progress id=&quot;videoProgressBar&quot; hidden max=&quot;100&quot; value=&quot;0&quot;&gt;&lt;/progress&gt;&lt;button id=&quot;dismissProgress&quot; type=&quot;button&quot; aria-label=&quot;Đóng thông báo&quot;&gt;×&lt;/button&gt;&lt;/section&gt;&lt;section id=&quot;previewSection&quot; hidden&gt;&lt;h2&gt;Xem trước video&lt;/h2&gt;&lt;p id=&quot;previewInfo&quot; hidden&gt;&lt;/p&gt;&lt;video id=&quot;previewPlayer&quot; controls playsinline preload=&quot;metadata&quot; style=&quot;width:100%;max-height:65vh;background:#000;border-radius:8px&quot;&gt;&lt;/video&gt;&lt;div class=&quot;preview-toolbar&quot;&gt;&lt;span id=&quot;previewRange&quot;&gt;&lt;/span&gt;&lt;button id=&quot;editVideoTime&quot; type=&quot;button&quot;&gt;Đổi thời gian&lt;/button&gt;&lt;/div&gt;&lt;p&gt;&lt;button id=&quot;savePreview&quot; type=&quot;button&quot;&gt;Tải video đang xem&lt;/button&gt;&lt;/p&gt;&lt;small&gt;Xem trước cần tải dữ liệu gốc và chuyển sang MP4 trong trình duyệt. Video không có âm thanh.&lt;/small&gt;&lt;/section&gt;&lt;section&gt;&lt;div class=&quot;result-heading&quot;&gt;&lt;h2&gt;Video tìm được&lt;/h2&gt;&lt;span id=&quot;resultCount&quot;&gt;0 video&lt;/span&gt;&lt;/div&gt;&lt;div id=&quot;results&quot; class=&quot;scroll&quot;&gt;Chưa tìm video.&lt;/div&gt;&lt;button id=&quot;tasksButton&quot; hidden style=&quot;margin-top:20px&quot;&gt;Kiểm tra tác vụ tải&lt;/button&gt;&lt;div id=&quot;tasks&quot;&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;section hidden&gt;&lt;h2&gt;Thông tin kiểm tra&lt;/h2&gt;&lt;p&gt;Chuyển đổi chạy trên máy bạn. Hiện hỗ trợ định dạng DVSMEDIADATA đã kiểm tra; mỗi nút xuất một tệp, không tự ghép nhiều bản ghi. Nếu thiếu khung hình khởi tạo, video bắt đầu tại khung hình có thể giải mã đầu tiên. Tệp lớn cần nhiều bộ nhớ.&lt;/p&gt;&lt;p&gt;Nếu hiện “Failed to fetch”, file HTML có thể bị chặn bởi CORS, kết nối hoặc địa chỉ máy chủ. Không thể sửa CORS chỉ bằng HTML. Trong app, kết nối API được xử lý trực tiếp.&lt;/p&gt;&lt;pre id=&quot;debug&quot;&gt;Chưa có yêu cầu.&lt;/pre&gt;&lt;/section&gt;&lt;/main&gt;
+&lt;div id=&quot;timePicker&quot; class=&quot;time-picker-overlay&quot; hidden&gt;&lt;div class=&quot;time-picker-card&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot; aria-labelledby=&quot;timePickerTitle&quot;&gt;&lt;h2 id=&quot;timePickerTitle&quot;&gt;Chọn thời gian&lt;/h2&gt;&lt;p&gt;Chọn giờ, phút và giây theo định dạng 24 giờ.&lt;/p&gt;&lt;div class=&quot;time-picker-columns&quot;&gt;&lt;div&gt;&lt;label for=&quot;pickerHour&quot;&gt;Giờ&lt;/label&gt;&lt;select id=&quot;pickerHour&quot;&gt;&lt;/select&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;pickerMinute&quot;&gt;Phút&lt;/label&gt;&lt;select id=&quot;pickerMinute&quot;&gt;&lt;/select&gt;&lt;/div&gt;&lt;div&gt;&lt;label for=&quot;pickerSecond&quot;&gt;Giây&lt;/label&gt;&lt;select id=&quot;pickerSecond&quot;&gt;&lt;/select&gt;&lt;/div&gt;&lt;/div&gt;&lt;p id=&quot;timePickerError&quot; class=&quot;time-picker-error&quot; role=&quot;status&quot;&gt;&lt;/p&gt;&lt;div class=&quot;time-picker-actions&quot;&gt;&lt;button id=&quot;timePickerCancel&quot; type=&quot;button&quot;&gt;Hủy&lt;/button&gt;&lt;button id=&quot;timePickerApply&quot; type=&quot;button&quot;&gt;Xác nhận&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;script&gt;
+if(!AbortSignal.timeout)AbortSignal.timeout=function(ms){const c=new AbortController();setTimeout(()=&gt;c.abort(),ms);return c.signal;};
+&lt;/script&gt;&lt;script&gt;
 function join(...parts){const n=parts.reduce((s,p)=&gt;s+p.length,0),b=new Uint8Array(n);let o=0;for(const p of parts){b.set(p,o);o+=p.length;}return b;}
 function u32(...v){const b=new Uint8Array(v.length*4),d=new DataView(b.buffer);v.forEach((x,i)=&gt;d.setUint32(i*4,x));return b;}function u16(...v){const b=new Uint8Array(v.length*2),d=new DataView(b.buffer);v.forEach((x,i)=&gt;d.setUint16(i*2,x));return b;}function ascii(s){return new TextEncoder().encode(s);}function box(t,...p){const b=join(...p);return join(u32(b.length+8),ascii(t),b);}function full(t,ver,flags,...p){return box(t,new Uint8Array([ver,flags&gt;&gt;16&amp;255,flags&gt;&gt;8&amp;255,flags&amp;255]),...p);}
 function nals(data){let found=[],start=-1;for(let i=0;i+3&lt;=data.length;i++){let n=0;if(data[i]===0&amp;&amp;data[i+1]===0){if(data[i+2]===1)n=3;else if(data[i+2]===0&amp;&amp;data[i+3]===1)n=4;}if(n){if(start&gt;=0)found.push(data.subarray(start,i));start=i+n;i+=n-1;}}if(start&gt;=0)found.push(data.subarray(start));return found.filter(x=&gt;x.length);}
@@ -1345,7 +1415,7 @@ function legacyToDVS(buffer,apiStart){
 function remuxDVS(buffer,channel,begin,end,apiStart){
  const magic=new Uint8Array(buffer);if(magic[0]===120&amp;&amp;magic[1]===86&amp;&amp;magic[2]===52&amp;&amp;magic[3]===18){buffer=legacyToDVS(buffer,apiStart);channel=0;}
  const bytes=new Uint8Array(buffer),view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);if(ascii(&#x27;DVSMEDIADATA&#x27;).some((x,i)=&gt;bytes[i]!==x))throw Error(&#x27;File không phải định dạng DVSMEDIADATA đã kiểm tra.&#x27;);if(!Number.isInteger(channel)||channel&lt;0||channel&gt;15)throw Error(&#x27;Kênh không hợp lệ.&#x27;);let pos=44,frames=[],sps=null,pps=null,vps=null,hevc=false;
- while(pos&lt;bytes.length){if(pos+16&gt;bytes.length||bytes[pos]!==80||bytes[pos+1]!==72)throw Error(&#x27;File bị thiếu hoặc cấu trúc chưa hỗ trợ tại byte &#x27;+pos);const type=bytes[pos+2],len=view.getUint32(pos+4,true),ts=Number(view.getBigUint64(pos+8,true))/1e6;if(pos+16+len&gt;bytes.length)throw Error(&#x27;File tải chưa đủ dữ liệu.&#x27;);if(type===16+channel){const ns=nals(bytes.subarray(pos+16,pos+16+len));for(const n of ns){if(((n[0]&gt;&gt;1)&amp;63)===32){vps=n;hevc=true;}if(hevc){if(((n[0]&gt;&gt;1)&amp;63)===33)sps=n;if(((n[0]&gt;&gt;1)&amp;63)===34)pps=n;}else{if((n[0]&amp;31)===7)sps=n;if((n[0]&amp;31)===8)pps=n;}}
+ while(pos&lt;bytes.length){if(pos+16&gt;bytes.length||bytes[pos]!==80||bytes[pos+1]!==72)throw Error(&#x27;File bị thiếu hoặc cấu trúc chưa hỗ trợ tại byte &#x27;+pos);const type=bytes[pos+2],len=view.getUint32(pos+4,true),ts=Number(view.getBigUint64(pos+8,true))/1e6;if(pos+16+len&gt;bytes.length)throw Error(&#x27;File tải chưa đủ dữ liệu.&#x27;);if(type===16+channel){const ns=nals(bytes.subarray(pos+16,pos+16+len));for(const n of ns){if(n.length&gt;=2&amp;&amp;(n[0]&amp;1)===0&amp;&amp;(n[1]&amp;7)!==0&amp;&amp;((n[0]&gt;&gt;1)&amp;63)===32){vps=n;hevc=true;}if(hevc){if(((n[0]&gt;&gt;1)&amp;63)===33)sps=n;if(((n[0]&gt;&gt;1)&amp;63)===34)pps=n;}else{if((n[0]&amp;31)===7)sps=n;if((n[0]&amp;31)===8)pps=n;}}
  const picture=ns.some(n=&gt;hevc?((n[0]&gt;&gt;1)&amp;63)&lt;=31:[1,5].includes(n[0]&amp;31));
  if(picture)frames.push({ts,key:ns.some(n=&gt;hevc?[16,17,18,19,20,21].includes((n[0]&gt;&gt;1)&amp;63):(n[0]&amp;31)===5),data:join(...ns.filter(n=&gt;hevc?((n[0]&gt;&gt;1)&amp;63)&lt;=31:![7,8,9].includes(n[0]&amp;31)).map(n=&gt;join(u32(n.length),n)))});}pos+=16+len;}
  if(!frames.length||!sps||!pps)throw Error(&#x27;Không có hình có thể giải mã ở kênh &#x27;+(channel+1)+&#x27;.&#x27;);if(!(begin&lt;end))throw Error(&#x27;Khoảng giờ không hợp lệ.&#x27;);const before=frames.map((f,i)=&gt;f.key&amp;&amp;f.ts&lt;=begin?i:-1).filter(i=&gt;i&gt;=0);let first=before.at(-1);if(first===undefined)first=frames.findIndex(f=&gt;f.key&amp;&amp;f.ts&lt;end);if(first===undefined||first&lt;0)throw Error(&#x27;Không có khung hình khởi tạo trong khoảng chọn.&#x27;);const selected=frames.slice(first).filter(f=&gt;f.ts&lt;end);if(!selected.length)throw Error(&#x27;Không có hình trong khoảng chọn.&#x27;);const mediaStart=selected[0].ts;const actualBegin=Math.max(begin,mediaStart),actualEnd=Math.min(end,frames.at(-1).ts+0.04);if(actualBegin&gt;=actualEnd)throw Error(&#x27;Khoảng chọn nằm ngoài bản ghi.&#x27;);const durations=selected.map((f,i)=&gt;Math.max(1,Math.round(((selected[i+1]?.ts??Math.min(f.ts+0.04,actualEnd))-f.ts)*1e6)));const duration=Math.round((actualEnd-actualBegin)*1000),mediaDuration=durations.reduce((a,b)=&gt;a+b,0),mediaOffset=Math.round((actualBegin-mediaStart)*1e6);const dim=hevc?hevcConfig(sps,vps,pps):dimensions(sps);const avcC=hevc?box(&#x27;hvcC&#x27;,dim.config):box(&#x27;avcC&#x27;,new Uint8Array([1,sps[1],sps[2],sps[3],255,225]),u16(sps.length),sps,new Uint8Array([1]),u16(pps.length),pps);const matrix=u32(65536,0,0,0,65536,0,0,0,1073741824);
@@ -1356,15 +1426,21 @@ function remuxDVS(buffer,channel,begin,end,apiStart){
 &#x27;use strict&#x27;;
 const $=id=&gt;document.getElementById(id);let session=&#x27;&#x27;,vehicles=[],files=[],searchCriteria=null;
 $(&#x27;date&#x27;).value=new Intl.DateTimeFormat(&#x27;en-CA&#x27;,{timeZone:&#x27;Asia/Ho_Chi_Minh&#x27;,year:&#x27;numeric&#x27;,month:&#x27;2-digit&#x27;,day:&#x27;2-digit&#x27;}).format(new Date());
-const show=(s,error=false)=&gt;{$(&#x27;status&#x27;).textContent=s;$(&#x27;status&#x27;).style.background=error?&#x27;#ffe5e8&#x27;:&#x27;#e4efff&#x27;;};
+const show=(s,error=false)=&gt;{$(&#x27;status&#x27;).hidden=!error||!$(&#x27;videoProgressBox&#x27;).hidden;$(&#x27;status&#x27;).textContent=s;$(&#x27;status&#x27;).style.background=error?&#x27;#ffe5e8&#x27;:&#x27;#e4efff&#x27;;};
 function scrub(v){if(Array.isArray(v))return v.map(scrub);if(v&amp;&amp;typeof v===&#x27;object&#x27;)return Object.fromEntries(Object.entries(v).map(([k,x])=&gt;[k,/password|jsession|JSESSIONID/i.test(k)?&#x27;[ẩn]&#x27;:scrub(x)]));return typeof v===&#x27;string&#x27;?v.replace(/([?&amp;](?:jsession|password)=)[^&amp;\s]*/gi,&#x27;$1[ẩn]&#x27;):v;}
 
 // All camera network requests use HTTPS; logical API URLs and serials stay intact.
 function cameraProxyBase(){
- let value=&#x27;https://lively-cloud-d33f.gianglue819.workers.dev&#x27;;
- try{const configured=parent.document.getElementById(&#x27;baseUrl&#x27;)?.value?.trim();if(configured)value=configured;}catch{}
- const u=new URL(value);if(u.protocol!==&#x27;https:&#x27;||u.username||u.password)throw Error(&#x27;Máy chủ trung gian camera phải dùng HTTPS.&#x27;);
- return u.origin;
+ const fallback=&#x27;https://lively-cloud-d33f.gianglue819.workers.dev&#x27;;
+ // The main GPS API may use HTTP; only HTTPS configuration can override the camera gateway.
+ try{
+  const configured=parent.document.getElementById(&#x27;baseUrl&#x27;)?.value?.trim();
+  if(configured){
+   const u=new URL(configured);
+   if(u.protocol===&#x27;https:&#x27;&amp;&amp;!u.username&amp;&amp;!u.password)return u.origin;
+  }
+ }catch{}
+ return fallback;
 }
 function cameraFetch(input,init){
  const target=new URL(String(input),$(&#x27;base&#x27;).value);
@@ -1372,17 +1448,16 @@ function cameraFetch(input,init){
  proxy.searchParams.set(&#x27;url&#x27;,target.href);
  return fetch(proxy.href,init);
 }
-async function api(name,params,method=$(&#x27;method&#x27;).value){const base=new URL($(&#x27;base&#x27;).value);if(![&#x27;http:&#x27;,&#x27;https:&#x27;].includes(base.protocol)||base.username||base.password)throw Error(&#x27;Địa chỉ máy chủ không hợp lệ.&#x27;);const url=new URL(&#x27;/StandardApiAction_&#x27;+name+&#x27;.action&#x27;,base);const body=new URLSearchParams(params);const started=Date.now();$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,method,params:scrub(params)},null,2);let response;try{response=await cameraFetch(method===&#x27;GET&#x27;?url+&#x27;?&#x27;+body:url,{method, ...(method===&#x27;POST&#x27;?{headers:{&#x27;Content-Type&#x27;:&#x27;application/x-www-form-urlencoded&#x27;},body}:{}),signal:AbortSignal.timeout(60000)});}catch(e){throw Error(&#x27;Không kết nối được API &#x27;+name+&#x27; qua HTTPS. Kiểm tra Worker đã cập nhật và hỗ trợ cổng camera. Chi tiết: &#x27;+e.message);}const text=await response.text();let data;try{data=JSON.parse(text);}catch{$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,response:text.slice(0,2000)},null,2);throw Error(&#x27;HTTP &#x27;+response.status+&#x27;: phản hồi không phải JSON.&#x27;);}$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,elapsedMs:Date.now()-started,response:scrub(data)},null,2);if(!response.ok||String(data.result)!==&#x27;0&#x27;)throw Error(&#x27;API &#x27;+name+&#x27; trả mã &#x27;+(data.result??response.status)+&#x27;.&#x27;);return data;}
-async function run(fn){document.querySelectorAll(&#x27;button&#x27;).forEach(x=&gt;x.disabled=true);show(&#x27;Đang gửi yêu cầu…&#x27;);try{await fn();}catch(e){failVideoProgress(e.message);show(e.message,true);}finally{document.querySelectorAll(&#x27;button&#x27;).forEach(x=&gt;x.disabled=false);}}
+async function api(name,params,method=$(&#x27;method&#x27;).value){const base=new URL($(&#x27;base&#x27;).value);if(![&#x27;http:&#x27;,&#x27;https:&#x27;].includes(base.protocol)||base.username||base.password)throw Error(&#x27;Địa chỉ máy chủ không hợp lệ.&#x27;);const url=new URL(&#x27;/StandardApiAction_&#x27;+name+&#x27;.action&#x27;,base);const body=new URLSearchParams(params);const started=Date.now();$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,method,params:scrub(params)},null,2);let response;try{response=await cameraFetch(method===&#x27;GET&#x27;?url+&#x27;?&#x27;+body:url,{method, ...(method===&#x27;POST&#x27;?{headers:{&#x27;Content-Type&#x27;:&#x27;application/x-www-form-urlencoded&#x27;},body}:{}),signal:AbortSignal.timeout(60000)});}catch(e){throw Error(&#x27;Không kết nối được API &#x27;+name+&#x27; qua HTTPS. Kiểm tra kết nối và máy chủ trung gian camera. Chi tiết: &#x27;+e.message);}const text=await response.text();let data;try{data=JSON.parse(text);}catch{$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,response:text.slice(0,2000)},null,2);throw Error(&#x27;HTTP &#x27;+response.status+&#x27;: phản hồi không phải JSON.&#x27;);}$(&#x27;debug&#x27;).textContent=JSON.stringify({api:name,http:response.status,elapsedMs:Date.now()-started,response:scrub(data)},null,2);if(!response.ok||String(data.result)!==&#x27;0&#x27;)throw Error(&#x27;API &#x27;+name+&#x27; trả mã &#x27;+(data.result??response.status)+&#x27;.&#x27;);return data;}
+let videoOperationBusy=false;
+async function run(fn){if(videoOperationBusy)return;videoOperationBusy=true;const controls=Array.from(document.querySelectorAll(&#x27;button,#searchForm input,#searchForm select&#x27;)),disabled=controls.map(x=&gt;x.disabled);controls.forEach(x=&gt;x.disabled=true);show(&#x27;Đang gửi yêu cầu…&#x27;);try{await fn();}catch(e){failVideoProgress(e.message);show(e.message,true);}finally{controls.forEach((x,i)=&gt;x.disabled=disabled[i]);videoOperationBusy=false;}}
 let allowedVehicleSerials=new Map(),lastAllowedSerials=&#x27;&#x27;;
-function normalizeVehicleSerial(value){const serial=String(value??&#x27;&#x27;).trim();return /^\d{8,}$/.test(serial)?serial.slice(-8):serial;}
+function normalizeVehicleSerial(value){return String(value??&#x27;&#x27;).trim();}
 let matchedDevicesCache=null;
 function list(){return matchedDevicesCache??(matchedDevicesCache=vehicles.flatMap(v=&gt;(v.dl||[]).map(d=&gt;({...d,plate:v.nm}))).filter(d=&gt;allowedVehicleSerials.has(normalizeVehicleSerial(d.id))).map(d=&gt;({...d,matchedPlate:allowedVehicleSerials.get(normalizeVehicleSerial(d.id))})));}
 function refreshMatchedDevices(){
 matchedDevicesCache=null;
-$(&#x27;devices&#x27;).replaceChildren();
-for(const d of list()){const o=document.createElement(&#x27;option&#x27;);o.value=d.matchedPlate;o.label=d.matchedPlate;$(&#x27;devices&#x27;).append(o);}
-if(!selected()){$(&#x27;vehiclePlate&#x27;).value=&#x27;&#x27;;$(&#x27;serial&#x27;).value=&#x27;&#x27;;$(&#x27;channel&#x27;).replaceChildren();files=[];searchCriteria=null;$(&#x27;results&#x27;).textContent=&#x27;Chưa có video .&#x27;;clearPreview();}
+if(!selected()){$(&#x27;vehiclePlate&#x27;).value=&#x27;&#x27;;$(&#x27;serial&#x27;).value=&#x27;&#x27;;$(&#x27;channel&#x27;).replaceChildren();files=[];searchCriteria=null;setVideoEmpty(&#x27;Chọn thời gian để tìm video&#x27;);clearPreview();}
 $(&#x27;vehiclePlate&#x27;).dispatchEvent(new Event(&#x27;input&#x27;));
 $(&#x27;serialMatchInfo&#x27;).textContent=&#x27;Có &#x27;+list().length+&#x27; thiết bị trùng serial. Thiết bị không trùng đã bị ẩn. Nếu chưa có thiết bị, hãy mở tab Danh sách xe để lấy danh sách rồi đăng nhập camera.&#x27;;
 }
@@ -1396,6 +1471,7 @@ refreshMatchedDevices();
 let cameraMainActive=false,cameraPanelVisible=false,cameraAuthGeneration=0,cameraInitBusy=false,cameraInitTimer=null;
 const nextCameraPaint=()=&gt;new Promise(resolve=&gt;requestAnimationFrame(()=&gt;setTimeout(resolve,0)));
 function cameraInitStep(text){
+ $(&#x27;cameraInitStatus&#x27;).classList.remove(&#x27;camera-error&#x27;);
  clearInterval(cameraInitTimer);const started=Date.now();
  $(&#x27;cameraInitStatus&#x27;).hidden=false;
  $(&#x27;cameraInitStatus&#x27;).textContent=text;
@@ -1418,10 +1494,10 @@ async function prepareCameraPanel(){
   cameraInitStep(&#x27;Bước 4/4: Lấy trạng thái và cập nhật màu biển số…&#x27;);await nextCameraPaint();check();
   const ok=await startVehicleStatusPoll();check();
   clearInterval(cameraInitTimer);
-  $(&#x27;cameraInitStatus&#x27;).hidden=ok!==false;
+  $(&#x27;cameraInitStatus&#x27;).hidden=ok!==false;$(&#x27;cameraInitStatus&#x27;).classList.toggle(&#x27;camera-error&#x27;,ok===false);
   $(&#x27;cameraInitStatus&#x27;).textContent=ok===false?&#x27;Đã lấy thiết bị. Chưa lấy được trạng thái màu; hệ thống sẽ thử lại sau 15 giây.&#x27;:&#x27;Sẵn sàng · &#x27;+list().length+&#x27; thiết bị trùng danh sách xe.&#x27;;
  }catch(e){
-  if(generation===cameraAuthGeneration){clearInterval(cameraInitTimer);if(e.message!==&#x27;CAMERA_INIT_CANCELLED&#x27;){$(&#x27;cameraInitStatus&#x27;).hidden=false;$(&#x27;cameraInitStatus&#x27;).textContent=&#x27;Không hoàn thành bước chuẩn bị: &#x27;+e.message+&#x27; · Mở lại tab để thử lại hoặc mở lại trang.&#x27;;}}
+  if(generation===cameraAuthGeneration){clearInterval(cameraInitTimer);if(e.message!==&#x27;CAMERA_INIT_CANCELLED&#x27;){$(&#x27;cameraInitStatus&#x27;).classList.add(&#x27;camera-error&#x27;);$(&#x27;cameraInitStatus&#x27;).hidden=false;$(&#x27;cameraInitStatus&#x27;).textContent=&#x27;Không hoàn thành bước chuẩn bị: &#x27;+e.message+&#x27; · Mở lại tab để thử lại hoặc mở lại trang.&#x27;;}}
  }finally{cameraInitBusy=false;if(generation!==cameraAuthGeneration&amp;&amp;cameraPanelVisible&amp;&amp;cameraMainActive)setTimeout(prepareCameraPanel,0);}
 }
 window.addEventListener(&#x27;message&#x27;,event=&gt;{
@@ -1458,6 +1534,9 @@ function vehicleColorState(d){
  return speed&gt;0?{color:&#x27;#15803d&#x27;,text:&#x27;Đang chạy · &#x27;+speed+&#x27; km/h&#x27;}:{color:&#x27;#2563eb&#x27;,text:&#x27;Dừng · ACC bật&#x27;};
 }
 const vehicleColorButtons=new Map();
+let vehiclePage=0,lastVehicleQuery=&#x27;&#x27;,vehicleDirectoryCount=0;
+$(&quot;vehiclePrev&quot;).onclick=()=&gt;{if(vehiclePage&gt;0){vehiclePage--;renderVehicleColors();}};
+$(&quot;vehicleNext&quot;).onclick=()=&gt;{if((vehiclePage+1)*20&lt;vehicleDirectoryCount){vehiclePage++;renderVehicleColors();}};
 function renderVehicleColors(){
  const current=selected(),input=$(&#x27;vehiclePlate&#x27;),status=$(&#x27;vehicleColorStatus&#x27;);
  const color=current?vehicleColorState(current):{color:&#x27;#14223c&#x27;,text:&#x27;&#x27;};
@@ -1465,22 +1544,30 @@ function renderVehicleColors(){
  input.style.fontWeight=&#x27;700&#x27;;status.style.color=color.color;
  if(status.textContent!==color.text)status.textContent=color.text;
  const box=$(&#x27;vehicleColorList&#x27;),keep=new Set(),fragment=document.createDocumentFragment();
- for(const d of list()){
+ const query=normalizePlate(input.value);if(query!==lastVehicleQuery){vehiclePage=0;lastVehicleQuery=query;}
+ const directory=list().filter(d=&gt;current||!query||(normalizePlate(d.matchedPlate).includes(query)||normalizePlate(d.id).includes(query))),pages=Math.ceil(directory.length/20);
+ vehicleDirectoryCount=directory.length;$(&#x27;vehicleNoMatches&#x27;).hidden=directory.length!==0;$(&#x27;vehiclePager&#x27;).hidden=pages&lt;=1;$(&#x27;vehicleCount&#x27;).textContent=directory.length+&#x27; xe&#x27;;updateVideoWorkspace(current,color);
+ vehiclePage=Math.min(vehiclePage,Math.max(0,pages-1));
+ $(&#x27;vehiclePageInfo&#x27;).textContent=(pages?vehiclePage+1:0)+&#x27; / &#x27;+pages;
+ $(&#x27;vehiclePrev&#x27;).disabled=vehiclePage===0;
+ $(&#x27;vehicleNext&#x27;).disabled=vehiclePage+1&gt;=pages;
+ for(const d of directory.slice(vehiclePage*20,vehiclePage*20+20)){
   const id=String(d.id),c=vehicleColorState(d);keep.add(id);
   let button=vehicleColorButtons.get(id);
   if(!button){
    button=document.createElement(&#x27;button&#x27;);button.type=&#x27;button&#x27;;
-   button.style.cssText=&#x27;width:auto;padding:6px 10px;background:white;font-size:14px;font-weight:700&#x27;;
+   button.className=&#x27;vehicle-choice&#x27;;button.setAttribute(&#x27;role&#x27;,&#x27;option&#x27;);
+   button.innerHTML=&#x27;&lt;span class=&quot;vehicle-choice-icon&quot;&gt;&#x27;+VIDEO_CAR_ICON+&#x27;&lt;/span&gt;&lt;span class=&quot;vehicle-choice-copy&quot;&gt;&lt;strong&gt;&lt;/strong&gt;&lt;small&gt;&lt;/small&gt;&lt;/span&gt;&lt;span class=&quot;vehicle-choice-arrow&quot; aria-hidden=&quot;true&quot;&gt;›&lt;/span&gt;&#x27;;
    button.onclick=()=&gt;{input.value=button.dataset.plate;input.dispatchEvent(new Event(&#x27;input&#x27;));};
    vehicleColorButtons.set(id,button);fragment.append(button);
   }
-  button.dataset.plate=d.matchedPlate;
-  if(button.textContent!==d.matchedPlate)button.textContent=d.matchedPlate;
-  if(button.title!==c.text)button.title=c.text;
+  button.dataset.plate=String(d.id);
+  button.querySelector(&#x27;strong&#x27;).textContent=d.matchedPlate;button.querySelector(&#x27;small&#x27;).textContent=c.text||&#x27;Chạm để chọn xe&#x27;;button.setAttribute(&#x27;aria-label&#x27;,&#x27;Chọn xe &#x27;+d.matchedPlate);button.setAttribute(&#x27;aria-selected&#x27;,String(String(current?.id)===id));
+  if(button.title!==c.text+&#x27; · &#x27;+d.id)button.title=c.text+&#x27; · &#x27;+d.id;
   if(button.dataset.color!==c.color){button.dataset.color=c.color;button.style.color=c.color;button.style.borderColor=c.color;}
  }
  for(const [id,button] of vehicleColorButtons)if(!keep.has(id)){button.remove();vehicleColorButtons.delete(id);}
- if(fragment.childNodes.length)box.append(fragment);
+ if(fragment.childNodes.length)box.append(fragment);directory.slice(vehiclePage*20,vehiclePage*20+20).forEach((d,i)=&gt;{const b=vehicleColorButtons.get(String(d.id));if(box.children[i]!==b)box.insertBefore(b,box.children[i]||null);});
 }
 function pauseVehicleStatusPoll(){++vehiclePollEpoch;clearTimeout(vehiclePollTimer);vehiclePollAbort?.abort();}
 function stopVehicleStatusPoll(){
@@ -1512,7 +1599,11 @@ function startVehicleStatusPoll(){
 $(&#x27;vehiclePlate&#x27;).addEventListener(&#x27;input&#x27;,renderVehicleColors);
 
 function normalizePlate(value){return String(value||&#x27;&#x27;).toUpperCase().replace(/[^A-Z0-9]/g,&#x27;&#x27;);}
-function selected(){const wanted=normalizePlate($(&#x27;vehiclePlate&#x27;).value);if(!wanted)return undefined;const matches=list().filter(d=&gt;normalizePlate(d.matchedPlate)===wanted);return matches.length===1?matches[0]:undefined;}
+function selected(){
+ const raw=$(&#x27;vehiclePlate&#x27;).value.trim(),wanted=normalizePlate(raw);if(!wanted)return undefined;
+ const exact=list().filter(d=&gt;String(d.id)===raw);if(exact.length===1)return exact[0];
+ const matches=list().filter(d=&gt;normalizePlate(d.matchedPlate)===wanted);return matches.length===1?matches[0]:undefined;
+}
 async function load(){const d=await api(&#x27;queryUserVehicle&#x27;,{jsession:session});vehicles=d.vehicles||[];refreshMatchedDevices();startVehicleStatusPoll();show(&#x27;Đã lấy &#x27;+list().length+&#x27; thiết bị. Chọn biển số xe để tìm video.&#x27;);}
 $(&#x27;loginForm&#x27;).onsubmit=e=&gt;{e.preventDefault();run(async()=&gt;{const d=await api(&#x27;login&#x27;,{account:$(&#x27;account&#x27;).value.trim(),password:$(&#x27;password&#x27;).value});session=d.jsession||d.JSESSIONID||&#x27;&#x27;;if(!session)throw Error(&#x27;Đăng nhập không trả jsession.&#x27;);$(&#x27;password&#x27;).value=&#x27;&#x27;;show(&#x27;Đăng nhập thành công. Đang lấy thiết bị…&#x27;);await load();});};
 $(&#x27;useSession&#x27;).onclick=()=&gt;run(async()=&gt;{session=$(&#x27;sessionInput&#x27;).value.trim();$(&#x27;sessionInput&#x27;).value=&#x27;&#x27;;if(!session)throw Error(&#x27;Nhập jsession.&#x27;);await load();});
@@ -1551,7 +1642,7 @@ function updateTimeSummary(){
   const rangeError=duration&lt;=0?&#x27;Giờ kết thúc phải sau giờ bắt đầu.&#x27;:duration&gt;MAX_VIDEO_SECONDS?&#x27;Chỉ nên tải tối đa 10 phút mỗi lần. Hãy giảm giờ kết thúc.&#x27;:&#x27;&#x27;;
   $(&#x27;end&#x27;).setCustomValidity(rangeError);
   summary.classList.toggle(&#x27;invalid&#x27;,Boolean(rangeError));
-  summary.textContent=rangeError?rangeError:inputClock(begin)+&#x27; → &#x27;+inputClock(end)+&#x27; · &#x27;+(Math.floor(duration/60)?Math.floor(duration/60)+&#x27; phút &#x27;:&#x27;&#x27;)+(duration%60?duration%60+&#x27; giây&#x27;:&#x27;&#x27;);
+  summary.textContent=rangeError?rangeError:($(&#x27;channel&#x27;).selectedOptions[0]?.textContent.split(&#x27; · &#x27;)[0]||&#x27;Kênh&#x27;)+&#x27; · &#x27;+inputClock(begin)+&#x27; → &#x27;+inputClock(end)+&#x27; · &#x27;+(Math.floor(duration/60)?Math.floor(duration/60)+&#x27; phút &#x27;:&#x27;&#x27;)+(duration%60?duration%60+&#x27; giây&#x27;:&#x27;&#x27;);
   document.querySelectorAll(&#x27;[data-duration]&#x27;).forEach(button=&gt;{const active=duration===Number(button.dataset.duration);button.classList.toggle(&#x27;selected&#x27;,active);button.setAttribute(&#x27;aria-pressed&#x27;,String(active));});
  }catch(e){$(&#x27;end&#x27;).setCustomValidity(&#x27;&#x27;);summary.textContent=&#x27;Chọn đầy đủ giờ bắt đầu và kết thúc.&#x27;;}
 }
@@ -1562,9 +1653,72 @@ document.querySelectorAll(&#x27;[data-duration]&#x27;).forEach(button=&gt;button
  try{const end=seconds($(&#x27;begin&#x27;).value)+Number(button.dataset.duration);if(end&gt;86399){$(&#x27;rangeTimeSummary&#x27;).textContent=&#x27;Đoạn đã chọn vượt qua cuối ngày. Hãy giảm độ dài hoặc đổi giờ bắt đầu.&#x27;;return;}$(&#x27;end&#x27;).value=inputClock(end);updateTimeSummary();}catch(e){$(&#x27;begin&#x27;).focus();}
 }));
 for(const id of [&#x27;begin&#x27;,&#x27;end&#x27;])$(id).addEventListener(&#x27;input&#x27;,updateTimeSummary);
+$(&#x27;channel&#x27;).addEventListener(&#x27;change&#x27;,updateTimeSummary);
 updateTimeSummary();
 
-$(&#x27;searchForm&#x27;).onsubmit=e=&gt;{e.preventDefault();resetVideoProgress();run(async()=&gt;{if(!session)throw Error(&#x27;Đăng nhập hoặc nhập phiên trước.&#x27;);const d=selected();if(!d)throw Error(&#x27;Biển số chưa có trong danh sách hoặc có nhiều thiết bị trùng biển số. Hãy chọn xe đã đối chiếu.&#x27;);const loc=&#x27;1&#x27;;if(loc!==&#x27;1&#x27;&amp;&amp;$(&#x27;idMode&#x27;).value===&#x27;plate&#x27;&amp;&amp;!d)throw Error(&#x27;Chưa tìm được biển số cho serial. Lấy danh sách xe hoặc thử chế độ serial.&#x27;);const BEG=seconds($(&#x27;begin&#x27;).value),END=seconds($(&#x27;end&#x27;).value);validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const [YEAR,MON,DAY]=$(&#x27;date&#x27;).value.split(&#x27;-&#x27;);const data=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:loc===&#x27;1&#x27;||$(&#x27;idMode&#x27;).value===&#x27;serial&#x27;?$(&#x27;serial&#x27;).value.trim():d.plate,LOC:loc,CHN:$(&#x27;channel&#x27;).value,YEAR,MON,DAY,BEG,END,RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:0,STORE:0});files=data.files||[];searchCriteria={date:$(&#x27;date&#x27;).value,begin:$(&#x27;begin&#x27;).value,end:$(&#x27;end&#x27;).value,channel:Number($(&#x27;channel&#x27;).value),serial:String(d.id),plate:d.matchedPlate,apiPlate:d.plate};render();show(&#x27;Tìm thấy &#x27;+files.length+&#x27; tệp.&#x27;);});};
+
+let timePickerTarget=null;
+for(const [id,count] of [[&#x27;pickerHour&#x27;,24],[&#x27;pickerMinute&#x27;,60],[&#x27;pickerSecond&#x27;,60]]){
+ const select=$(id);for(let i=0;i&lt;count;i++){const option=document.createElement(&#x27;option&#x27;);option.value=String(i);option.textContent=String(i).padStart(2,&#x27;0&#x27;);select.append(option);}
+}
+function openTimePicker(id){
+ if(timePickerTarget)return;timePickerTarget=id;
+ const parts=($(id).value||&#x27;00:00:00&#x27;).split(&#x27;:&#x27;).map(Number);
+ $(&#x27;pickerHour&#x27;).value=String(parts[0]||0);$(&#x27;pickerMinute&#x27;).value=String(parts[1]||0);$(&#x27;pickerSecond&#x27;).value=String(parts[2]||0);
+ $(&#x27;timePickerTitle&#x27;).textContent=id===&#x27;begin&#x27;?&#x27;Chọn giờ bắt đầu&#x27;:&#x27;Chọn giờ kết thúc&#x27;;
+ $(&#x27;timePickerError&#x27;).textContent=&#x27;&#x27;;$(&#x27;timePicker&#x27;).hidden=false;
+ document.querySelector(&#x27;main&#x27;).setAttribute(&#x27;inert&#x27;,&#x27;&#x27;);document.body.style.overflow=&#x27;hidden&#x27;;$(&#x27;pickerHour&#x27;).focus();
+}
+function closeTimePicker(){const target=timePickerTarget;timePickerTarget=null;$(&#x27;timePicker&#x27;).hidden=true;document.querySelector(&#x27;main&#x27;).removeAttribute(&#x27;inert&#x27;);document.body.style.overflow=&#x27;&#x27;;if(target)$(target).focus();}
+function applyTimePicker(){
+ const target=timePickerTarget;if(!target)return;
+ const value=Number($(&#x27;pickerHour&#x27;).value)*3600+Number($(&#x27;pickerMinute&#x27;).value)*60+Number($(&#x27;pickerSecond&#x27;).value);
+ if(target===&#x27;end&#x27;){
+  const duration=value-seconds($(&#x27;begin&#x27;).value);
+  if(duration&lt;=0||duration&gt;MAX_VIDEO_SECONDS){$(&#x27;timePickerError&#x27;).textContent=duration&lt;=0?&#x27;Giờ kết thúc phải sau giờ bắt đầu.&#x27;:&#x27;Chọn đoạn tối đa 10 phút.&#x27;;return;}
+ }else{
+  if(value&gt;=86399){$(&#x27;timePickerError&#x27;).textContent=&#x27;Chọn giờ bắt đầu trước 23:59:59.&#x27;;return;}
+  const duration=Math.max(1,Math.min(MAX_VIDEO_SECONDS,seconds($(&#x27;end&#x27;).value)-seconds($(&#x27;begin&#x27;).value)||60));
+  $(&#x27;end&#x27;).value=inputClock(Math.min(86399,value+duration));
+ }
+ $(target).value=inputClock(value);updateTimeSummary();closeTimePicker();
+}
+for(const id of [&#x27;begin&#x27;,&#x27;end&#x27;]){const input=$(id);input.addEventListener(&#x27;click&#x27;,()=&gt;openTimePicker(id));input.addEventListener(&#x27;keydown&#x27;,e=&gt;{if(e.key===&#x27;Enter&#x27;||e.key===&#x27; &#x27;){e.preventDefault();openTimePicker(id);}});}
+$(&#x27;timePickerCancel&#x27;).onclick=closeTimePicker;$(&#x27;timePickerApply&#x27;).onclick=applyTimePicker;
+$(&#x27;timePicker&#x27;).addEventListener(&#x27;click&#x27;,e=&gt;{if(e.target===$(&#x27;timePicker&#x27;))closeTimePicker();});
+document.addEventListener(&#x27;keydown&#x27;,e=&gt;{if(!timePickerTarget)return;if(e.key===&#x27;Escape&#x27;){e.preventDefault();closeTimePicker();}else if(e.key===&#x27;Tab&#x27;){const items=[$(&#x27;pickerHour&#x27;),$(&#x27;pickerMinute&#x27;),$(&#x27;pickerSecond&#x27;),$(&#x27;timePickerCancel&#x27;),$(&#x27;timePickerApply&#x27;)];const index=items.indexOf(document.activeElement);if(e.shiftKey&amp;&amp;index===0){e.preventDefault();items.at(-1).focus();}else if(!e.shiftKey&amp;&amp;index===items.length-1){e.preventDefault();items[0].focus();}}});
+
+$(&#x27;searchForm&#x27;).onsubmit=e=&gt;{e.preventDefault();resetVideoProgress();run(async()=&gt;{
+ if(!session)throw Error(&#x27;Đăng nhập hoặc nhập phiên trước.&#x27;);const d=selected();if(!d)throw Error(&#x27;Chọn biển số xe hợp lệ trước.&#x27;);
+ const criteria={date:$(&#x27;date&#x27;).value,begin:$(&#x27;begin&#x27;).value,end:$(&#x27;end&#x27;).value,channel:Number($(&#x27;channel&#x27;).value),serial:String(d.id),plate:d.matchedPlate,apiPlate:d.plate};
+ validateVideoRange(criteria.begin,criteria.end);const [YEAR,MON,DAY]=criteria.date.split(&#x27;-&#x27;);
+ const data=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:criteria.serial,LOC:1,CHN:criteria.channel,YEAR,MON,DAY,BEG:seconds(criteria.begin),END:seconds(criteria.end),RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:0,STORE:0});
+ searchCriteria=criteria;files=matchingVideoFiles(data.files,criteria);render();show(&#x27;Tìm thấy &#x27;+files.length+&#x27; đoạn phù hợp.&#x27;);
+});};
+function matchingVideoFiles(rows,criteria){
+ const begin=seconds(criteria.begin),end=seconds(criteria.end),channel=Number(criteria.channel);
+ return (Array.isArray(rows)?rows:[]).filter(file=&gt;{
+  const b=Number(file.beg),e=Number(file.end),ch=Number(file.chn);
+  return Number.isInteger(ch)&amp;&amp;ch&gt;=0&amp;&amp;(channel&lt;0||ch===channel)&amp;&amp;Number.isFinite(b)&amp;&amp;Number.isFinite(e)&amp;&amp;b&lt;end&amp;&amp;e&gt;begin&amp;&amp;b&lt;e&amp;&amp;
+   (file.devIdno==null||String(file.devIdno).trim()===String(criteria.serial).trim());
+ }).map(file=&gt;({...file,clipBeg:Math.max(begin,Number(file.beg)),clipEnd:Math.min(end,Number(file.end))}))
+ .sort((a,b)=&gt;a.clipBeg-b.clipBeg||Number(a.chn)-Number(b.chn));
+}
+function checkedSegment(file,criteria){
+ const match=matchingVideoFiles([file],criteria)[0];
+ if(!match)throw Error(&#x27;Bản ghi không đúng xe, kênh hoặc khoảng giờ đã chọn. Tìm video lại.&#x27;);
+ return match;
+}
+function mp4Duration(buffer){
+ const view=new DataView(buffer);let pos=0;
+ while(pos+8&lt;=view.byteLength){const len=view.getUint32(pos),type=new TextDecoder().decode(new Uint8Array(buffer,pos+4,4));
+  if(len&lt;8||pos+len&gt;view.byteLength)break;
+  if(type===&#x27;moov&#x27;){let child=pos+8;while(child+8&lt;=pos+len){const n=view.getUint32(child),t=new TextDecoder().decode(new Uint8Array(buffer,child+4,4));if(n&lt;8||child+n&gt;pos+len)break;
+   if(t===&#x27;mvhd&#x27;){const v=view.getUint8(child+8),offset=child+(v===1?28:20);if(offset+(v===1?12:8)&gt;child+n)break;const scale=view.getUint32(offset),duration=v===1?Number(view.getBigUint64(offset+4)):view.getUint32(offset+4);if(scale&gt;0)return duration/scale;}
+   child+=n;
+  }}pos+=len;
+ }throw Error(&#x27;Không xác minh được thời lượng MP4 từ máy chủ.&#x27;);
+}
 function downloadURL(raw){
  const u=new URL(raw,$(&#x27;base&#x27;).value);
  if(![&#x27;http:&#x27;,&#x27;https:&#x27;].includes(u.protocol)||u.username||u.password)throw Error(&#x27;Liên kết tải không hợp lệ.&#x27;);
@@ -1575,14 +1729,14 @@ let lastVideoProgressPaint=0,lastVideoProgressMessage=&#x27;&#x27;;
 function updateVideoProgress(percent,message,bytes=&#x27;&#x27;){
 const now=performance.now();if(videoProgressActive&amp;&amp;message===lastVideoProgressMessage&amp;&amp;percent!==100&amp;&amp;now-lastVideoProgressPaint&lt;120)return;
 lastVideoProgressPaint=now;lastVideoProgressMessage=message;
-videoProgressActive=true;$(&#x27;videoProgressBox&#x27;).hidden=false;
-const bar=$(&#x27;videoProgressBar&#x27;);
-if(percent===null){bar.removeAttribute(&#x27;value&#x27;);$(&#x27;videoProgressText&#x27;).textContent=message;}
-else{const value=Math.max(0,Math.min(100,Math.floor(percent)));bar.value=value;$(&#x27;videoProgressText&#x27;).textContent=value+&#x27;% · &#x27;+message;}
-$(&#x27;videoProgressBytes&#x27;).textContent=bytes;
+videoProgressActive=true;const box=$(&#x27;videoProgressBox&#x27;);box.hidden=false;box.dataset.state=&#x27;busy&#x27;;
+const bar=$(&#x27;videoProgressBar&#x27;),ring=$(&#x27;videoProgressRing&#x27;);ring.classList.toggle(&#x27;indeterminate&#x27;,percent===null);
+if(percent===null){bar.removeAttribute(&#x27;value&#x27;);$(&#x27;videoProgressPercent&#x27;).textContent=&#x27;&#x27;;}
+else{const value=Math.max(0,Math.min(100,Math.floor(percent)));bar.value=value;ring.style.setProperty(&#x27;--value&#x27;,value);$(&#x27;videoProgressPercent&#x27;).textContent=value+&#x27;%&#x27;;}
+$(&#x27;videoProgressText&#x27;).textContent=message;$(&#x27;videoProgressBytes&#x27;).textContent=bytes;
 }
-function finishVideoProgress(message){updateVideoProgress(100,message);videoProgressActive=false;}
-function failVideoProgress(message){if(videoProgressActive){$(&#x27;videoProgressText&#x27;).textContent=&#x27;Dừng: &#x27;+message;videoProgressActive=false;}}
+function finishVideoProgress(message){updateVideoProgress(100,message);videoProgressActive=false;$(&#x27;videoProgressBox&#x27;).dataset.state=&#x27;done&#x27;;$(&#x27;videoProgressPercent&#x27;).textContent=&#x27;✓&#x27;;}
+function failVideoProgress(message){if(videoProgressActive){$(&#x27;videoProgressText&#x27;).textContent=message;videoProgressActive=false;$(&#x27;videoProgressBox&#x27;).dataset.state=&#x27;error&#x27;;$(&#x27;videoProgressRing&#x27;).classList.remove(&#x27;indeterminate&#x27;);$(&#x27;videoProgressPercent&#x27;).textContent=&#x27;!&#x27;;}}
 function validateVideoHeader(bytes){
  if(!bytes.length)throw Error(&#x27;Máy chủ trả dữ liệu rỗng, không có video.&#x27;);
  const signature=new TextDecoder().decode(bytes.subarray(0,12));
@@ -1645,24 +1799,27 @@ if(player.readyState&gt;=2)ready();
 
 let preparedVideo=null, previewObjectURL=null;
 function clearPreview(){
+document.body.classList.remove(&#x27;has-preview&#x27;);
 $(&#x27;previewPlayer&#x27;).pause();$(&#x27;previewPlayer&#x27;).removeAttribute(&#x27;src&#x27;);$(&#x27;previewPlayer&#x27;).load();
 if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);
 previewObjectURL=null;preparedVideo=null;$(&#x27;previewSection&#x27;).hidden=true;
 }
-function savePrepared(item){
-const url=URL.createObjectURL(item.blob),a=document.createElement(&#x27;a&#x27;);
-a.href=url;a.download=item.filename;document.body.append(a);a.click();a.remove();
-setTimeout(()=&gt;URL.revokeObjectURL(url),60000);
+async function savePrepared(item){
+ const url=URL.createObjectURL(item.blob),a=document.createElement(&#x27;a&#x27;);
+ a.href=url;a.download=item.filename;document.body.append(a);a.click();a.remove();
+ setTimeout(()=&gt;URL.revokeObjectURL(url),60000);
 }
 const segmentTasks=new Map();
 function segmentTaskParams(file,criteria){
  validateVideoRange(criteria.begin,criteria.end);
+ file=checkedSegment(file,criteria);
  const u=downloadURL(file.DownTaskUrl);
  if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);
  const params=Object.fromEntries(u.searchParams);
  const begin=Math.max(seconds(criteria.begin),Number(file.beg)),end=Math.min(seconds(criteria.end),Number(file.end));
  if(!(begin&lt;end))throw Error(&#x27;Khoảng chọn không nằm trong tệp này.&#x27;);
- params.jsession=session;params.dtp=&#x27;2&#x27;;
+ if(String(params.did).trim()!==criteria.serial||Number(params.chn)!==Number(file.chn))throw Error(&#x27;Liên kết tác vụ không đúng camera hoặc kênh.&#x27;);
+ params.jsession=session;params.dtp=&#x27;2&#x27;;params.chn=String(file.chn);
  params.fbtm=criteria.date+&#x27; &#x27;+inputClock(begin);params.fetm=criteria.date+&#x27; &#x27;+inputClock(end);
  // sbtm/setm, did and fph remain the source metadata supplied by the server.
  return params;
@@ -1681,7 +1838,7 @@ async function getServerSegment(file,criteria){
    updateVideoProgress(20,&#x27;Đoạn đã lên máy chủ, đang lấy liên kết…&#x27;);
    const [YEAR,MON,DAY]=criteria.date.split(&#x27;-&#x27;);
    const result=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:criteria.apiPlate,LOC:2,CHN:params.chn,YEAR,MON,DAY,BEG:seconds(criteria.begin),END:seconds(criteria.end),RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:-1,STORE:0});
-   const segment=(result.files||[]).find(x=&gt;x.DownUrl&amp;&amp;String(x.devIdno)===String(params.did)&amp;&amp;Number(x.chn)===Number(params.chn)&amp;&amp;Number(x.beg)&gt;=seconds(params.fbtm.slice(11))&amp;&amp;Number(x.end)&lt;=seconds(params.fetm.slice(11))&amp;&amp;Number(x.end)&gt;Number(x.beg));
+   const segment=(result.files||[]).find(x=&gt;x.DownUrl&amp;&amp;String(x.devIdno)===String(params.did)&amp;&amp;Number(x.chn)===Number(params.chn)&amp;&amp;Math.abs(Number(x.beg)-seconds(params.fbtm.slice(11)))&lt;=0.1&amp;&amp;Math.abs(Number(x.end)-seconds(params.fetm.slice(11)))&lt;=0.1&amp;&amp;Number(x.end)&gt;Number(x.beg));
    if(segment)return segment;
    updateVideoProgress(20,&#x27;Đang chờ máy chủ lập danh sách đoạn video…&#x27;);
   }else updateVideoProgress(5,&#x27;Đang chờ xe gửi đoạn video lên máy chủ…&#x27;,current?&#x27;Trạng thái tác vụ: &#x27;+current.stu:&#x27;Đang chờ tác vụ xuất hiện&#x27;);
@@ -1740,7 +1897,7 @@ info:&#x27;Kênh &#x27;+(ch+1)+&#x27; · &#x27;+new Date(result.actualBegin*1000
 updateVideoProgress(96,&#x27;MP4 đã sẵn sàng&#x27;);return preparedVideo;
 }
 
-function render8(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.beg)+&#x27;–&#x27;+time(f.end),(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownUrl&amp;&amp;Number(f.stream)!==1){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);savePrepared(item);finishVideoProgress(&#x27;Đã chuẩn bị MP4 và gửi đến trình tải xuống&#x27;);show(&#x27;Đã xuất MP4. &#x27;+item.info);});
+function render8(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownUrl&amp;&amp;Number(f.stream)!==1){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
 const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
 preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
 
@@ -1754,19 +1911,20 @@ async function prepareVideo(file){
  validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);
  if(searchCriteria)validateVideoRange(searchCriteria.begin,searchCriteria.end);
  if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);
+ file=checkedSegment(file,searchCriteria);
  const flow=videoSerialFlow(searchCriteria.serial);
  return flow===&#x27;8&#x27;?prepareVideo8(file):prepareVideo12(file);
 }
 function render(){
  const serial=searchCriteria?.serial??selected()?.id;
- return videoSerialFlow(serial)===&#x27;8&#x27;?render8():render12();
+ const result=videoSerialFlow(serial)===&#x27;8&#x27;?render8():render12();decorateVideoResults();return result;
 }
 
 async function prepareVideo12(f){
 resetVideoProgress();
 const key=JSON.stringify([session,f.DownUrl,searchCriteria]);
 if(preparedVideo&amp;&amp;preparedVideo.key===key){updateVideoProgress(96,&#x27;MP4 đã có sẵn&#x27;);return preparedVideo;}updateVideoProgress(0,&#x27;Đang kết nối tải video…&#x27;);
-if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang chuẩn bị đoạn video kênh &#x27;+(ch+1)+&#x27;…&#x27;);const segment=await getServerSegment(f,criteria);const u=downloadURL(segment.DownUrl);u.searchParams.set(&#x27;jsession&#x27;,session);const response=await cameraFetch(u,{signal:AbortSignal.timeout(300000)});if(!response.ok)throw Error(&#x27;Tải dữ liệu thất bại: HTTP &#x27;+response.status);const buffer=await readVideoWithProgress(response,segment.len);updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const isMP4=new TextDecoder().decode(new Uint8Array(buffer,4,4))===&#x27;ftyp&#x27;;const result=isMP4?{bytes:new Uint8Array(buffer),actualBegin:day+Number(segment.beg),actualEnd:day+Number(segment.end),duration:Number(segment.end)-Number(segment.beg)}:await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),day+Number(segment.beg),&#x27;12&#x27;);
+if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang chuẩn bị đoạn video kênh &#x27;+(ch+1)+&#x27;…&#x27;);const segment=await getServerSegment(f,criteria);const u=downloadURL(segment.DownUrl);u.searchParams.set(&#x27;jsession&#x27;,session);const response=await cameraFetch(u,{signal:AbortSignal.timeout(300000)});if(!response.ok)throw Error(&#x27;Tải dữ liệu thất bại: HTTP &#x27;+response.status);const buffer=await readVideoWithProgress(response,segment.len);updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const isMP4=new TextDecoder().decode(new Uint8Array(buffer,4,4))===&#x27;ftyp&#x27;;if(isMP4&amp;&amp;Math.abs(mp4Duration(buffer)-(Number(segment.end)-Number(segment.beg)))&gt;0.25)throw Error(&#x27;Máy chủ trả MP4 có thời lượng khác đoạn đã chọn. Không lưu tệp sai giờ.&#x27;);const result=isMP4?{bytes:new Uint8Array(buffer),actualBegin:day+Number(segment.beg),actualEnd:day+Number(segment.end),duration:Number(segment.end)-Number(segment.beg)}:await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),day+Number(segment.beg),&#x27;12&#x27;);
 const filename=criteria.plate.replace(/[^A-Za-z0-9.-]/g,&#x27;_&#x27;)+&#x27;_CH&#x27;+(ch+1)+&#x27;_&#x27;+criteria.date+&#x27;_&#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;-&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;.mp4&#x27;;
 clearPreview();
 preparedVideo={key,blob:new Blob([result.bytes],{type:&#x27;video/mp4&#x27;}),filename,
@@ -1778,19 +1936,81 @@ const player=$(&#x27;previewPlayer&#x27;);player.pause();player.removeAttribute(
 if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);
 previewObjectURL=URL.createObjectURL(item.blob);player.src=previewObjectURL;updateVideoProgress(98,&#x27;Đang mở trình phát video…&#x27;);const ready=waitPreviewReady(player);
 $(&#x27;previewInfo&#x27;).textContent=item.filename+&#x27; · &#x27;+item.info;
-$(&#x27;previewSection&#x27;).hidden=false;player.load();
+$(&#x27;previewSection&#x27;).hidden=false;updatePreviewWorkspace();player.load();
 $(&#x27;previewSection&#x27;).scrollIntoView({behavior:&#x27;smooth&#x27;,block:&#x27;start&#x27;});
 await ready;await player.play().catch(()=&gt;{});finishVideoProgress(&#x27;Video đã sẵn sàng để xem&#x27;);show(player.paused?&#x27;Video đã sẵn sàng. Bấm nút phát để xem.&#x27;:&#x27;Đang phát video xem trước.&#x27;);
 }
-$(&#x27;savePreview&#x27;).onclick=()=&gt;{if(preparedVideo){savePrepared(preparedVideo);finishVideoProgress(&#x27;Đã gửi MP4 đến trình tải xuống&#x27;);show(&#x27;Đã gửi MP4 đang xem đến trình tải xuống.&#x27;);}};
+$(&#x27;savePreview&#x27;).onclick=()=&gt;run(async()=&gt;{if(!preparedVideo)throw Error(&#x27;Chưa có video để lưu.&#x27;);await savePrepared(preparedVideo);finishVideoProgress(&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã gửi MP4 tới trình tải xuống của trình duyệt.&#x27;);});
 $(&#x27;previewPlayer&#x27;).addEventListener(&#x27;error&#x27;,()=&gt;show(&#x27;Trình duyệt không phát được MP4 này. Bạn vẫn có thể tải video để mở bằng VLC.&#x27;,true));
 window.addEventListener(&#x27;pagehide&#x27;,()=&gt;{if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);});
 
-function render12(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.beg)+&#x27;–&#x27;+time(f.end),(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);savePrepared(item);finishVideoProgress(item.info.includes(&#x27;không đủ&#x27;)?&#x27;Đã tải MP4 · Video nhận được chưa đủ toàn bộ khoảng giờ chọn&#x27;:&#x27;Đã chuẩn bị MP4 và gửi đến trình tải xuống&#x27;);show(&#x27;Đã xuất MP4. &#x27;+item.info);});
+function render12(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(item.info.includes(&#x27;không đủ&#x27;)?&#x27;Đã tải MP4 · Video nhận được chưa đủ toàn bộ khoảng giờ chọn&#x27;:&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
 const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
 preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
 $(&#x27;tasksButton&#x27;).onclick=()=&gt;run(async()=&gt;{if(!session)throw Error(&#x27;Đăng nhập trước.&#x27;);if(!selected())throw Error(&#x27;Chọn biển số xe hợp lệ trước.&#x27;);const d=await api(&#x27;downloadTasklist&#x27;,{jsession:session,devIdno:$(&#x27;serial&#x27;).value.trim(),begintime:$(&#x27;date&#x27;).value+&#x27; 00:00:00&#x27;,endtime:$(&#x27;date&#x27;).value+&#x27; 23:59:59&#x27;,currentPage:1,pageRecords:100});$(&#x27;tasks&#x27;).replaceChildren();for(const t of d.infos||[]){const p=document.createElement(&#x27;p&#x27;);p.textContent=(t.fph||t.lab)+&#x27; · &#x27;+({1:&#x27;Chờ tải&#x27;,2:&#x27;Đang tải&#x27;,3:&#x27;Thất bại&#x27;,4:&#x27;Đã tải về máy chủ&#x27;}[t.stu]||t.stu)+(Number(t.stu)===3?&#x27; · Lỗi &#x27;+t.err:&#x27;&#x27;);$(&#x27;tasks&#x27;).append(p);}show(&#x27;Đã cập nhật tác vụ. Tác vụ máy chủ đã cập nhật. Tìm video hiện mặc định từ thiết bị trên xe.&#x27;);});
-&lt;/script&gt;&lt;script&gt;function resizeCameraFrame(){if(window.frameElement)window.frameElement.style.height=Math.ceil(document.documentElement.scrollHeight)+&#x27;px&#x27;;}new ResizeObserver(resizeCameraFrame).observe(document.body);window.addEventListener(&#x27;load&#x27;,resizeCameraFrame);&lt;/script&gt;&lt;/html&gt;
+&lt;/script&gt;&lt;script&gt;function resizeCameraFrame(){if(window.frameElement)window.frameElement.style.height=Math.ceil(document.documentElement.scrollHeight)+&#x27;px&#x27;;}new ResizeObserver(resizeCameraFrame).observe(document.body);window.addEventListener(&#x27;load&#x27;,resizeCameraFrame);
+const VIDEO_UI_ICON=&#x27;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3&quot; y=&quot;6&quot; width=&quot;13&quot; height=&quot;12&quot; rx=&quot;2&quot;/&gt;&lt;path d=&quot;m16 10 5-3v10l-5-3z&quot;/&gt;&lt;/svg&gt;&#x27;;
+const VIDEO_CAR_ICON=&#x27;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;m5 7 2-3h10l2 3 2 3v8H3v-8zM3 10h18M7 18v3m10-3v3&quot;/&gt;&lt;circle cx=&quot;7&quot; cy=&quot;14&quot; r=&quot;1&quot;/&gt;&lt;circle cx=&quot;17&quot; cy=&quot;14&quot; r=&quot;1&quot;/&gt;&lt;/svg&gt;&#x27;;
+
+function updateVideoWorkspace(current,color){
+ $(&#x27;videoDownloadNotice&#x27;).hidden=Boolean(current);
+ $(&#x27;vehiclePicker&#x27;).hidden=Boolean(current);if(current)setVehicleDropdown(false);
+ $(&#x27;selectedVehicleCard&#x27;).hidden=!current;
+ if(current){$(&#x27;selectedVehiclePlate&#x27;).textContent=current.matchedPlate;$(&#x27;selectedVehiclePlate&#x27;).style.color=color.color;$(&#x27;selectedVehicleMeta&#x27;).textContent=[color.text,current.cc+&#x27; kênh&#x27;].filter(Boolean).join(&#x27; · &#x27;);if(document.body.classList.contains(&#x27;has-preview&#x27;)&amp;&amp;searchCriteria){$(&#x27;selectedVehiclePlate&#x27;).textContent=searchCriteria.plate;$(&#x27;selectedVehicleMeta&#x27;).textContent=searchCriteria.date.split(&#x27;-&#x27;).reverse().join(&#x27;/&#x27;)+&#x27; · &#x27;+(Number(searchCriteria.channel)&lt;0?&#x27;Tất cả kênh&#x27;:&#x27;Kênh &#x27;+(Number(searchCriteria.channel)+1));}}
+}
+$(&#x27;changeVehicle&#x27;).onclick=()=&gt;{clearPreview();files=[];searchCriteria=null;setVideoEmpty(&#x27;Chọn thời gian để tìm video&#x27;);$(&#x27;vehiclePlate&#x27;).value=&#x27;&#x27;;$(&#x27;vehiclePlate&#x27;).dispatchEvent(new Event(&#x27;input&#x27;));$(&#x27;vehiclePlate&#x27;).focus();};
+$(&#x27;dismissProgress&#x27;).onclick=()=&gt;{if(!videoProgressActive)$(&#x27;videoProgressBox&#x27;).hidden=true;};
+function setVideoEmpty(text){const root=$(&#x27;results&#x27;);root.replaceChildren();const box=document.createElement(&#x27;div&#x27;);box.className=&#x27;video-empty&#x27;;box.innerHTML=VIDEO_UI_ICON;const label=document.createElement(&#x27;p&#x27;);label.textContent=text;box.append(label);root.append(box);$(&#x27;resultCount&#x27;).textContent=&#x27;0 video&#x27;;}
+function decorateVideoResults(){
+ const root=$(&#x27;results&#x27;),rows=Array.from(root.querySelectorAll(&#x27;tbody tr&#x27;));
+ $(&#x27;resultCount&#x27;).textContent=rows.length+&#x27; video&#x27;;
+ if(!rows.length){setVideoEmpty(&#x27;Không có video trong khoảng thời gian đã chọn.&#x27;);return;}
+ const cards=document.createElement(&#x27;div&#x27;);cards.className=&#x27;video-results&#x27;;
+ for(const row of rows){
+  const cells=Array.from(row.cells);if(cells.length&lt;5)continue;
+  const card=document.createElement(&#x27;article&#x27;);card.className=&#x27;video-result-card&#x27;;
+  const thumb=document.createElement(&#x27;div&#x27;);thumb.className=&#x27;result-thumb&#x27;;thumb.innerHTML=VIDEO_UI_ICON;
+  const thumbLabel=document.createElement(&#x27;small&#x27;);thumbLabel.textContent=&#x27;VIDEO · MP4&#x27;;thumb.append(thumbLabel);
+  const copy=document.createElement(&#x27;div&#x27;);copy.className=&#x27;result-copy&#x27;;
+  const title=document.createElement(&#x27;strong&#x27;);title.textContent=&#x27;Camera &#x27;+cells[1].textContent;
+  const range=document.createElement(&#x27;span&#x27;);range.textContent=&#x27;◷ &#x27;+cells[2].textContent;
+  const ready=document.createElement(&#x27;span&#x27;);ready.className=&#x27;ready&#x27;;const buttons=Array.from(cells[4].querySelectorAll(&#x27;button&#x27;));ready.textContent=buttons.length?&#x27;● Sẵn sàng&#x27;:&#x27;Chưa có liên kết tải&#x27;;
+  copy.append(title,range,ready);const actions=document.createElement(&#x27;div&#x27;);actions.className=&#x27;result-actions&#x27;;
+  for(const b of buttons){if(b.textContent.includes(&#x27;Xem&#x27;)){b.classList.add(&#x27;preview-action&#x27;);b.textContent=&#x27;▷ Xem trước&#x27;;}else b.textContent=&#x27;↓ Tải MP4&#x27;;actions.append(b);}
+  if(!buttons.length){const note=document.createElement(&#x27;small&#x27;);note.textContent=cells[4].textContent;actions.append(note);}
+  card.append(thumb,copy,actions);cards.append(card);
+ }
+ root.replaceChildren(cards);
+}
+function updatePreviewWorkspace(){
+ const c=searchCriteria;if(!c)return;
+ $(&#x27;selectedVehiclePlate&#x27;).textContent=c.plate;$(&#x27;selectedVehicleMeta&#x27;).textContent=c.date.split(&#x27;-&#x27;).reverse().join(&#x27;/&#x27;)+&#x27; · &#x27;+(Number(c.channel)&lt;0?&#x27;Tất cả kênh&#x27;:&#x27;Kênh &#x27;+(Number(c.channel)+1));
+ $(&#x27;previewRange&#x27;).textContent=&#x27;◷ &#x27;+c.begin+&#x27; – &#x27;+c.end;
+ document.body.classList.add(&#x27;has-preview&#x27;);
+}
+$(&#x27;editVideoTime&#x27;).onclick=()=&gt;{document.body.classList.remove(&#x27;has-preview&#x27;);$(&#x27;searchForm&#x27;).scrollIntoView({behavior:&#x27;smooth&#x27;,block:&#x27;start&#x27;});};
+setVideoEmpty(&#x27;Chọn thời gian để tìm video&#x27;);
+
+function setVehicleDropdown(open){
+ const expanded=Boolean(open)&amp;&amp;!selected();$(&#x27;vehicleDropdown&#x27;).hidden=!expanded;
+ $(&#x27;vehiclePlate&#x27;).setAttribute(&#x27;aria-expanded&#x27;,String(expanded));$(&#x27;toggleVehicleDropdown&#x27;).setAttribute(&#x27;aria-expanded&#x27;,String(expanded));
+ $(&#x27;toggleVehicleDropdown&#x27;).setAttribute(&#x27;aria-label&#x27;,expanded?&#x27;Thu gọn danh sách xe&#x27;:&#x27;Mở danh sách xe&#x27;);
+}
+$(&#x27;vehiclePlate&#x27;).addEventListener(&#x27;focus&#x27;,()=&gt;setVehicleDropdown(true));
+$(&#x27;vehiclePlate&#x27;).addEventListener(&#x27;input&#x27;,()=&gt;{if(document.activeElement===$(&#x27;vehiclePlate&#x27;))setVehicleDropdown(true);});
+$(&#x27;toggleVehicleDropdown&#x27;).onclick=()=&gt;{const open=$(&#x27;vehicleDropdown&#x27;).hidden;$(&#x27;vehiclePlate&#x27;).focus();setVehicleDropdown(open);};
+document.addEventListener(&#x27;pointerdown&#x27;,e=&gt;{if(!$(&#x27;vehiclePicker&#x27;).contains(e.target))setVehicleDropdown(false);});
+$(&#x27;vehiclePicker&#x27;).addEventListener(&#x27;keydown&#x27;,e=&gt;{
+ if(e.key===&#x27;Escape&#x27;){e.preventDefault();$(&#x27;vehiclePlate&#x27;).focus();setVehicleDropdown(false);return;}
+ if(![&#x27;ArrowDown&#x27;,&#x27;ArrowUp&#x27;].includes(e.key))return;
+ const input=$(&#x27;vehiclePlate&#x27;),options=Array.from($(&#x27;vehicleColorList&#x27;).querySelectorAll(&#x27;button&#x27;));
+ if(document.activeElement===input){e.preventDefault();setVehicleDropdown(true);if(options.length)(e.key===&#x27;ArrowDown&#x27;?options[0]:options[options.length-1]).focus();return;}
+ const index=options.indexOf(document.activeElement);if(index&lt;0)return;e.preventDefault();
+ const next=index+(e.key===&#x27;ArrowDown&#x27;?1:-1);if(next&lt;0||next&gt;=options.length)input.focus();else options[next].focus();
+});
+&lt;/script&gt;&lt;/html&gt;
+
+
 "></iframe>
 </div>
 
@@ -4317,6 +4537,7 @@ setTimeout(() => {
 
     const bsList = matchedDevices
       .map(device => ({
+        CameraId: String(device?.CameraId ?? device?.cameraId ?? device?.cameraid ?? '').trim(),
         Bs: device?.Bs ?? device?.bs ?? '',
         Id: device?.Id ?? device?.id ?? '',
         Serial: device?.Serial ?? device?.serial ?? '',
@@ -4337,7 +4558,7 @@ setTimeout(() => {
         const bs = item.Bs || '(chưa có biển số)';
         const serial = item.Serial || '';
         html += `
-          <div class="modern-item">
+          <div class="modern-item" data-camera-id="${escapeHtml(item.CameraId || '')}">
             <div class="modern-item-top">
               <div class="modern-item-title">${escapeHtml(bs)}</div>
               <div class="modern-badge">Xe ${index + 1}</div>
@@ -5311,7 +5532,7 @@ function initBackToLoginButton() {
   setAppView('login');
 </script>
 
-<!-- Serial comparison bridge: reads displayed vehicle list only -->
+<!-- Camera directory bridge: authorized CameraId values from the vehicle list -->
 <script>
 (function(){
 'use strict';
@@ -5331,10 +5552,9 @@ frame.contentWindow?.postMessage({type:'V14_VIDEO_MAIN_AUTH',active},'*');
 const vehicles=[];
 if(!document.body.classList.contains('login-mode')){
 box.querySelectorAll('.modern-item').forEach(card=>{
-const text=card.querySelector('.modern-item-sub')?.textContent||'';
-const match=text.match(/Serial:\s*(\S+)/);
+const cameraId=card.dataset.cameraId?.trim()||'';
 const plate=card.querySelector('.modern-item-title')?.textContent.trim()||'';
-if(match&&plate&&plate!=='(chưa có biển số)')vehicles.push({serial:match[1].trim(),plate});
+if(cameraId&&plate&&plate!=='(chưa có biển số)')vehicles.push({serial:cameraId,plate});
 });
 }
 const signature=JSON.stringify(vehicles);
