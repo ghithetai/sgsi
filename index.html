@@ -1682,53 +1682,26 @@ function clearSetupPrivilegedToken() {
 function normalizeUsername(value) {
     return String(value || '').trim().toLowerCase();
   }
-async function sendOpcode210ToDevice() {
-  const baseUrl = $('baseUrl').value.trim().replace(/\/$/, '');
-  const serial = String($('opcode210Serial')?.value || '').trim();
-  const username = String($('opcode210Username')?.value || '1').trim() || '1';
-  let apiKey = await loginSetupPrivilegedUser();
-
-  if (!baseUrl || !apiKey || !serial) {
-    setOpcode210Status('Thiếu Base URL, API Key hoặc Serial xe.', 'err');
-    return false;
-  }
-
-  apiKey = await loginSetupPrivilegedUser();
-
-  const url = `${baseUrl}/api/DeviceSetup/SetupDeviceNoParams?serials=${encodeURIComponent(serial)}&opcode=210&username=${encodeURIComponent(username)}&api_key=${encodeURIComponent(apiKey)}`;
-
-  $('opcode210UrlBox').textContent = url;
-  $('opcode210ResponseBox').textContent = '';
-  setOpcode210Status('Đang gửi mã 210 xuống thiết bị...', 'info');
-
-  try {
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' },
-      cache: 'no-store'
-    });
-
-    const rawText = await res.text();
-    let dataText = rawText;
-    try {
-      dataText = JSON.stringify(JSON.parse(rawText), null, 2);
-    } catch {}
-
-    $('opcode210ResponseBox').textContent = dataText || '(API không trả nội dung)';
-
-    if (!res.ok) {
-      const apiMsg = extractApiMessage(rawText, rawText);
-      throw new Error(`Gửi mã 210 thất bại. HTTP ${res.status}${apiMsg ? ' - ' + apiMsg : ''}`);
-    }
-
-    clearSetupPrivilegedToken();
-    setOpcode210Status('Đã gửi mã 210 xoá tài xế của xe thành công.', 'ok');
-    return true;
-  } catch (err) {
-    $('opcode210ResponseBox').textContent = err.message;
-    setOpcode210Status('Lỗi gửi mã 210: ' + err.message, 'err');
-    return false;
-  }
+async function sendOpcode210ToDevice(){
+ const owner=getRuntimeUsername(),mainToken=getCurrentLoginToken(),serial=String($('opcode210Serial')?.value||'').trim();
+ try{
+  if(!owner||!mainToken||!/^\d+$/.test(serial)||!Number.isSafeInteger(Number(serial))||Number(serial)<=0)throw new Error('Đăng nhập và chọn xe hợp lệ trước.');
+  df.owner=owner;df.mainToken=mainToken;
+  const fleet=await dfReadMainFleet(true);
+  if(!fleet.Devices.some(d=>String(d.Serial)===serial))throw new Error('Xe không còn thuộc danh sách quản lý của user.');
+  const base=$('baseUrl').value.trim().replace(/\/$/,''),key=await loginSetupPrivilegedUser();
+  if(owner!==getRuntimeUsername()||mainToken!==getCurrentLoginToken())throw new Error('Phiên đăng nhập đã thay đổi.');
+  const url=base+'/api/DeviceSetup/SetupDeviceNoParams?'+new URLSearchParams({serials:serial,opcode:210,username:owner,api_key:key});
+  $('opcode210UrlBox').textContent='Gửi mã 210 · Serial '+serial;
+  setOpcode210Status('Đang gửi mã 210 xuống thiết bị…','info');
+  const res=await fetchWithTimeout(url,{method:'GET',headers:{Accept:'application/json'},cache:'no-store'});
+  const {data}=await readResponseSmart(res);
+  if(owner!==getRuntimeUsername()||mainToken!==getCurrentLoginToken())throw new Error('Phiên đăng nhập đã thay đổi.');
+  if(res.status===401||res.status===403)clearSetupPrivilegedToken();
+  if(!res.ok||!data||String(data.Status)!=='1')throw new Error(extractApiMessage(data,'Máy chủ chưa xác nhận lệnh 210. HTTP '+res.status));
+  $('opcode210ResponseBox').textContent=JSON.stringify(data,null,2);
+  setOpcode210Status('Máy chủ đã nhận lệnh 210. Cần kiểm tra phản hồi trên thiết bị.','ok');return true;
+ }catch(e){$('opcode210ResponseBox').textContent=e.message;setOpcode210Status('Chưa xác nhận gửi mã 210: '+e.message,'err');return false;}
 }
 function initPasswordToggle() {
   const toggle = $('togglePassword');
@@ -1947,12 +1920,12 @@ function dfLicense(v){return dfNorm(v).replace(/[\s.-]/g,'');}
 function dfMsg(message,type='info'){$('dfStatus').hidden=false;$('dfStatus').className='msg '+type;$('dfStatus').textContent=message;}
 function dfCheck(){if(!df.owner||df.owner!==getRuntimeUsername()||!df.mainToken||df.mainToken!==getCurrentLoginToken())throw new Error('Phiên user chính đã thay đổi. Mở lại tab để tải đúng dữ liệu.');}
 async function dfApi(path,method='GET',body,query={},useMainToken=false){
- dfCheck();const token=useMainToken?getCurrentLoginToken():await loginSetupPrivilegedUser();dfCheck();
+ dfCheck();const requestOwner=df.owner,requestMainToken=df.mainToken;const checkRequest=()=>{dfCheck();if(requestOwner!==df.owner||requestMainToken!==df.mainToken)throw new Error('Phiên đăng nhập đã thay đổi.');};const token=useMainToken?getCurrentLoginToken():await loginSetupPrivilegedUser();checkRequest();
  const base=$('baseUrl').value.trim().replace(/\/$/,'');
  let res;
  try{res=await fetchWithTimeout(base+path+'?'+new URLSearchParams({...query,api_key:token}),{method,cache:'no-store',headers:{'Content-Type':'application/json','Accept':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});}
  catch(e){throw new Error(method==='GET'?'Không kết nối được máy chủ.':'Chưa xác định máy chủ đã lưu hay chưa. Tải lại danh sách trước khi thử lưu tiếp.');}
- const {data}=await readResponseSmart(res);dfCheck();
+ const {data}=await readResponseSmart(res);checkRequest();
  if(!useMainToken&&(res.status===401||res.status===403))clearSetupPrivilegedToken();
  if(!res.ok||!data||typeof data!=='object'||(data.Status!==1&&data.Status!=='1'))throw new Error(extractApiMessage(data,'Máy chủ chưa xác nhận thành công. HTTP '+res.status+'; Status '+data?.Status));
  return data;
