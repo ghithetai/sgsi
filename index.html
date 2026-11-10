@@ -1135,7 +1135,18 @@ function setCachedSetupToken(token, loginResponse = null) {
     } catch {}
   }
 }
-async function loginSetupPrivilegedUser() {
+let setupLoginPending=null;
+function loginSetupPrivilegedUser() {
+  const session=dfSession;
+  if(setupLoginPending?.session===session)return setupLoginPending.promise;
+  const pending={session,promise:null};
+  pending.promise=requestSetupLogin(session).finally(()=>{
+    if(setupLoginPending===pending)setupLoginPending=null;
+  });
+  setupLoginPending=pending;
+  return pending.promise;
+}
+async function requestSetupLogin(session) {
   const cachedToken = getCachedSetupToken();
   if (cachedToken) {
     return cachedToken;
@@ -1181,6 +1192,7 @@ async function loginSetupPrivilegedUser() {
     throw new Error('User quyền gắn không trả về token hợp lệ.');
   }
 
+  if(session!==dfSession)throw new Error('Phiên đăng nhập đã thay đổi.');
   setCachedSetupToken(token, data);
   updateGlobalInfo();
   return String(token).trim();
@@ -1719,6 +1731,7 @@ function initBackToLoginButton() {
   if (!btn) return;
 
   btn.addEventListener('click', () => {
+    clearRuntimeSessionData();
     setAppView('login');
     if ($('password')) $('password').focus();
   });
@@ -1825,7 +1838,7 @@ $('loginForm').addEventListener('submit', async (e) => {
 // 👉 vào app ngay (không chờ API)
 setAppView('app', 'appHomeTab');
 
-// 👉 gọi API nền sau (không block login)
+dfSchedulePreload();
 
 
     setTimeout(() => {
@@ -1894,10 +1907,6 @@ $('btnOpcode210Confirm')?.addEventListener('click', async () => {
     state.isSendingOpcode210 = false;
   }
 });
-document.getElementById('btnBackToLogin')?.addEventListener('click', () => {
-  setAppView('login');
-  if ($('password')) $('password').focus();
-});
 window.addEventListener('pagehide', clearRuntimeSessionData);
 window.addEventListener('beforeunload', clearRuntimeSessionData);
 setAppView('login');
@@ -1913,6 +1922,25 @@ setAppView('login');
 <script>
 // Driver management scoped to the MAIN account; privileged token only executes APIs.
 var df={owner:'',mainToken:'',busy:false,account:null,vehicles:[],vehicle:null,drivers:[],links:[],editing:null,page:0,companies:[],groups:[]};
+let dfSession=0;
+let dfFleetTimer,dfDriverTimer;
+function dfSessionKey(){
+ return JSON.stringify([dfSession,$('baseUrl').value.trim(),df.owner,df.mainToken]);
+}
+function dfCheckSession(key){
+ dfCheck();
+ if(key!==dfSessionKey())throw new Error('Phiên đăng nhập đã thay đổi.');
+}
+function dfSchedulePreload(){
+ df.owner=getRuntimeUsername();
+ df.mainToken=getCurrentLoginToken();
+ const key=dfSessionKey();
+ const run=task=>async()=>{
+  try{dfCheckSession(key);await task();}catch{}
+ };
+ dfFleetTimer=setTimeout(run(()=>dfReadMainFleet()),1000);
+ dfDriverTimer=setTimeout(run(()=>dfReadDriverBase()),2000);
+}
 const DF_FIELDS=["Id", "Name", "Gplx", "Mnv", "CompanyId", "GroupId", "Born", "Cmnd", "Address", "Sex", "CreateDateOfGplx", "EndDateOfGplx", "AddressOfGplx", "Phone", "LicenseType"];
 function dfNorm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().trim().replace(/\s+/g,' ');}
 function dfPlateNorm(v){return dfNorm(v).replace(/[^a-z0-9]/g,'');}
@@ -1920,7 +1948,10 @@ function dfLicense(v){return dfNorm(v).replace(/[\s.-]/g,'');}
 function dfMsg(message,type='info'){$('dfStatus').hidden=false;$('dfStatus').className='msg '+type;$('dfStatus').textContent=message;}
 function dfCheck(){if(!df.owner||df.owner!==getRuntimeUsername()||!df.mainToken||df.mainToken!==getCurrentLoginToken())throw new Error('Phiên user chính đã thay đổi. Mở lại tab để tải đúng dữ liệu.');}
 async function dfApi(path,method='GET',body,query={},useMainToken=false){
- dfCheck();const requestOwner=df.owner,requestMainToken=df.mainToken;const checkRequest=()=>{dfCheck();if(requestOwner!==df.owner||requestMainToken!==df.mainToken)throw new Error('Phiên đăng nhập đã thay đổi.');};const token=useMainToken?getCurrentLoginToken():await loginSetupPrivilegedUser();checkRequest();
+ dfCheck();
+ const key=dfSessionKey(),checkRequest=()=>dfCheckSession(key);
+ const token=useMainToken?df.mainToken:await loginSetupPrivilegedUser();
+ checkRequest();
  const base=$('baseUrl').value.trim().replace(/\/$/,'');
  let res;
  try{res=await fetchWithTimeout(base+path+'?'+new URLSearchParams({...query,api_key:token}),{method,cache:'no-store',headers:{'Content-Type':'application/json','Accept':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});}
@@ -1933,18 +1964,26 @@ async function dfApi(path,method='GET',body,query={},useMainToken=false){
 function dfCompanyIds(account){const ids=(account.CompanyIds||[]).map(x=>parseCombinedCompanyGroup(x)?.companyId||String(x));if(account.CompanyId)ids.push(String(account.CompanyId));return [...new Set(ids.filter(x=>Number.isSafeInteger(Number(x))&&Number(x)>0))];}
 // Web equivalent of DriverFleetService: membership comes from GetAll using the main token.
 let dfFleetInFlight=null,dfFleetCache=null;
-function dfReadMainFleet(force=false){
- dfCheck();const key=$('baseUrl').value.trim()+':'+df.owner+':'+df.mainToken;
- if(!force&&dfFleetCache?.key===key&&Date.now()-dfFleetCache.at<15000)return Promise.resolve(dfFleetCache.value);
+function dfReadMainFleet(force=false,allowStale=false){
+ dfCheck();
+ const key=dfSessionKey();
+ if(!force&&dfFleetCache?.key===key&&(allowStale||Date.now()-dfFleetCache.at<15000))return Promise.resolve(dfFleetCache.value);
  if(dfFleetInFlight?.key===key)return dfFleetInFlight.promise;
- const request={key,promise:null};request.promise=dfReadMainFleetRequest().then(value=>{dfCheck();dfFleetCache={key,value,at:Date.now()};return value;}).finally(()=>{if(dfFleetInFlight===request)dfFleetInFlight=null;});dfFleetInFlight=request;return request.promise;
+ const request={key,promise:null};
+ request.promise=dfReadMainFleetRequest(key).then(value=>{
+  dfCheckSession(key);
+  dfFleetCache={key,value,at:Date.now()};
+  return value;
+ }).finally(()=>{if(dfFleetInFlight===request)dfFleetInFlight=null;});
+ dfFleetInFlight=request;
+ return request.promise;
 }
-async function dfReadMainFleetRequest(){
+async function dfReadMainFleetRequest(key){
  dfCheck();
  const owner=df.owner,token=df.mainToken,base=$('baseUrl').value.trim().replace(/\/$/,'');
  async function request(path,query={},init={}){
-  dfCheck();const res=await fetchWithTimeout(base+path+'?'+new URLSearchParams(query),{cache:'no-store',...init,headers:{token,...init.headers}},45000);
-  const {data}=await readResponseSmart(res);dfCheck();
+  dfCheckSession(key);const res=await fetchWithTimeout(base+path+'?'+new URLSearchParams(query),{cache:'no-store',...init,headers:{token,...init.headers}},45000);
+  const {data}=await readResponseSmart(res);dfCheckSession(key);
   if(!res.ok||!data||typeof data!=='object'||data.Status===0||data.Status==='0')throw new Error(extractApiMessage(data,'Chưa tải được danh sách xe của user.'));
   return data;
  }
@@ -1964,7 +2003,7 @@ async function dfReadMainFleetRequest(){
    // Establish the monitoring connection before asking for GetAll.
    const response=await fetchWithTimeout(base+'/signalr/connect?'+new URLSearchParams({...params,tid:'9'}),{signal:controller.signal,headers:{Accept:'text/event-stream',token},cache:'no-store'},45000);
    if(!response.ok||!response.body)throw new Error('Chưa kết nối được danh sách giám sát.');
-   reader=response.body.getReader();await reader.read();dfCheck();
+   reader=response.body.getReader();await reader.read();dfCheckSession(key);
    await request('/signalr/start',params);
    const [fleet,metadata,catalog]=await Promise.all([request('/signalr/send',params,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent('{"H":"devicestatushub","M":"GetAll","A":[],"I":0}')}),request('/api/Device/GetByCompanyId',{api_key:token,companyId}),request('/api/DeviceGroup/GetAllGroup',{api_key:token,companyId})]);
    if(!Array.isArray(fleet.R))throw new Error('Máy chủ chưa trả danh sách xe giám sát.');
@@ -1980,12 +2019,11 @@ async function dfReadMainFleetRequest(){
    }
   }finally{clearTimeout(deadline);controller.abort();if(reader)await reader.cancel().catch(()=>{});}
  }
- dfCheck();if(owner!==df.owner||token!==df.mainToken)throw new Error('Phiên đăng nhập đã thay đổi.');
+ dfCheckSession(key);
  return {Username:owner,Devices:[...new Map(rows.map(d=>[String(d.Serial),d])).values()],Companies:companies.map(Id=>({Id:Number(Id),Name:''})),Groups:groups,Account:info};
 }
 
-async function dfScope(force=false){
- const fleet=await dfReadMainFleet(force);
+function dfFleetScope(fleet){
  const devices=fleet.Devices.filter(d=>Number.isSafeInteger(Number(d.Serial))&&Number(d.Serial)>0);
  const companies=fleet.Companies.filter(c=>Number.isSafeInteger(Number(c.Id))&&Number(c.Id)>0);
  const groups=[...fleet.Groups];
@@ -1995,21 +2033,31 @@ async function dfScope(force=false){
   if(!companies.some(c=>String(c.Id)===String(d.CompanyId)))companies.push({Id:d.CompanyId,Name:d.CompanyName||''});
   if(!groups.some(g=>String(g.CompanyId)===String(d.CompanyId)&&String(g.Id)===String(d.GroupId)))groups.push({Id:d.GroupId,CompanyId:d.CompanyId,Name:d.GroupName||''});
  }
- dfCheck();df.companies=companies;df.groups=groups;df.vehicles=[...new Map(devices.map(x=>[String(x.Serial),x])).values()];
+ const groupKey=groups.map(g=>g.CompanyId+':'+g.Id).sort();
+ const scopeKey=JSON.stringify([companies.map(c=>String(c.Id)).sort(),groupKey]);
+ return {companies,groups,vehicles:[...new Map(devices.map(x=>[String(x.Serial),x])).values()],scopeKey};
+}
+async function dfScope(force=false,allowStale=false){
+ const key=dfSessionKey(),fleet=await dfReadMainFleet(force,allowStale);
+ dfCheckSession(key);
+ const {companies,groups,vehicles,scopeKey}=dfFleetScope(fleet);
+ if(df.scopeKey!==scopeKey){df.drivers=[];df.links=[];}
+ Object.assign(df,{companies,groups,vehicles,scopeKey});
  df.account={...fleet.Account,Username:df.owner,CompanyIds:companies.map(x=>x.Id),CompanyId:Array.isArray(fleet.Account?.CompanyId)?undefined:fleet.Account?.CompanyId,GroupId:fleet.Account?.GroupUserId??fleet.Account?.GroupId};
  $('dfPlates').replaceChildren(...df.vehicles.map(x=>{const o=document.createElement('option');o.value=x.Bs||'';return o;}));$('dfScopeInfo').textContent='User: '+df.owner+' · '+df.vehicles.length+' xe được quản lý';
  if(df.vehicle){const fresh=df.vehicles.find(x=>String(x.Serial)===String(df.vehicle.Serial));if(!fresh||String(fresh.CompanyId)!==String(df.vehicle.CompanyId)||String(fresh.GroupId)!==String(df.vehicle.GroupId)){df.vehicle=null;$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;$('dfExistingPick').value='';$('dfDriverHints').hidden=true;df.editing=null;$('dfEditForm').hidden=true;}}
  dfRenderList();dfRenderVehicles();return companies.map(x=>String(x.Id));
 }
-async function dfDrivers(company){if(!df.companies.some(x=>String(x.Id)===String(company)))throw new Error('Công ty không thuộc phiên user hiện tại.');const r=await dfApi('/api/Driver/GetDriverByCompany','GET',undefined,{companyId:company});if(!Array.isArray(r.Drivers))throw new Error('API thiếu danh sách tài xế.');return r.Drivers.filter(x=>(x.CompanyId===undefined||String(x.CompanyId)===String(company))&&df.groups.some(g=>String(g.CompanyId)===String(company)&&String(g.Id)===String(x.GroupId))).map(x=>({...x,CompanyId:x.CompanyId??Number(company)}));}
+async function dfDrivers(company,scope=df){if(!scope.companies.some(x=>String(x.Id)===String(company)))throw new Error('Công ty không thuộc phiên user hiện tại.');const r=await dfApi('/api/Driver/GetDriverByCompany','GET',undefined,{companyId:company});if(!Array.isArray(r.Drivers))throw new Error('API thiếu danh sách tài xế.');return r.Drivers.filter(x=>(x.CompanyId===undefined||String(x.CompanyId)===String(company))&&scope.groups.some(g=>String(g.CompanyId)===String(company)&&String(g.Id)===String(x.GroupId))).map(x=>({...x,CompanyId:x.CompanyId??Number(company)}));}
 async function dfValidateVehicle(){const selected=df.vehicle;if(!selected?.Serial)throw new Error('Tìm và chọn xe trước khi nạp.');await dfScope(true);const d=df.vehicles.find(x=>String(x.Serial)===String(selected.Serial)&&String(x.CompanyId)===String(selected.CompanyId)&&String(x.GroupId)===String(selected.GroupId));if(!d||!df.vehicle)throw new Error('Xe không còn thuộc user hoặc công ty/nhóm đã thay đổi. Tìm lại xe.');if(!df.groups.some(g=>String(g.CompanyId)===String(d.CompanyId)&&String(g.Id)===String(d.GroupId)))throw new Error('Nhóm của xe không thuộc phạm vi user hiện tại.');df.vehicle=d;return d;}
 function dfReceiptKey(){return 'sgsi_driver_vehicle_receipts_v1:'+encodeURIComponent($('baseUrl').value.trim())+':'+df.owner;}
 function dfReceipts(){try{const list=JSON.parse(localStorage.getItem(dfReceiptKey())||'[]');return Array.isArray(list)?list:[];}catch{return [];}}
-function dfRecord(driver,vehicle){dfListCache=null;const item={DriverId:driver.Id,Serial:vehicle.Serial,Plate:vehicle.Bs||'',CompanyId:driver.CompanyId,AtTime:new Date().toISOString()};const records=dfReceipts();const key=x=>String(x.DriverId)+':'+String(x.Serial)+':'+String(x.CompanyId);const next=records.filter(x=>key(x)!==key(item));next.push(item);try{localStorage.setItem(dfReceiptKey(),JSON.stringify(next));}catch{$('dfListNote').textContent='Không lưu được liên kết tài xế với xe trên điện thoại này.';}df.links=df.links.filter(x=>key(x)!==key(item));df.links.push(item);}
+function dfRecord(driver,vehicle){dfInvalidateDriverList();const item={DriverId:driver.Id,Serial:vehicle.Serial,Plate:vehicle.Bs||'',CompanyId:driver.CompanyId,AtTime:new Date().toISOString()};const records=dfReceipts();const key=x=>String(x.DriverId)+':'+String(x.Serial)+':'+String(x.CompanyId);const next=records.filter(x=>key(x)!==key(item));next.push(item);try{localStorage.setItem(dfReceiptKey(),JSON.stringify(next));}catch{$('dfListNote').textContent='Không lưu được liên kết tài xế với xe trên điện thoại này.';}df.links=df.links.filter(x=>key(x)!==key(item));df.links.push(item);}
 function dfHistoryDriverId(row){let value=row.DriverId??row.driverId;if(value===undefined&&typeof row.Note==='string'){try{const note=JSON.parse(row.Note);value=note?.DriverId??note?.driverId??note?.rq?.DriverId;}catch{const m=row.Note.match(/\bDriverId\s*[:=]\s*["']?(\d+)/i);if(m)value=m[1];}}return Number.isSafeInteger(Number(value))&&Number(value)>0?Number(value):null;}
 function dfActivityKey(serial){return 'sgsi_driver_activity_v1:'+encodeURIComponent($('baseUrl').value.trim())+':'+df.owner+':'+serial;}
 function dfActivityCache(serial){try{const x=JSON.parse(localStorage.getItem(dfActivityKey(serial))||'null');return x&&Array.isArray(x.rows)&&Number.isFinite(x.scannedAt)?x:null;}catch{return null;}}
 async function dfActivity(vehicle){
+ const key=dfSessionKey(),storageKey=dfActivityKey(vehicle.Serial);
  const cached=dfActivityCache(vehicle.Serial),now=Date.now();
  if(cached&&now-cached.scannedAt<15*60*1000&&now>=cached.scannedAt)return cached.rows;
  const start=cached?Math.max(0,cached.scannedAt-3*86400000):Math.max(Date.parse('2000-01-01T00:00:00Z'),Number.isFinite(Date.parse(vehicle.CreateTime))?Date.parse(vehicle.CreateTime):0);
@@ -2017,31 +2065,197 @@ async function dfActivity(vehicle){
  if(!Array.isArray(r.Datas))throw new Error('API lịch sử tài xế thiếu Datas.');
  const byLicense=new Map((cached?.rows||[]).map(x=>[dfLicense(x.Gplx),x]));
  for(const x of r.Datas){const license=dfLicense(x.Gplx);if(!license||!String(x.Name||'').trim()||x.Bs&&dfPlateNorm(x.Bs)!==dfPlateNorm(vehicle.Bs))continue;byLicense.set(license,{Name:String(x.Name).trim(),Gplx:String(x.Gplx).trim(),Plate:vehicle.Bs||'',AtTime:x.EndTime||x.BeginTime||''});}
- const rows=[...byLicense.values()];dfCheck();try{localStorage.setItem(dfActivityKey(vehicle.Serial),JSON.stringify({scannedAt:now,rows}));}catch{}return rows;
+ const rows=[...byLicense.values()];dfCheckSession(key);try{localStorage.setItem(storageKey,JSON.stringify({scannedAt:now,rows}));}catch{}return rows;
 }
-async function dfSupplementActivity(){
- const vehicles=[...df.vehicles],results=new Array(vehicles.length);let index=0;
- const worker=async()=>{while(index<vehicles.length){const i=index++;try{results[i]={rows:await dfActivity(vehicles[i])};}catch(error){results[i]={rows:dfActivityCache(vehicles[i].Serial)?.rows||[],error};}}};
- await Promise.all(Array.from({length:Math.min(3,vehicles.length)},worker));dfCheck();let unmatched=0,ambiguous=0,failed=0;
- for(let i=0;i<vehicles.length;i++){const vehicle=vehicles[i],result=results[i];if(result.error)failed++;
-  for(const row of result.rows){if(row.Plate&&dfPlateNorm(row.Plate)!==dfPlateNorm(vehicle.Bs))continue;
-   let matches=df.drivers.filter(d=>!d.Observed&&dfLicense(d.Gplx)===dfLicense(row.Gplx));
-   if(matches.length>1){const local=matches.filter(d=>String(d.CompanyId)===String(vehicle.CompanyId));if(local.length===1)matches=local;else{const named=matches.filter(d=>dfNorm(d.Name)===dfNorm(row.Name));if(named.length===1)matches=named;}}
-   if(matches.length>1){ambiguous++;continue;}
-   let driver=matches[0];if(!driver){const id='observed:'+dfLicense(row.Gplx);driver=df.drivers.find(d=>d.Observed&&d.Id===id);if(!driver){driver={Id:id,Name:row.Name,Gplx:row.Gplx,CompanyId:vehicle.CompanyId,Observed:true};df.drivers.push(driver);unmatched++;}}
-   df.links.push({DriverId:driver.Id,CompanyId:driver.CompanyId,Serial:vehicle.Serial,Plate:vehicle.Bs||'',Source:'device'});
+let dfListCache=null,dfListInFlight=null,dfScanInFlight=null,dfListRevision=0;
+const DF_LIST_MAX_AGE=60000;
+function dfInvalidateDriverList(){
+ dfListRevision++;
+ dfListCache=null;
+ dfListInFlight=null;
+}
+function dfReadDriverBase(fresh=false){
+ dfCheck();
+ const key=dfSessionKey(),revision=dfListRevision;
+ if(dfListInFlight?.key===key)return dfListInFlight.promise;
+ if(!fresh&&dfListCache?.key===key&&Date.now()-dfListCache.at<DF_LIST_MAX_AGE)return Promise.resolve(dfListCache);
+ const request={key,promise:null};
+ const check=()=>{
+  dfCheckSession(key);
+  if(revision!==dfListRevision)throw new Error('Danh sách tài xế đã thay đổi.');
+ };
+ request.promise=(async()=>{
+  const fleet=await dfReadMainFleet();
+  check();
+  const scope=dfFleetScope(fleet);
+  const results=await Promise.all(scope.companies.map(async company=>{
+   const companyId=String(company.Id);
+   const [drivers,history]=await Promise.allSettled([
+    dfDrivers(companyId,scope),
+    dfApi('/admin/GetSetupDeviceHistory','GET',undefined,{companyId,groupId:0,opcode:0,begin:'2000-01-01T00:00:00',end:new Date().toISOString()})
+   ]);
+   const historyRows=history.status==='fulfilled'?history.value.Data:null;
+   return {
+    drivers:drivers.status==='fulfilled'?drivers.value:[],
+    links:Array.isArray(historyRows)?historyRows.map(row=>({
+     DriverId:dfHistoryDriverId(row),Serial:row.Serial,CompanyId:row.CompanyId??Number(companyId)
+    })).filter(x=>x.DriverId):[],
+    incomplete:drivers.status==='rejected'||!Array.isArray(historyRows)
+   };
+  }));
+  check();
+  const at=Date.now(),incomplete=results.some(r=>r.incomplete);
+  dfListCache={
+   key,scopeKey:scope.scopeKey,at,incomplete,
+   drivers:results.flatMap(r=>r.drivers),links:results.flatMap(r=>r.links),
+   activity:null
+  };
+  return dfListCache;
+ })().finally(()=>{if(dfListInFlight===request)dfListInFlight=null;});
+ dfListInFlight=request;
+ return request.promise;
+}
+function dfApplyDriverList(base){
+ if(base.key!==dfSessionKey()||base.scopeKey!==df.scopeKey)return;
+ const source=base.activity||base;
+ df.drivers=source.drivers.slice();
+ df.links=[...dfReceipts(),...source.links];
+ dfRenderList();
+ let note=base.incomplete?'Một phần hồ sơ hoặc lịch sử nạp chưa tải được.':'Hiện tài xế có liên kết với xe trong tài khoản.';
+ if(!base.activity?.complete)note+=' Đang bổ sung lịch sử lái…';
+ if(base.activity?.unmatched)note+=' '+base.activity.unmatched+' tài xế chưa có hồ sơ.';
+ if(base.activity?.ambiguous)note+=' '+base.activity.ambiguous+' GPLX trùng nhiều hồ sơ chưa được tự ghép.';
+ if(base.activity?.failed)note+=' Chưa tải được lịch sử của '+base.activity.failed+' xe. Bấm Tải lại để thử tiếp.';
+ $('dfListNote').textContent=note;
+}
+function dfMergeActivity(activity,vehicle,rows){
+ for(const row of rows){
+  if(row.Plate&&dfPlateNorm(row.Plate)!==dfPlateNorm(vehicle.Bs))continue;
+  const license=dfLicense(row.Gplx);
+  let matches=activity.drivers.filter(d=>!d.Observed&&dfLicense(d.Gplx)===license);
+  if(matches.length>1){
+   const local=matches.filter(d=>String(d.CompanyId)===String(vehicle.CompanyId));
+   if(local.length===1)matches=local;
+   else{
+    const named=matches.filter(d=>dfNorm(d.Name)===dfNorm(row.Name));
+    if(named.length===1)matches=named;
+   }
+  }
+  if(matches.length>1){activity.ambiguous++;continue;}
+  let driver=matches[0];
+  if(!driver){
+   const id='observed:'+license;
+   driver=activity.drivers.find(d=>d.Observed&&d.Id===id);
+   if(!driver){
+    driver={Id:id,Name:row.Name,Gplx:row.Gplx,CompanyId:vehicle.CompanyId,Observed:true};
+    activity.drivers.push(driver);
+    activity.unmatched++;
+   }
+  }
+  activity.links.push({DriverId:driver.Id,CompanyId:driver.CompanyId,Serial:vehicle.Serial,Plate:vehicle.Bs||'',Source:'device'});
+ }
+}
+function dfScanActivity(base,foreground=false){
+ const priority=df.vehicle?.Serial;
+ const fleet=df.vehicles;
+ const fleetKey=JSON.stringify(fleet.map(v=>[v.Serial,v.Bs,v.CompanyId,v.GroupId,v.CreateTime]));
+ if(base.activity?.complete&&base.activity.fleetKey===fleetKey&&!base.activity.failed)return Promise.resolve();
+ const previous=dfScanInFlight;
+ if(previous?.base===base&&previous.fleetKey===fleetKey){
+  if(foreground)previous.foreground=true;
+  return previous.promise;
+ }
+ const scan={base,fleetKey,foreground,promise:null};
+ const current=()=>dfScanInFlight===scan&&dfListCache===base&&base.key===dfSessionKey()&&base.scopeKey===df.scopeKey;
+ const visible=()=>$('attachDriverTab').classList.contains('active')&&Boolean(df.vehicle);
+ scan.promise=(async()=>{
+  await previous?.promise.catch(()=>{});
+  if(!current())return;
+  const activity={fleetKey,drivers:base.drivers.slice(),links:base.links.slice(),unmatched:0,ambiguous:0,failed:0,complete:false};
+  const queue=fleet.slice().sort((a,b)=>Number(b.Serial===priority)-Number(a.Serial===priority));
+  base.activity=activity;
+  for(let i=0;i<queue.length;i+=3){
+   if(!current()||(!scan.foreground&&!visible()))return;
+   const batch=queue.slice(i,i+3);
+   const results=await Promise.allSettled(batch.map(dfActivity));
+   if(!current())return;
+   for(let j=0;j<batch.length;j++){
+    const result=results[j],vehicle=batch[j];
+    if(result.status==='rejected')activity.failed++;
+    const rows=result.status==='fulfilled'?result.value:dfActivityCache(vehicle.Serial)?.rows||[];
+    dfMergeActivity(activity,vehicle,rows);
+   }
+   if(!df.busy&&visible())dfApplyDriverList(base);
+  }
+  activity.complete=true;
+  if(!df.busy&&visible())dfApplyDriverList(base);
+ })().finally(()=>{if(dfScanInFlight===scan)dfScanInFlight=null;});
+ dfScanInFlight=scan;
+ return scan.promise;
+}
+async function dfLoadList(driverId){
+ const key=dfSessionKey(),base=await dfReadDriverBase(true);
+ await dfScope(false,true);
+ dfCheckSession(key);
+ if(base.scopeKey!==df.scopeKey)throw new Error('Phạm vi xe đã thay đổi. Tải lại danh sách tài xế.');
+ dfApplyDriverList(base);
+ if(driverId&&dfVisible().some(d=>!d.Observed&&String(d.Id)===driverId))return;
+ await dfScanActivity(base,true);
+ dfCheckSession(key);
+ dfApplyDriverList(base);
+}
+async function dfShowDriverList(){
+ await dfScope(false,true);
+ const key=dfSessionKey();
+ let base=dfListCache?.key===key&&dfListCache.scopeKey===df.scopeKey?dfListCache:null;
+ if(!base){
+  dfMsg('Đang chuẩn bị danh sách tài xế…');
+  base=await dfReadDriverBase();
+  dfCheckSession(key);
+  await dfScope(false,true);
+ }
+ if(base.scopeKey!==df.scopeKey)throw new Error('Phạm vi xe đã thay đổi. Chọn lại xe.');
+ dfApplyDriverList(base);
+ return base;
+}
+async function dfCompleteDriverList(base,vehicle){
+ try{
+  if(!base||Date.now()-base.at>=DF_LIST_MAX_AGE||base.incomplete){
+   const updated=await dfReadDriverBase(true);
+   if(df.vehicle!==vehicle||!$('attachDriverTab').classList.contains('active'))return;
+   if(updated.scopeKey!==df.scopeKey){
+    if(df.busy)return;
+    await dfScope(false,true);
+    if(df.vehicle!==vehicle)return;
+   }
+   base=updated;
+   if(!df.busy)dfApplyDriverList(base);
+  }
+  if(df.vehicle===vehicle)await dfScanActivity(base);
+ }catch{
+  if(df.vehicle===vehicle)$('dfListNote').textContent='Chưa cập nhật được danh sách tài xế. Bấm Tải lại để thử tiếp.';
+ }
+}
+function dfVisible(){
+ const cars=new Map(df.vehicles.map(v=>[String(v.Serial),v]));
+ const byDriver=new Map();
+ function add(companyId,driverId,vehicle){
+  const key=String(companyId)+':'+String(driverId);
+  if(!byDriver.has(key))byDriver.set(key,new Map());
+  byDriver.get(key).set(String(vehicle.Serial),vehicle);
+ }
+ for(const link of df.links){
+  const vehicle=cars.get(String(link.Serial));
+  if(vehicle&&(!link.Plate||dfPlateNorm(link.Plate)===dfPlateNorm(vehicle.Bs))){
+   add(link.CompanyId,link.DriverId,vehicle);
   }
  }
- return {unmatched,ambiguous,failed};
+ for(const vehicle of df.vehicles)add(vehicle.CompanyId,vehicle.DriverId,vehicle);
+ return df.drivers.flatMap(driver=>{
+  const vehicles=byDriver.get(String(driver.CompanyId)+':'+String(driver.Id));
+  return vehicles?.size?[{...driver,vehicles:[...vehicles.values()]}]:[];
+ });
 }
-let dfListCache=null;
-async function dfLoadList(fresh=true){
- dfCheck();const key=$('baseUrl').value.trim()+':'+df.owner+':'+df.mainToken;
- if(!fresh&&dfListCache?.key===key&&Date.now()-dfListCache.at<30000){await dfScope();df.drivers=dfListCache.drivers.slice();df.links=dfListCache.links.slice();dfRenderList();return;}
- await dfLoadListRequest();dfCheck();dfListCache={key,at:Date.now(),drivers:df.drivers.slice(),links:df.links.slice()};
-}
-async function dfLoadListRequest(){const companies=await dfScope();const results=await Promise.allSettled(companies.map(async companyId=>{const [drivers,history]=await Promise.all([dfDrivers(companyId),dfApi('/admin/GetSetupDeviceHistory','GET',undefined,{companyId,groupId:0,opcode:0,begin:'2000-01-01T00:00:00',end:new Date().toISOString()})]);if(!Array.isArray(history.Data))throw new Error('API lịch sử không trả về Data.');return {drivers,links:history.Data.map(row=>({DriverId:dfHistoryDriverId(row),Serial:row.Serial,CompanyId:row.CompanyId??Number(companyId)})).filter(x=>x.DriverId)};}));df.drivers=[];df.links=dfReceipts();const errors=[];for(let i=0;i<results.length;i++){const r=results[i];if(r.status==='fulfilled'){df.drivers.push(...r.value.drivers);df.links.push(...r.value.links);}else{errors.push(r.reason.message);try{df.drivers.push(...await dfDrivers(companies[i]));}catch(e){errors.push(e.message);}}}const activity=await dfSupplementActivity();dfRenderList();$('dfListNote').textContent=errors.length?'Một phần lịch sử chưa tải được. Danh sách chỉ dùng liên kết tài xế với các xe user hiện còn quản lý.':'Gộp tài xế đã nạp và tài xế được thiết bị ghi nhận trên xe trong user.';if(activity.unmatched)$('dfListNote').textContent+=' '+activity.unmatched+' tài xế chưa có hồ sơ: chọn để khai báo và nạp.';if(activity.ambiguous)$('dfListNote').textContent+=' '+activity.ambiguous+' GPLX trùng nhiều hồ sơ chưa được tự ghép.';if(activity.failed)$('dfListNote').textContent+=' Chưa tải đủ lịch sử của '+activity.failed+' xe; bấm Tải lại để thử tiếp.';}
-function dfVisible(){const cars=new Map(df.vehicles.map(x=>[String(x.Serial),x]));return df.drivers.map(driver=>{const vehicles=[...new Map([...df.links,...df.vehicles.filter(v=>String(v.DriverId)===String(driver.Id)).map(v=>({DriverId:driver.Id,CompanyId:driver.CompanyId,Serial:v.Serial}))].filter(x=>String(x.DriverId)===String(driver.Id)&&String(x.CompanyId)===String(driver.CompanyId)&&cars.has(String(x.Serial))&&(!x.Plate||dfPlateNorm(x.Plate)===dfPlateNorm(cars.get(String(x.Serial)).Bs))).map(x=>[String(x.Serial),cars.get(String(x.Serial))])).values()];return {...driver,vehicles};}).filter(x=>x.vehicles.length);}
 function dfRenderList(){const q=dfNorm($('dfExistingSearch').value),list=$('dfDriverList'),pager=$('dfListPager');const dismissed=new Set(dfDismissed()),fragment=document.createDocumentFragment();const eligible=dfVisible().filter(x=>!x.Observed||!dismissed.has(dfObservedKey(x)));const rows=eligible.filter(x=>dfNorm((x.Name||'')+' '+(x.Gplx||'')+' '+x.vehicles.map(v=>v.Bs).join(' ')).includes(q));const pages=Math.max(1,Math.ceil(rows.length/10));df.page=Math.min(Math.max(0,df.page||0),pages-1);list.replaceChildren();pager.replaceChildren();$('dfListNote').textContent=df.vehicle?'Có '+eligible.length+' tài xế đã gắn với xe trong user · '+rows.length+' kết quả':'';if(!rows.length){const p=document.createElement('p');p.textContent=df.vehicle?'Chưa có tài xế đã gắn với xe trong user. Chọn Tài xế mới để khai báo và nạp.':'Chọn xe để nạp tài xế.';list.append(p);}rows.slice(df.page*10,(df.page+1)*10).forEach(x=>{const row=document.createElement('div');row.className='df-compact-driver';const info=document.createElement('div'),title=document.createElement('strong'),note=document.createElement('small');title.textContent=x.Name||'Chưa có tên';note.textContent='GPLX: '+(x.Gplx||'')+' · '+x.vehicles.map(v=>v.Bs).join(', ');info.append(title,note);const choose=document.createElement('button');choose.type='button';choose.className='driver-edit';const selected=String(x.Id)===$('dfExistingPick').value;choose.textContent=x.Observed?'Khai báo':selected?'Đã chọn':'Chọn nạp';choose.setAttribute('aria-pressed',String(selected));choose.onclick=()=>{if(df.busy)return;if(x.Observed){$('dfNewName').value=x.Name||'';$('dfNewLicense').value=x.Gplx||'';$('dfChooseNew').onclick();dfNudgeLoad('dfNewForm');return;}$('dfExistingPick').value=String(x.Id);$('dfDriverChosen').textContent='Đã chọn: '+x.Name+' · GPLX '+(x.Gplx||'');dfNudgeLoad('dfExistingForm');dfRenderList();};row.append(info,choose);const remove=document.createElement('button');remove.type='button';remove.className='df-delete-direct';remove.textContent='Xoá';remove.setAttribute('aria-label','Xoá tài xế '+(x.Name||''));remove.onclick=()=>{if(!df.busy)(x.Observed?dfDismissObserved(x):dfDelete(x.Id,x.CompanyId));};if(!x.Observed){const edit=document.createElement('button');edit.type='button';edit.className='df-edit-direct';edit.textContent='Sửa';edit.setAttribute('aria-label','Sửa tài xế '+(x.Name||''));edit.onclick=()=>{if(!df.busy)dfOpenEdit(x.Id,x.CompanyId);};row.append(edit);}row.append(remove);fragment.append(row);});list.append(fragment);if(pages>1){for(const [text,offset] of [['Trước',-1],['Sau',1]]){const button=document.createElement('button');button.type='button';button.textContent=text;button.disabled=offset<0?df.page===0:df.page===pages-1;button.onclick=()=>{if(df.busy)return;df.page+=offset;dfRenderList();};pager.append(button);if(offset<0){const note=document.createElement('span');note.textContent=(df.page+1)+' / '+pages;pager.append(note);}}}}
 
 
@@ -2051,13 +2265,39 @@ function dfHints(inputId,boxId,rows,title,choose){const input=$(inputId),box=$(b
 function dfRenderVehicles(){const pick=$('dfVehiclePick');pick.replaceChildren();const first=document.createElement('option');first.value='';first.textContent='Chọn xe trong user';pick.append(first);const rows=dfMatches(df.vehicles,x=>(x.Bs||'')+' '+x.Serial,$('dfPlate').value,true);for(const x of rows){const o=document.createElement('option');o.value=String(x.Serial);o.textContent=(x.Bs||'Chưa có biển số')+' · '+x.Serial;pick.append(o);}pick.value=df.vehicle?String(df.vehicle.Serial):'';if(df.vehicle&&dfPlateNorm($('dfPlate').value)===dfPlateNorm(df.vehicle.Bs)){$('dfVehicleHints').hidden=true;$('dfPlate').setAttribute('aria-expanded','false');return;}dfHints('dfPlate','dfVehicleHints',rows,x=>(x.Bs||'Chưa có biển số')+' · '+x.Serial,x=>{if(df.busy)return;$('dfPlate').value=x.Bs||String(x.Serial);$('dfPlate').blur();dfRun(()=>dfSelectVehicle(x.Serial));});}
 let dfRenderFrame=null;function dfScheduleExisting(){if(dfRenderFrame!==null)return;dfRenderFrame=requestAnimationFrame(()=>{dfRenderFrame=null;dfRenderExisting();});}
 function dfRenderExisting(){df.page=0;$('dfDriverHints').hidden=true;dfRenderList();}
-async function dfSelectVehicle(serial){dfStopLoadNudge();await dfLoadList(false);const vehicle=df.vehicles.find(x=>String(x.Serial)===String(serial));if(!vehicle)throw new Error('Xe không còn trong danh sách hệ thống.');df.vehicle=vehicle;$('dfPlate').value=vehicle.Bs;$('dfVehicleHints').hidden=true;$('dfPlate').setAttribute('aria-expanded','false');$('dfVehicleInfo').hidden=false;$('dfVehicleInfo').textContent='Xe '+vehicle.Bs+' · Serial '+vehicle.Serial;$('dfChoices').hidden=false;$('dfExistingForm').hidden=false;driverChoiceState('df','Existing');$('dfNewForm').hidden=true;$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';df.page=0;dfRenderVehicles();dfRenderList();dfMsg('Chọn tài xế có sẵn để nạp hoặc khai báo tài xế mới.');}
+async function dfSelectVehicle(serial){dfStopLoadNudge();const base=await dfShowDriverList();const vehicle=df.vehicles.find(x=>String(x.Serial)===String(serial));if(!vehicle)throw new Error('Xe không còn trong danh sách hệ thống.');df.vehicle=vehicle;$('dfPlate').value=vehicle.Bs;$('dfVehicleHints').hidden=true;$('dfPlate').setAttribute('aria-expanded','false');$('dfVehicleInfo').hidden=false;$('dfVehicleInfo').textContent='Xe '+vehicle.Bs+' · Serial '+vehicle.Serial;$('dfChoices').hidden=false;$('dfExistingForm').hidden=false;driverChoiceState('df','Existing');$('dfNewForm').hidden=true;$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';df.page=0;dfRenderVehicles();dfRenderList();dfMsg('Chọn tài xế có sẵn để nạp hoặc khai báo tài xế mới.');
+ requestAnimationFrame(()=>setTimeout(()=>{
+  if(df.vehicle===vehicle&&$('attachDriverTab').classList.contains('active'))void dfCompleteDriverList(base,vehicle);
+ },0));
+}
 function dfHintKeyboard(inputId,boxId){const input=$(inputId),box=$(boxId);input.addEventListener('keydown',e=>{if(e.key==='Escape'){box.hidden=true;input.setAttribute('aria-expanded','false');return;}const buttons=[...box.querySelectorAll('button')];if(e.key==='ArrowDown'&&buttons.length){e.preventDefault();buttons[0].focus();}if(e.key==='Enter'&&!box.hidden&&buttons.length===1){e.preventDefault();buttons[0].click();}});box.addEventListener('keydown',e=>{const buttons=[...box.querySelectorAll('button')],index=buttons.indexOf(document.activeElement);if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const offset=e.key==='ArrowDown'?1:-1;buttons[(index+offset+buttons.length)%buttons.length]?.focus();}if(e.key==='Escape'){box.hidden=true;input.focus();}});}
 $('dfPlate').addEventListener('input',()=>{dfStopLoadNudge();df.vehicle=null;$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;dfRenderVehicles();});$('dfPlate').addEventListener('focus',dfRenderVehicles);
 $('dfExistingSearch').addEventListener('input',()=>{dfStopLoadNudge();$('dfExistingPick').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';dfScheduleExisting();});$('dfExistingSearch').addEventListener('focus',dfRenderExisting);
 dfHintKeyboard('dfPlate','dfVehicleHints');dfHintKeyboard('dfExistingSearch','dfDriverHints');
-async function dfRun(task){if(df.busy)return;df.busy=true;const controls=[...$('attachDriverTab').querySelectorAll('button,input,select')];const states=controls.map(x=>x.disabled);controls.forEach(x=>x.disabled=true);try{await task();}catch(e){dfMsg(e.message,'err');}finally{df.busy=false;controls.forEach((x,i)=>x.disabled=states[i]);}}
-async function dfInit(){dfStopLoadNudge();driverChoiceState('df','');if(df.busy)return;$('dfVehicleHints').replaceChildren();$('dfVehicleHints').hidden=true;$('dfDriverHints').replaceChildren();$('dfDriverHints').hidden=true;$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';df.owner=getRuntimeUsername();df.mainToken=getCurrentLoginToken();$('dfNewMnv').value=df.owner;$('dfCreateDebug').hidden=true;$('dfNewCompany').value='';$('dfNewGroup').value='';df.vehicle=null;df.editing=null;df.drivers=[];df.page=0;df.links=[];df.vehicles=[];$('dfListPager').replaceChildren();$('dfPlate').value='';$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;$('dfEditForm').hidden=true;$('dfDriverList').replaceChildren();await dfRun(dfScope);dfRenderVehicles();}
+async function dfRun(task){
+ if(df.busy)return;
+ const session=dfSession;
+ df.busy=true;
+ const controls=[...$('attachDriverTab').querySelectorAll('button,input,select')];
+ const states=controls.map(x=>x.disabled);
+ controls.forEach(x=>x.disabled=true);
+ try{await task();}catch(e){if(session===dfSession)dfMsg(e.message,'err');}
+ finally{
+  df.busy=false;
+  controls.forEach((x,i)=>x.disabled=states[i]);
+  if(session===dfSession&&df.vehicle&&dfListCache&&$('attachDriverTab').classList.contains('active')){
+   dfApplyDriverList(dfListCache);
+  }
+ }
+}
+async function dfInit(){dfStopLoadNudge();driverChoiceState('df','');if(df.busy)return;$('dfVehicleHints').replaceChildren();$('dfVehicleHints').hidden=true;$('dfDriverHints').replaceChildren();$('dfDriverHints').hidden=true;$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';df.owner=getRuntimeUsername();df.mainToken=getCurrentLoginToken();$('dfNewMnv').value=df.owner;$('dfCreateDebug').hidden=true;$('dfNewCompany').value='';$('dfNewGroup').value='';df.vehicle=null;df.editing=null;df.drivers=[];df.page=0;df.links=[];df.vehicles=[];$('dfListPager').replaceChildren();$('dfPlate').value='';$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;$('dfEditForm').hidden=true;$('dfDriverList').replaceChildren();await dfRun(()=>dfScope(false,true));
+ const key=dfSessionKey();
+ if(dfFleetCache?.key===key&&Date.now()-dfFleetCache.at>=15000){
+  void dfReadMainFleet().then(()=>{
+   if(!df.busy&&key===dfSessionKey()&&$('attachDriverTab').classList.contains('active'))return dfScope(false,true);
+  }).catch(()=>{});
+ }
+}
 
 function dfAfterSend(driver,vehicle){
  dfStopLoadNudge();
@@ -2076,9 +2316,9 @@ function dfAfterSend(driver,vehicle){
 }
 
 async function dfSend(driver,vehicle){dfCheck();const latest=await dfValidateVehicle();if(String(latest.Serial)!==String(vehicle.Serial))throw new Error('Xe đã thay đổi. Tìm lại trước khi nạp.');if(!dfCompanyIds(df.account).includes(String(driver.CompanyId)))throw new Error('Tài xế không thuộc công ty user được cấp quyền.');const r=await dfApi('/api/Driver/GetDriverById/'+encodeURIComponent(driver.Id),'GET',undefined,{companyId:driver.CompanyId});if(!r.Driver||String(r.Driver.Id)!==String(driver.Id)||(r.Driver.CompanyId!==undefined&&String(r.Driver.CompanyId)!==String(driver.CompanyId)))throw new Error('Tài xế không còn trong công ty. Tải lại danh sách.');if(!df.groups.some(g=>String(g.CompanyId)===String(driver.CompanyId)&&String(g.Id)===String(r.Driver.GroupId)))throw new Error('Nhóm của tài xế không thuộc phạm vi user hiện tại.');await dfApi('/api/DeviceSetup/SetupDriver','POST',{DriverId:Number(driver.Id),Username:df.owner,Serial:Number(latest.Serial)},{companyId:latest.CompanyId});dfRecord(driver,latest);clearApiCache();dfAfterSend(driver,latest);}
-$('dfVehicleForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{await dfScope();const q=$('dfPlate').value;const exact=df.vehicles.filter(x=>dfPlateNorm(x.Bs)===dfPlateNorm(q)||String(x.Serial)===q.trim());const matches=exact.length?exact:dfMatches(df.vehicles,x=>(x.Bs||'')+' '+x.Serial,q,true);if(matches.length!==1){dfRenderVehicles();throw new Error(matches.length?'Có nhiều xe gần giống. Bấm chọn đúng xe trong danh sách gợi ý.':'Không tìm thấy xe phù hợp trong user chính.');}await dfSelectVehicle(matches[0].Serial);});});
-$('dfChooseExisting').onclick=()=>dfRun(async()=>{const vehicle=df.vehicle;if(!vehicle)throw new Error('Chọn xe trước.');await dfLoadList(false);const drivers=dfVisible();dfCheck();if(String(df.vehicle?.Serial)!==String(vehicle.Serial))throw new Error('Xe đã thay đổi. Chọn lại xe trước khi tải tài xế.');$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';driverChoiceState('df','Existing');$('dfExistingForm').hidden=false;$('dfNewForm').hidden=true;dfRenderExisting();dfMsg('Có '+drivers.length+' tài xế trong danh sách của user phù hợp với xe này. Chọn tài xế cần nạp.','ok');});$('dfChooseNew').onclick=()=>{driverChoiceState('df','New');$('dfExistingForm').hidden=true;$('dfNewForm').hidden=false;dfNudgeLoad('dfNewForm');$('dfNewScope').textContent='Đang kiểm tra nhóm và công ty của user chính…';dfRun(async()=>{try{const v=await dfValidateVehicle();await dfDestination(v);}catch(e){$('dfNewScope').textContent=e.message;throw e;}});};
-$('dfExistingForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{const id=$('dfExistingPick').value;const vehicle=await dfValidateVehicle();await dfLoadList();const driver=dfVisible().find(x=>String(x.Id)===id);if(!driver||driver.Observed)throw new Error('Tài xế không nằm trong danh sách tài xế của user chính. Tải lại danh sách và chọn đúng tài xế.');await dfSend(driver,vehicle);});});
+$('dfVehicleForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{await dfScope(false,true);const q=$('dfPlate').value;const exact=df.vehicles.filter(x=>dfPlateNorm(x.Bs)===dfPlateNorm(q)||String(x.Serial)===q.trim());const matches=exact.length?exact:dfMatches(df.vehicles,x=>(x.Bs||'')+' '+x.Serial,q,true);if(matches.length!==1){dfRenderVehicles();throw new Error(matches.length?'Có nhiều xe gần giống. Bấm chọn đúng xe trong danh sách gợi ý.':'Không tìm thấy xe phù hợp trong user chính.');}await dfSelectVehicle(matches[0].Serial);});});
+$('dfChooseExisting').onclick=()=>dfRun(async()=>{const vehicle=df.vehicle;if(!vehicle)throw new Error('Chọn xe trước.');const base=await dfShowDriverList();const drivers=dfVisible();dfCheck();if(String(df.vehicle?.Serial)!==String(vehicle.Serial))throw new Error('Xe đã thay đổi. Chọn lại xe trước khi tải tài xế.');$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfDriverChosen').textContent='Chưa chọn tài xế.';driverChoiceState('df','Existing');$('dfExistingForm').hidden=false;$('dfNewForm').hidden=true;dfRenderExisting();dfMsg('Có '+drivers.length+' tài xế trong danh sách của user phù hợp với xe này. Chọn tài xế cần nạp.','ok');requestAnimationFrame(()=>{if(df.vehicle===vehicle)void dfCompleteDriverList(base,vehicle);});});$('dfChooseNew').onclick=()=>{driverChoiceState('df','New');$('dfExistingForm').hidden=true;$('dfNewForm').hidden=false;dfNudgeLoad('dfNewForm');$('dfNewScope').textContent='Đang kiểm tra nhóm và công ty của user chính…';dfRun(async()=>{try{const v=await dfValidateVehicle();await dfDestination(v);}catch(e){$('dfNewScope').textContent=e.message;throw e;}});};
+$('dfExistingForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{const id=$('dfExistingPick').value;const vehicle=await dfValidateVehicle();await dfLoadList(id);const driver=dfVisible().find(x=>String(x.Id)===id);if(!driver||driver.Observed)throw new Error('Tài xế không nằm trong danh sách tài xế của user chính. Tải lại danh sách và chọn đúng tài xế.');await dfSend(driver,vehicle);});});
 
 function dfUserDestination(account){
  const native=null;const allowed=dfCompanyIds(account);const pairs=[];
@@ -2096,11 +2336,11 @@ function dfNewBody(name,gplx,destination){
  const now=new Date(),future=new Date(now);future.setFullYear(now.getFullYear()+5);
  return {Id:0,Name:name,Gplx:gplx,Mnv:df.owner,CompanyId:Number(destination.CompanyId),GroupId:Number(destination.GroupId),Born:1990,Cmnd:'',Address:'',Sex:0,CreateDateOfGplx:now.toISOString(),EndDateOfGplx:future.toISOString(),AddressOfGplx:'',Phone:''};
 }
-$('dfNewForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{const vehicle=await dfValidateVehicle(),name=$('dfNewName').value.trim(),gplx=$('dfNewLicense').value.trim();if(!name||!gplx)throw new Error('Nhập đủ tên và GPLX.');const destination=await dfDestination();let drivers=await dfDrivers(destination.CompanyId);let matches=drivers.filter(x=>dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(gplx));if(matches.length>1)throw new Error('Có nhiều tài xế trùng tên và GPLX trong công ty user. Kiểm tra lại trước khi nạp.');let driver=matches[0];if(!driver){const latest=await dfValidateVehicle();if(String(latest.Serial)!==String(vehicle.Serial))throw new Error('Xe đã thay đổi. Tìm lại xe.');const current=dfUserDestination(df.account);if(current.CompanyId!==destination.CompanyId||current.GroupId!==destination.GroupId)throw new Error('Nhóm/công ty user đã thay đổi. Mở lại tab trước khi lưu.');const body=dfNewBody(name,gplx,current);const r=await dfApi('/api/Driver/Add','POST',body,{companyId:current.CompanyId});drivers=await dfDrivers(current.CompanyId);matches=drivers.filter(x=>dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(gplx));driver=r.Id?matches.find(x=>String(x.Id)===String(r.Id)):matches.length===1?matches[0]:null;if(!driver)throw new Error('Máy chủ đã nhận tạo tài xế nhưng chưa xác định được tài xế để nạp. Tải lại trước khi thử tiếp.');}const observedId='observed:'+dfLicense(driver.Gplx);df.links=df.links.map(x=>String(x.DriverId)===observedId?{...x,DriverId:driver.Id,CompanyId:driver.CompanyId}:x);df.drivers=[...df.drivers.filter(x=>String(x.CompanyId)!==String(destination.CompanyId)&&!(x.Observed&&dfLicense(x.Gplx)===dfLicense(driver.Gplx))),...drivers];dfRenderList();await dfSend(driver,vehicle);});});
+$('dfNewForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{const vehicle=await dfValidateVehicle(),name=$('dfNewName').value.trim(),gplx=$('dfNewLicense').value.trim();if(!name||!gplx)throw new Error('Nhập đủ tên và GPLX.');const destination=await dfDestination();let drivers=await dfDrivers(destination.CompanyId);let matches=drivers.filter(x=>dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(gplx));if(matches.length>1)throw new Error('Có nhiều tài xế trùng tên và GPLX trong công ty user. Kiểm tra lại trước khi nạp.');let driver=matches[0];if(!driver){const latest=await dfValidateVehicle();if(String(latest.Serial)!==String(vehicle.Serial))throw new Error('Xe đã thay đổi. Tìm lại xe.');const current=dfUserDestination(df.account);if(current.CompanyId!==destination.CompanyId||current.GroupId!==destination.GroupId)throw new Error('Nhóm/công ty user đã thay đổi. Mở lại tab trước khi lưu.');const body=dfNewBody(name,gplx,current);const r=await dfApi('/api/Driver/Add','POST',body,{companyId:current.CompanyId});dfInvalidateDriverList();drivers=await dfDrivers(current.CompanyId);matches=drivers.filter(x=>dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(gplx));driver=r.Id?matches.find(x=>String(x.Id)===String(r.Id)):matches.length===1?matches[0]:null;if(!driver)throw new Error('Máy chủ đã nhận tạo tài xế nhưng chưa xác định được tài xế để nạp. Tải lại trước khi thử tiếp.');}const observedId='observed:'+dfLicense(driver.Gplx);df.links=df.links.map(x=>String(x.DriverId)===observedId?{...x,DriverId:driver.Id,CompanyId:driver.CompanyId}:x);df.drivers=[...df.drivers.filter(x=>String(x.CompanyId)!==String(destination.CompanyId)&&!(x.Observed&&dfLicense(x.Gplx)===dfLicense(driver.Gplx))),...drivers];dfRenderList();await dfSend(driver,vehicle);});});
 async function dfAuthorizedDriver(id,company){await dfLoadList();const visible=dfVisible().find(x=>String(x.Id)===String(id)&&String(x.CompanyId)===String(company));if(!visible)throw new Error('Tài xế không có lần nạp xác định với xe user đang quản lý.');const r=await dfApi('/api/Driver/GetDriverById/'+encodeURIComponent(id),'GET',undefined,{companyId:company});if(!r.Driver||String(r.Driver.Id)!==String(id)||(r.Driver.CompanyId!==undefined&&String(r.Driver.CompanyId)!==String(company)))throw new Error('Không xác định đúng tài xế trong công ty.');return r.Driver;}
 function dfOpenEdit(id,company){return dfRun(async()=>{const driver=await dfAuthorizedDriver(id,company);df.editing={id,company};$('dfEditName').value=driver.Name||'';$('dfEditLicense').value=driver.Gplx||'';$('dfEditForm').hidden=false;$('dfEditForm').scrollIntoView({behavior:'smooth',block:'center'});});}
 $('dfEditCancel').onclick=()=>{df.editing=null;$('dfEditForm').hidden=true;};
-$('dfEditForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{if(!df.editing)throw new Error('Chọn tài xế cần sửa.');const {id,company}=df.editing;const driver=await dfAuthorizedDriver(id,company);const name=$('dfEditName').value.trim(),license=$('dfEditLicense').value.trim();if(!name||!license)throw new Error('Tên và GPLX không được trống.');const others=await dfDrivers(company);if(others.some(x=>String(x.Id)!==String(id)&&dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(license)))throw new Error('Tên và GPLX trùng tài xế khác trong công ty.');const body={};for(const k of DF_FIELDS)if(Object.prototype.hasOwnProperty.call(driver,k))body[k]=driver[k];body.Name=name;body.Gplx=license;await dfApi('/api/Driver/Update/'+encodeURIComponent(id),'PUT',body,{companyId:company});const check=await dfApi('/api/Driver/GetDriverById/'+encodeURIComponent(id),'GET',undefined,{companyId:company});if(check.Driver?.Name!==name||check.Driver?.Gplx!==license)throw new Error('Chưa xác nhận thông tin đã sửa. Tải lại trước khi lưu tiếp.');df.editing=null;$('dfEditForm').hidden=true;await dfLoadList();dfMsg('Đã lưu tên và GPLX.','ok');clearApiCache();});});
+$('dfEditForm').addEventListener('submit',e=>{e.preventDefault();dfRun(async()=>{if(!df.editing)throw new Error('Chọn tài xế cần sửa.');const {id,company}=df.editing;const driver=await dfAuthorizedDriver(id,company);const name=$('dfEditName').value.trim(),license=$('dfEditLicense').value.trim();if(!name||!license)throw new Error('Tên và GPLX không được trống.');const others=await dfDrivers(company);if(others.some(x=>String(x.Id)!==String(id)&&dfNorm(x.Name)===dfNorm(name)&&dfLicense(x.Gplx)===dfLicense(license)))throw new Error('Tên và GPLX trùng tài xế khác trong công ty.');const body={};for(const k of DF_FIELDS)if(Object.prototype.hasOwnProperty.call(driver,k))body[k]=driver[k];body.Name=name;body.Gplx=license;await dfApi('/api/Driver/Update/'+encodeURIComponent(id),'PUT',body,{companyId:company});dfInvalidateDriverList();const check=await dfApi('/api/Driver/GetDriverById/'+encodeURIComponent(id),'GET',undefined,{companyId:company});if(check.Driver?.Name!==name||check.Driver?.Gplx!==license)throw new Error('Chưa xác nhận thông tin đã sửa. Tải lại trước khi lưu tiếp.');df.editing=null;$('dfEditForm').hidden=true;await dfLoadList();dfMsg('Đã lưu tên và GPLX.','ok');clearApiCache();});});
 
 let driverDeletePromptOpen=false;
 function confirmDriverDelete(driver){
@@ -2123,12 +2363,24 @@ function confirmDriverDelete(driver){
   cancel.onclick=()=>finish(false);confirm.onclick=()=>finish(true);overlay.onclick=e=>{if(e.target===overlay)finish(false);};document.addEventListener('keydown',onKey);cancel.focus();
  });
 }
-function dfDelete(id,company){return dfRun(async()=>{const driver=await dfAuthorizedDriver(id,company);if(!await confirmDriverDelete(driver))return;await dfApi('/api/Driver/Del/'+encodeURIComponent(id),'DELETE',undefined,{companyId:company});const remaining=await dfDrivers(company);if(remaining.some(x=>String(x.Id)===String(id)))throw new Error('Chưa xác nhận tài xế đã được xoá.');await dfLoadList();dfMsg('Đã xoá tài xế khỏi công ty.','ok');clearApiCache();});}
+function dfDelete(id,company){return dfRun(async()=>{const driver=await dfAuthorizedDriver(id,company);if(!await confirmDriverDelete(driver))return;await dfApi('/api/Driver/Del/'+encodeURIComponent(id),'DELETE',undefined,{companyId:company});dfInvalidateDriverList();const remaining=await dfDrivers(company);if(remaining.some(x=>String(x.Id)===String(id)))throw new Error('Chưa xác nhận tài xế đã được xoá.');await dfLoadList();dfMsg('Đã xoá tài xế khỏi công ty.','ok');clearApiCache();});}
 $('dfExistingForm').append($('dfCompanyList'));
 $('dfVehiclePick').onchange=()=>{if(df.busy||!$('dfVehiclePick').value)return;const serial=$('dfVehiclePick').value;dfRun(()=>dfSelectVehicle(serial));};
 $('dfReload').onclick=()=>dfRun(dfLoadList);$('dfListReload').onclick=()=>dfRun(dfLoadList);$('dfListSearch').addEventListener('input',dfRenderList);
 document.querySelector('[data-app-panel="attachDriverTab"]').addEventListener('click',dfInit);
-function dfReset(){dfFleetCache=null;dfListCache=null;dfStopLoadNudge();if(!df)return;if(typeof dfFleetPending!=='undefined'){for(const pending of dfFleetPending.values()){clearTimeout(pending.timer);pending.reject(new Error('Phiên user đã thay đổi.'));}dfFleetPending.clear();}df.companies=[];df.groups=[];df.owner='';df.mainToken='';df.vehicles=[];df.drivers=[];df.page=0;df.links=[];df.vehicle=null;df.editing=null;$('dfListPager').replaceChildren();$('dfVehiclePick').replaceChildren();$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;$('dfEditForm').hidden=true;$('dfDriverList').replaceChildren();$('dfPlate').value='';$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfVehicleHints').hidden=true;$('dfDriverHints').hidden=true;$('dfDriverChosen').textContent='Chưa chọn tài xế.';$('dfStatus').hidden=true;}
+function dfReset(){
+ dfSession++;
+ clearTimeout(dfFleetTimer);
+ clearTimeout(dfDriverTimer);
+ dfFleetCache=null;
+ dfFleetInFlight=null;
+ dfScanInFlight=null;
+ dfInvalidateDriverList();
+ df.scopeKey='';
+ $('dfPlates').replaceChildren();
+ $('dfScopeInfo').textContent='';
+ $('dfListNote').textContent='';
+ dfStopLoadNudge();if(!df)return;if(typeof dfFleetPending!=='undefined'){for(const pending of dfFleetPending.values()){clearTimeout(pending.timer);pending.reject(new Error('Phiên user đã thay đổi.'));}dfFleetPending.clear();}df.companies=[];df.groups=[];df.owner='';df.mainToken='';df.vehicles=[];df.drivers=[];df.page=0;df.links=[];df.vehicle=null;df.editing=null;$('dfListPager').replaceChildren();$('dfVehiclePick').replaceChildren();$('dfChoices').hidden=true;$('dfVehicleInfo').hidden=true;$('dfEditForm').hidden=true;$('dfDriverList').replaceChildren();$('dfPlate').value='';$('dfExistingPick').value='';$('dfExistingSearch').value='';$('dfVehicleHints').hidden=true;$('dfDriverHints').hidden=true;$('dfDriverChosen').textContent='Chưa chọn tài xế.';$('dfStatus').hidden=true;}
 
 
 
