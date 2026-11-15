@@ -23,8 +23,250 @@
  #attachDriverTab #dfNewForm>.grid>div{min-width:0}
  #attachDriverTab #dfNewName,#attachDriverTab #dfNewLicense{width:100%;box-sizing:border-box;font-size:16px;min-height:50px}
 }
-</style></head>
-<body>
+</style><style>
+#camChannelPanel .pr-card{background:white;border:1px solid #dbe9ef;border-radius:16px;padding:18px;margin:12px 0}#camChannelPanel .pr-list{max-height:360px;overflow:auto;border:1px solid #dce6ed;border-radius:12px;padding:8px;margin-top:10px}#camChannelPanel .pr-row{display:flex!important;align-items:center;gap:10px;padding:12px!important;margin:4px 0!important;border-radius:10px;background:#f5f9fc;text-align:left;width:100%;min-height:48px}#camChannelPanel .pr-row input{width:20px!important;min-height:20px!important;margin:0!important;flex-shrink:0}#camChannelPanel .pr-row span{overflow-wrap:anywhere}#camChannelPanel .pr-row.selected{background:#e7f5ee;border:1px solid #62b48d}#camChannelPanel .pr-info{white-space:pre-wrap;overflow-wrap:anywhere}#camChannelPanel .pr-note{font-size:13px;color:#526578;line-height:1.6}@media(max-width:640px){#camChannelPanel .pr-grid{grid-template-columns:1fr}#camChannelPanel .pr-card{padding:12px}#camChannelPanel .pr-list{max-height:280px}}
+#videoSettingsTab [hidden]{display:none!important}
+#vcGate{max-width:720px;margin:auto}
+#vcStatus,#prStatus,#vcInfo{overflow-wrap:anywhere}
+#camChannelPanel summary{cursor:pointer}
+
+#appHomeTab .app-tile[data-app-panel="attachDriverTab"]{background:#edf8f1}
+#appHomeTab .app-tile[data-app-panel="downloadVideoTab"]{background:#eef5ff}
+#appHomeTab .app-tile[data-app-panel="videoSettingsTab"]{background:#f5effc}
+#appHomeTab .app-tile[data-app-panel="opcode210Tab"]{background:#fff7e8}
+#camChannelPanel{width:100%;max-width:820px;margin:0 auto;color:#0f172a}
+#camChannelPanel .vc-card{background:#fff;border:1px solid #d9e5ef;border-radius:18px;padding:22px;margin-bottom:14px;box-shadow:0 4px 18px rgba(15,23,42,.05)}
+#camChannelPanel .vc-card[aria-labelledby="vcLoginTitle"]{background:#eef5ff;border-color:#c8ddf5}
+#camChannelPanel .vc-card[aria-labelledby="vcFindTitle"]{background:#edf8f1;border-color:#c7e3d1}
+#camChannelPanel .vc-card#vcChannelCard{background:#fff7e8;border-color:#ecd9ae}
+#camChannelPanel .vc-card#photoRulePanel{background:#f5effc;border-color:#dfd0ef}
+#camChannelPanel h3{font-size:20px;line-height:1.3;margin:0 0 16px}
+#camChannelPanel .vc-card-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
+#camChannelPanel .vc-card-header h3{margin:0}
+#camChannelPanel .vc-connected{background:#e8f7ef;color:#17633b;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:700}
+#camChannelPanel .vc-fields,#camChannelPanel .vc-inline{display:grid;gap:12px;margin-top:12px}
+#camChannelPanel .vc-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+#camChannelPanel .vc-inline{grid-template-columns:minmax(0,1fr) auto;align-items:end}
+#camChannelPanel label{color:#334155;display:block;margin:0 0 6px;text-transform:none;letter-spacing:normal}
+#camChannelPanel input:not([type=checkbox]),#camChannelPanel select{width:100%;min-width:0;margin:0;border-radius:12px}
+#camChannelPanel .vc-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+#camChannelPanel .vc-rule-actions{justify-content:flex-end}
+#camChannelPanel .remember-row{display:flex;align-items:center;gap:9px;margin:0;padding:0;border:0;box-shadow:none;background:none;font-weight:500}
+#camChannelPanel .remember-row input{accent-color:#2563eb;flex:none}
+#camChannelPanel .action{width:auto;margin:0;padding:10px 18px;min-height:44px;border-radius:12px}
+#camChannelPanel .vc-secondary{background:#edf4fb;color:#1e4b79;box-shadow:none;border:1px solid #cbdcec}
+#camChannelPanel .vc-details{margin-top:16px;padding-top:12px;border-top:1px solid #e3eaf2;color:#334155;font-size:14px}
+#camChannelPanel .vc-docs{margin-bottom:14px}
+#camChannelPanel .vc-status,#vcGateStatus{margin:12px 0 0;color:#1e4b79;background:#eff6ff;border-radius:10px;padding:10px 12px;font-size:14px}
+#camChannelPanel .vc-status:empty,#vcGateStatus:empty{display:none}
+#camChannelPanel .vc-status[data-error]{background:#fff1f2;color:#991b1b}
+#camChannelPanel #vcInfo{margin-bottom:12px;padding:12px;border-radius:10px;background:#edf6fc;color:#164b72}
+#camChannelPanel #vcPreview{margin-bottom:0}
+@media(max-width:640px){
+  #camChannelPanel .vc-card{padding:14px}
+  #camChannelPanel .vc-fields,#camChannelPanel .vc-inline{grid-template-columns:minmax(0,1fr)}
+  #camChannelPanel .vc-actions{align-items:stretch;flex-direction:column}
+  #camChannelPanel .action{width:100%}
+}
+
+</style>
+<style>
+body.login-mode {
+  min-height:100vh;
+  min-height:100svh;
+  display:grid;
+  align-items:center;
+  justify-items:center;
+  padding:28px 16px;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 20% 12%,#e2ecff 0,transparent 52%),
+    radial-gradient(ellipse at 88% 84%,#def3ee 0,transparent 50%),#f5f8fc;
+}
+body.login-mode > .wrap {width:min(100%,460px);margin:0}
+body.login-mode > .wrap > .card {
+  border:1px solid #dbe6f0;
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 22px 56px rgba(29,57,96,.13),0 3px 9px rgba(29,57,96,.04);
+  backdrop-filter:none;
+}
+body.login-mode .card > .head {
+  padding:26px 24px 22px;
+  background:linear-gradient(135deg,#eef5ff,#f1f8fc);
+  border-bottom:1px solid #dfeaf4;
+}
+body.login-mode .head .title-main {
+  margin:0 auto;
+  max-width:26ch;
+  color:#163967;
+  font-size:clamp(15px,4vw,18px);
+  line-height:1.45;
+  font-weight:750;
+  letter-spacing:.035em;
+  background:none;
+  -webkit-text-fill-color:currentColor;
+  animation:none;
+}
+body.login-mode .head .company-hotline {
+  display:inline-flex!important;
+  margin-top:10px!important;
+  padding:5px 11px;
+  border:1px solid #d1e3f6;
+  border-radius:999px;
+  background:#fff;
+  color:#275589!important;
+  font-size:13px!important;
+  font-weight:650!important;
+  line-height:1.5;
+}
+.hotline-compact,body.login-mode .hotline-full {display:none}
+body.login-mode .hotline-compact {display:inline}
+body.login-mode .head .company-hotline:hover {background:#e0efff}
+body.login-mode .card > .body {padding:28px 30px 30px}
+body.login-mode #loginTab {padding:0;border:0;background:transparent;box-shadow:none}
+#loginTitle {margin:0 0 22px;color:#102646;font-size:clamp(25px,6vw,30px);line-height:1.15;letter-spacing:-.035em}
+#loginForm {display:grid;gap:16px}
+#loginForm label {
+  margin:0 0 7px;
+  color:#233a56;
+  font-size:14px;
+  font-weight:650;
+  letter-spacing:0;
+  text-transform:none;
+}
+#loginForm input:not([type="checkbox"]) {
+  display:block;
+  width:100%;
+  min-height:48px;
+  margin:0;
+  padding:10px 13px;
+  border:1px solid #cbd9e8;
+  border-radius:10px;
+  background:#f8fbff;
+  color:#122946;
+  font:inherit;
+  font-size:16px;
+}
+#loginForm input::placeholder {color:#65758b}
+#loginForm input:not([type="checkbox"]):focus {
+  border-color:#3372ca;
+  outline:0;
+  box-shadow:0 0 0 3px #dceafe;
+  background:#fff;
+}
+#loginForm #password {padding-right:74px}
+#loginForm .password-toggle {
+  right:5px;
+  width:58px;
+  height:44px;
+  border-radius:8px;
+  background:transparent;
+  color:#1e5299;
+  font:inherit;
+  font-size:14px;
+  font-weight:650;
+}
+#loginForm .password-toggle:hover {background:#e7f1ff}
+#loginForm .remember-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:0;
+  padding:2px 0;
+  font-weight:500;
+  line-height:1.4;
+}
+#loginForm .remember-row input {flex:none;width:17px;height:17px;accent-color:#225fbc}
+#loginForm #loginBtn {
+  width:100%;
+  min-height:48px;
+  margin:0;
+  border-radius:11px;
+  background:#1f5fba;
+  box-shadow:0 5px 13px rgba(31,95,186,.19);
+  font:inherit;
+  font-weight:700;
+}
+#loginForm #loginBtn:not(:disabled):hover {background:#174f9f}
+#loginForm #loginBtn.success {background:#187447}
+#loginForm #loginBtn.error {background:#b83044}
+#loginForm button:focus-visible,body.login-mode .company-hotline:focus-visible {
+  outline:2px solid #1e4f9a;
+  outline-offset:2px;
+}
+body.login-mode #loginMessage {margin-top:14px;overflow-wrap:anywhere}
+@media(max-width:480px) {
+  body.login-mode {padding:18px 12px}
+  body.login-mode > .wrap > .card {border-radius:19px}
+  body.login-mode .card > .head {padding:18px 18px 16px}
+  body.login-mode .card > .body {padding:22px 20px 23px}
+}
+</style>
+<style>
+#deviceLookupPanel {max-width:900px;margin:0 auto}
+#vcTools {display:flex;gap:8px;flex-wrap:wrap;max-width:900px;margin:0 auto 16px}
+#vcTools button {
+  min-height:42px;padding:8px 15px;border:1px solid #cbd9e8;border-radius:12px;
+  background:#f3f7fc;color:#274763;font:inherit;font-size:14px;font-weight:650;cursor:pointer
+}
+#vcTools [aria-pressed="true"] {background:#e2efff;border-color:#92b7e8;color:#194986}
+#vcTools button:focus-visible {outline:2px solid #2563eb;outline-offset:2px}
+#deviceLookupPanel .dl-card {
+  background:#fff;border:1px solid #d8e4ee;border-radius:16px;
+  padding:18px;margin-bottom:12px;box-shadow:0 4px 18px rgba(15,23,42,.05)
+}
+#deviceLookupPanel .dl-search {background:#edf6ff}
+#deviceLookupPanel h3,#deviceLookupPanel h4 {margin:0 0 12px;color:#163451}
+#deviceLookupPanel .dl-form {
+  display:grid;grid-template-columns:minmax(125px,.48fr) minmax(0,1fr) auto;
+  align-items:end;gap:12px
+}
+#deviceLookupPanel .dl-form label {margin:0 0 6px;text-transform:none;letter-spacing:normal}
+#deviceLookupPanel .dl-form input,#deviceLookupPanel .dl-form select {width:100%;min-width:0;margin:0}
+#deviceLookupPanel .action {width:auto;margin:0;min-height:46px}
+#dlStatus {margin:10px 0 0;font-size:14px;color:#36516c;overflow-wrap:anywhere}
+#dlStatus:empty {display:none}
+#dlStatus[data-error] {color:#a12535}
+#dlResult .dl-grid {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:10px;margin:0
+}
+#dlAccountRows {display:grid;gap:10px}
+#dlResult .dl-field {
+  padding:10px 12px;border:1px solid transparent;border-radius:10px;
+  background:var(--dl-field-bg,#f4f8fb);min-width:0;
+}
+#dlResult .dl-field-plate {--dl-field-bg:#eaf3ff}
+#dlResult .dl-field-serial {--dl-field-bg:#edf8ef}
+#dlResult .dl-field-device-phone {--dl-field-bg:#e8f7f4}
+#dlResult .dl-field-note {--dl-field-bg:#f2f4f7}
+#dlResult .dl-field-model {--dl-field-bg:#f0f0fc}
+#dlResult .dl-field-company {--dl-field-bg:#eaf5f6}
+#dlResult .dl-field-group {--dl-field-bg:#fff4ea}
+#dlResult .dl-field-account {--dl-field-bg:#eef1ff}
+#dlResult .dl-field-name {--dl-field-bg:#fceff5}
+#dlResult .dl-field-user-phone {--dl-field-bg:#edf8f7}
+#dlResult .dl-field-owner-phone {--dl-field-bg:#eef5ed}
+#dlResult .dl-field-expiry {--dl-field-bg:#fff1d5;--dl-accent:#8a510e;--dl-outline:#e9ca85}
+#dlResult .dl-field-update {--dl-field-bg:#e2f8fa;--dl-accent:#126576;--dl-outline:#9fd7df}
+#dlResult .dl-field-firmware {--dl-field-bg:#efe4ff;--dl-accent:#6531a0;--dl-outline:#cfb5ef}
+#dlResult .dl-field.dl-important {
+  border-color:var(--dl-outline);border-inline-start:4px solid var(--dl-accent);
+}
+#dlResult .dl-field.dl-important dt {color:var(--dl-accent);font-weight:700}
+#dlResult .dl-field.dl-important dd {color:var(--dl-accent);font-size:clamp(16px,1.8vw,19px);font-weight:800}
+#dlResult .dl-field-update dd,#dlResult .dl-field-expiry dd {font-variant-numeric:tabular-nums}
+#dlResult .dl-field dt {font-size:13px;color:#465d73}
+#dlResult .dl-field dd {margin:4px 0 0;color:#142e49;font-weight:650;overflow-wrap:anywhere;white-space:pre-wrap}
+#dlResult .dl-field-wide {grid-column:1/-1}
+#dlResult .dl-software {background:#f5effc}
+@media(max-width:600px) {
+  #deviceLookupPanel .dl-form {grid-template-columns:minmax(0,1fr)}
+  #deviceLookupPanel .action {width:100%}
+  #deviceLookupPanel .dl-card {padding:14px}
+}
+</style>
+</head>
+<body class="login-mode">
   <div class="wrap">
   <div class="card">
     <div class="head" style="text-align:center">
@@ -32,7 +274,7 @@
         CÔNG TY NGÔI SAO SÀI GÒN
       </h1>
 
-  <a href="tel:+84902555070" style="
+  <a class="company-hotline" href="tel:+84902555070" style="
   display:block;
   margin-top:6px;
   font-size:16px;
@@ -41,7 +283,7 @@
   color:#ef4444;
   text-decoration:none;
 ">
-  Bấm để gọi Hotline: 📞 0902.55.50.70
+  <span class="hotline-full">Bấm để gọi Hotline: 📞 0902.55.50.70</span><span class="hotline-compact">Hotline · 0902.55.50.70</span>
 </a>
 
 <div class="app-header-actions">
@@ -57,8 +299,9 @@
       <div class="body">
         <div class="statusbar" id="globalInfo" style="display:none !important"></div>
 
-        <div id="loginTab" class="tab-panel active login-tab-standalone">
-          <form id="loginForm" class="grid-1">
+        <div id="loginTab" class="tab-panel active login-tab-standalone" aria-labelledby="loginTitle">
+          <h2 id="loginTitle">Đăng nhập</h2>
+          <form id="loginForm">
             <div style="display:none">
               <label for="baseUrl">Base URL</label>
               <input id="baseUrl" type="text" value="https://lively-cloud-d33f.gianglue819.workers.dev" />
@@ -69,7 +312,7 @@
             </div>
             <div>
               <label for="username">Tên đăng nhập</label>
-              <input id="username" name="username" type="text" autocomplete="username" placeholder="Nhập username" required />
+              <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Nhập tên đăng nhập" required />
             </div>
             <div>
               <label for="password">Mật khẩu</label>
@@ -82,20 +325,17 @@
                   placeholder="Nhập mật khẩu" 
                   required
                 />
-                <button id="togglePassword" class="password-toggle" type="button" aria-label="Hiện mật khẩu">👁️</button>
+                <button id="togglePassword" class="password-toggle" type="button" aria-label="Hiện mật khẩu" aria-controls="password" aria-pressed="false">Hiện</button>
               </div>
             </div>
             <label class="remember-row">
               <input id="rememberAccount" type="checkbox" />
               <span>Nhớ tài khoản cho lần sau</span>
             </label>
-            <div>
-              <button id="loginBtn" class="action" type="submit">Đăng nhập</button>
-            </div>
+            <button id="loginBtn" class="action" type="submit">Đăng nhập</button>
           </form>
 
-          <div id="loginMessage" class="msg info" style="display:none"></div>
-          <div class="login-screen-note">Đăng nhập thành công hệ thống sẽ tự chuyển sang màn hình thao tác.</div>
+          <div id="loginMessage" class="msg info" role="status" aria-live="polite" style="display:none"></div>
         </div>
 
 
@@ -118,6 +358,12 @@
             
             
             
+
+            <button class="app-tile" type="button" data-app-panel="videoSettingsTab">
+              <div class="app-tile-icon">🎥</div>
+              <div class="app-tile-title">Cài đặt kênh video</div>
+              <div class="app-tile-desc">Đổi số kênh, quản lý quy tắc chụp hình và tra cứu thiết bị.</div>
+            </button>
             <button class="app-tile" type="button" data-app-panel="opcode210Tab">
               <div class="app-tile-icon">🚫</div>
               <div class="app-tile-title">Xoá tài xế trên xe</div>
@@ -127,6 +373,129 @@
         </div>
 
         <div id="attachDriverTab" class="tab-panel app-only-panel"><div class="panel-topbar"><h2>Nạp tài xế</h2><button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button></div><p id="dfScopeInfo" class="small"></p><form id="dfVehicleForm"><label for="dfPlate">Tìm biển số xe </label><input id="dfPlate" type="search" required autocomplete="off" placeholder="Nhập biển số hoặc serial…" role="combobox" aria-autocomplete="list" aria-controls="dfVehicleHints" aria-expanded="false"><label for="dfVehiclePick" hidden>Xe có sẵn trong user</label><select id="dfVehiclePick" hidden><option value="">Chọn biển số xe</option></select><datalist id="dfPlates"></datalist><div id="dfVehicleHints" class="df-hints" role="listbox" aria-label="Xe thuộc user chính" hidden></div><button class="action df-search-button">Tìm xe</button></form><button id="dfReload" class="action" type="button">Tải lại xe và tài xế</button><div id="dfVehicleInfo" class="statusbar" hidden></div><div id="dfChoices" hidden><div class="grid" style="margin-top:16px"><button class="app-tile driver-choice" id="dfChooseExisting" type="button" aria-pressed="false"><span class="driver-choice-icon" aria-hidden="true">👤</span><div class="app-tile-title">Tài xế có sẵn</div><div class="app-tile-desc">Chọn từ danh sách tài xế của user</div></button><button class="app-tile driver-choice" id="dfChooseNew" type="button" aria-pressed="false"><span class="driver-choice-icon" aria-hidden="true">＋</span><div class="app-tile-title">Tài xế mới</div><div class="app-tile-desc">Nhập tên và GPLX</div></button></div><form id="dfExistingForm" hidden><label for="dfExistingSearch">Tìm tên tài xế hoặc GPLX</label><input id="dfExistingSearch" type="search" autocomplete="off" placeholder="Gõ vài ký tự tên hoặc GPLX rồi chọn" role="combobox" aria-autocomplete="list" aria-controls="dfDriverHints" aria-expanded="false"><input id="dfExistingPick" type="hidden"><div id="dfDriverHints" class="df-hints" role="listbox" aria-label="Tài xế trong công ty" hidden></div><p id="dfDriverChosen" class="small" role="status">Chưa chọn tài xế.</p><button class="action">Nạp tài xế</button></form><form id="dfNewForm" hidden><p id="dfNewScope" class="statusbar">Nhóm và công ty sẽ được kiểm tra theo user chính trước khi lưu.</p><div class="grid"><div hidden><label for="dfNewId">Mã tài xế (Id)</label><input id="dfNewId" type="number" value="0" readonly></div><div><label for="dfNewName">Tên tài xế *</label><input id="dfNewName" type="text" required></div><div><label for="dfNewLicense">Giấy phép lái xe *</label><input id="dfNewLicense" type="text" required></div><div hidden><label for="dfNewMnv">Mã nhân viên / user chính (Mnv)</label><input id="dfNewMnv" type="text" readonly></div><div hidden><label for="dfNewCompany">Công ty * (CompanyId)</label><input id="dfNewCompany" type="number" readonly></div><div hidden><label for="dfNewGroup">Nhóm * (GroupId)</label><input id="dfNewGroup" type="number" readonly></div><div hidden><label for="dfNewBorn">Năm sinh (Born)</label><input id="dfNewBorn" type="number" min="1900" max="2100" placeholder="Nhập năm sinh nếu có"></div><div hidden><label for="dfNewCmnd">CCCD / CMND (Cmnd)</label><input id="dfNewCmnd" type="text" ></div><div hidden><label for="dfNewAddress">Địa chỉ (Address)</label><input id="dfNewAddress" type="text" ></div><div hidden><label for="dfNewSex">Mã giới tính (Sex)</label><input id="dfNewSex" type="number" value="0" min="0"></div><div hidden><label for="dfNewCreateDate">Ngày cấp GPLX * (CreateDateOfGplx)</label><input id="dfNewCreateDate" type="datetime-local" ></div><div hidden><label for="dfNewEndDate">Ngày hết hạn GPLX * (EndDateOfGplx)</label><input id="dfNewEndDate" type="datetime-local" ></div><div hidden><label for="dfNewLicenseAddress">Nơi cấp GPLX (AddressOfGplx)</label><input id="dfNewLicenseAddress" type="text" ></div><div hidden><label for="dfNewPhone">Điện thoại tài xế (Phone)</label><input id="dfNewPhone" type="tel" ></div><div hidden><label for="dfNewLicenseType">Hạng GPLX (LicenseType)</label><input id="dfNewLicenseType" type="text" placeholder="Ví dụ: B2, C"></div></div><button class="action">Nạp tài xế — tạo mới</button><div hidden><details id="dfCreateDebug"><summary>Thông tin tạo tài xế</summary><pre id="dfCreateDebugText"></pre></details></div></form></div><div id="dfStatus" class="msg info" role="status" aria-live="polite" hidden></div><section id="dfCompanyList" style="margin-top:12px"><h3>Tài xế có sẵn</h3><p class="small">Chỉ hiện tài xế có lần nạp được xác định với xe user đang được quản lý. Lịch sử cũ không xác định được tài xế sẽ không hiển thị.</p><input id="dfListSearch" type="search" hidden placeholder="Tìm tên, GPLX hoặc biển số"><button id="dfListReload" class="action" type="button">Tải danh sách tài xế</button><p id="dfListNote" class="small" role="status"></p><div id="dfDriverList" class="delete-driver-list" style="margin-top:10px"></div><div id="dfListPager" class="fw-list-pager"></div></section><form id="dfEditForm" hidden style="margin-top:20px"><h3>Sửa tài xế</h3><label for="dfEditName">Tên tài xế *</label><input id="dfEditName" required><label for="dfEditLicense">GPLX *</label><input id="dfEditLicense" required><button class="action">Lưu thay đổi</button><button id="dfEditCancel" class="action secondary" type="button">Huỷ sửa</button></form></div>
+
+
+<div id="videoSettingsTab" class="tab-panel app-only-panel">
+  <div class="panel-topbar">
+    <h2>Cài đặt kênh video</h2>
+    <button class="panel-back-btn" type="button" onclick="openAppHome()">← Quay lại</button>
+  </div>
+  <form id="vcGate" autocomplete="off">
+    <label for="vcAccessCode">Số cấp quyền</label>
+    <input id="vcAccessCode" type="password" autocomplete="off" required>
+    <button class="action" type="submit">Tiếp tục</button>
+    <p id="vcGateStatus" role="status" aria-live="polite"></p>
+  </form>
+  <nav id="vcTools" aria-label="Chức năng cấp quyền" hidden>
+    <button id="vcToolCamera" type="button" aria-pressed="true" aria-controls="camChannelPanel">Cài đặt kênh video</button>
+    <button id="vcToolLookup" type="button" aria-pressed="false" aria-controls="deviceLookupPanel">Tra cứu thiết bị</button>
+  </nav>
+  <section id="deviceLookupPanel" aria-labelledby="dlTitle" hidden>
+    <section class="dl-card dl-search">
+      <h3 id="dlTitle">Tra cứu thiết bị</h3>
+      <form id="dlForm" class="dl-form">
+        <div>
+          <label for="dlMode">Tra cứu theo</label>
+          <select id="dlMode">
+            <option value="plate">Biển số xe</option>
+            <option value="serial">Số serial</option>
+          </select>
+        </div>
+        <div>
+          <label id="dlQueryLabel" for="dlQuery">Biển số xe</label>
+          <input id="dlQuery" type="search" maxlength="32" autocomplete="off" placeholder="Ví dụ 71F00264" required>
+        </div>
+        <button id="dlSubmit" class="action" type="submit">Tra cứu</button>
+      </form>
+      <p id="dlStatus" role="status" aria-live="polite"></p>
+    </section>
+    <div id="dlResult" hidden></div>
+  </section>
+<section id="camChannelPanel" hidden>
+    <section class="vc-card" aria-labelledby="vcLoginTitle">
+      <h3 id="vcLoginTitle">Đăng nhập camera</h3>
+      <form id="vcLogin">
+        <label for="vcBase">Máy chủ camera hoặc proxy</label>
+        <input id="vcBase" type="url" value="http://cam.gpssaigon.vn:88" required>
+        <div class="vc-fields">
+          <div>
+            <label for="vcUser">Tài khoản camera</label>
+            <input id="vcUser" autocomplete="username" required>
+          </div>
+          <div>
+            <label for="vcPassword">Mật khẩu</label>
+            <input id="vcPassword" type="password" autocomplete="current-password" required>
+          </div>
+        </div>
+        <div class="vc-actions">
+          <label class="remember-row" for="vcRememberPassword">
+            <input id="vcRememberPassword" type="checkbox">
+            <span>Nhớ mật khẩu camera</span>
+          </label>
+          <button class="action" type="submit">Đăng nhập camera</button>
+        </div>
+      </form>
+      <details class="vc-details">
+        <summary>Dùng phiên camera có sẵn</summary>
+        <form id="vcSessionForm" class="vc-inline">
+          <div>
+            <label for="vcSession">Mã phiên (jsession)</label>
+            <input id="vcSession" type="password" autocomplete="off" required>
+          </div>
+          <button class="action vc-secondary" type="submit">Xác thực phiên</button>
+        </form>
+      </details>
+      <p id="vcStatus" class="vc-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <div id="vcWorkspace" hidden>
+      <section class="vc-card" aria-labelledby="vcFindTitle">
+        <header class="vc-card-header">
+          <h3 id="vcFindTitle">Tìm camera theo serial</h3>
+          <span class="vc-connected">Đã kết nối</span>
+        </header>
+        <form id="vcFind" class="vc-inline">
+          <div>
+            <label for="vcSerial">Serial camera</label>
+            <input id="vcSerial" type="text" inputmode="numeric" autocomplete="off" pattern="[0-9]+" required placeholder="Nhập serial, giữ số 0 ở đầu">
+          </div>
+          <button class="action" type="submit">Tìm serial CAM</button>
+        </form>
+        <p id="vcWorkStatus" class="vc-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="vcChannelCard" class="vc-card" aria-labelledby="vcChannelTitle" hidden>
+        <h3 id="vcChannelTitle">Cấu hình kênh video</h3>
+        <div id="vcInfo" hidden></div>
+        <form id="vcSave" hidden>
+          <div class="vc-inline">
+            <div>
+              <label for="vcCount">Số kênh hiển thị</label>
+              <select id="vcCount" required><option value="">Chọn số kênh</option><option value="1">1 kênh</option><option value="2">2 kênh</option><option value="3">3 kênh</option><option value="4">4 kênh</option></select>
+            </div>
+            <button class="action" type="submit">Lưu số kênh</button>
+          </div>
+          <p id="vcPreview" class="small"></p>
+        </form>
+      </section>
+
+      <section id="photoRulePanel" hidden class="vc-card">
+        <h3>Quy tắc chụp hình</h3>
+        <p id="prVehicleInfo" class="pr-info pr-note"></p>
+        <label for="prRuleSearch">Tìm tên quy tắc</label>
+        <input id="prRuleSearch" type="search" placeholder="Ví dụ: 2 CAM 180S">
+        <div id="prRules" class="pr-list"></div>
+        <p id="prSummary" class="pr-info pr-note"></p>
+        <p id="prStatus" class="vc-status" role="status" aria-live="polite"></p>
+        <div class="vc-actions vc-rule-actions">
+          <button id="prRefresh" type="button" class="action vc-secondary" disabled hidden>Đọc lại quy tắc</button>
+          <button id="prSave" type="button" class="action" disabled>Lưu thay đổi quy tắc</button>
+        </div>
+      </section>
+    </div>
+    <details class="vc-details vc-docs"><summary>Tài liệu API</summary><p class="small">Tìm thiết bị: StandardApiAction_queryUserVehicle.action.<br>Lưu số kênh: StandardApiAction_editDevice.action · devIdno · channelNum.<br><a href="http://cam.gpssaigon.vn:88/808gps/open/webApi.html#sec-device-management-editDevice" target="_blank" rel="noopener">Tài liệu API CMSV6</a></p></details>
+  </section>
+</div>
 
 <div id="downloadVideoTab" class="tab-panel app-only-panel">
   <div class="panel-topbar">
@@ -1055,6 +1424,7 @@ function getRuntimeUsername() {
   return normalizeUsername(safeStorageGet(sessionStorage, 'sgsi_username', ''));
 }
 function clearRuntimeSessionData() {
+  window.dispatchEvent(new Event('video-settings-reset'));
   if(typeof df!=='undefined'&&df)dfReset();
   [
     'sgsi_token',
@@ -1723,7 +2093,9 @@ function initPasswordToggle() {
   toggle.addEventListener('click', () => {
     const showing = pwd.type === 'text';
     pwd.type = showing ? 'password' : 'text';
-    toggle.textContent = showing ? '👁️' : '🙈';
+    toggle.textContent = showing ? 'Hiện' : 'Ẩn';
+    toggle.setAttribute('aria-label', showing ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+    toggle.setAttribute('aria-pressed', String(!showing));
   });
 }
 function initBackToLoginButton() {
@@ -2433,5 +2805,748 @@ function driverChoiceState(prefix,choice){['Existing','New'].forEach(x=>$(prefix
 })();
 </script>
 
+<script>
+(() => {
+const vcAccess = {unlocked: false, generation: 0, owner: '', token: '', lookupKey: ''};
+function vcMainSessionActive() {
+  return Boolean(vcAccess.token && getCurrentLoginToken() === vcAccess.token &&
+    getRuntimeUsername() === vcAccess.owner && document.body.classList.contains('app-mode'));
+}
+function vcHasAccess() {
+  return vcAccess.unlocked && vcMainSessionActive();
+}
+async function vcVerifyAccess(password){const base=$('baseUrl').value.trim().replace(/\/$/,''),apiKey=getLoginApiKey();if(!base||!apiKey)throw new Error('Thiếu cấu hình máy chủ hoặc API Key đăng nhập.');for(const Username of ['khaibaoapp2','khaibaoapp1']){let res;try{res=await fetchWithTimeout(base+'/Auth/Login?api_key='+encodeURIComponent(apiKey)+'&_access_check='+Date.now()+'_'+encodeURIComponent(Username),{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({Username,Pwd:password})});}catch{throw new Error('Không kết nối được máy chủ để kiểm tra số cấp quyền.');}if(res.status>=500||res.status===429)throw new Error('Máy chủ chưa thể kiểm tra số cấp quyền. Vui lòng thử lại sau.');const {data}=await readResponseSmart(res);if(res.ok&&data&&typeof data==='object'&&(data.Status===1||data.Status==='1')&&typeof data.Token==='string'&&data.Token.trim()&&!isExplicitApiFailure(data))return data.Token.trim();if(!res.ok&&![400,401,403].includes(res.status))throw new Error('Không kiểm tra được số cấp quyền (HTTP '+res.status+').');}throw new Error('Số cấp quyền không đúng mật khẩu');}
+$('vcGate').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button');
+  if (button.disabled || !getCurrentLoginToken()) return;
+  vcAccess.owner = getRuntimeUsername();
+  vcAccess.token = getCurrentLoginToken();
+  const generation = vcAccess.generation;
+  button.disabled = true;
+  $('vcGateStatus').textContent = 'Đang kiểm tra số cấp quyền…';
+  try {
+    const lookupKey = await vcVerifyAccess($('vcAccessCode').value);
+    if (generation !== vcAccess.generation || !vcMainSessionActive()) return;
+    vcAccess.lookupKey = lookupKey;
+    vcAccess.unlocked = true;
+    form.hidden = true;
+    $('vcTools').hidden = false;
+    selectProtectedTool('camera');
+    vcRestoreCameraLogin();
+    if ($('videoSettingsTab').classList.contains('active')) $('vcUser').focus();
+  } catch (error) {
+    if (generation === vcAccess.generation) $('vcGateStatus').textContent = error.message;
+  } finally {
+    if (generation === vcAccess.generation) {
+      $('vcAccessCode').value = '';
+      button.disabled = false;
+    }
+  }
+});
+
+window.addEventListener('video-settings-reset', () => {
+  vcAccess.generation++;
+  vcAccess.unlocked = false;
+  vcAccess.owner = '';
+  vcAccess.token = '';
+  vcAccess.lookupKey = '';
+  for (const id of ['vcAccessCode', 'vcUser', 'vcPassword', 'vcSession', 'vcSerial', 'prRuleSearch']) $(id).value = '';
+  $('vcRememberPassword').checked = false;
+  $('vcGateStatus').textContent = '';
+  $('vcGate').querySelector('button').disabled = false;
+  $('vcGate').hidden = false;
+  $('camChannelPanel').hidden = true;
+  vcLockWorkspace();
+  vcStatus('');
+});
+// CMSV6 channel count, documented editDevice channelNum; serial stays a string.
+const vcState={device:null,busy:false,context:'',verifiedSession:''};
+function vcContext(){return JSON.stringify([$('vcBase').value.trim(),$('vcSession').value.trim(),$('vcSerial').value.trim(),vcAccess.generation]);}
+function vcReset() {
+  prInvalidate();
+  vcState.device = null;
+  vcState.context = '';
+  $('vcChannelCard').hidden = true;
+  $('vcSave').hidden = true;
+  $('vcInfo').hidden = true;
+}
+
+function vcReady() {
+  return Boolean(vcHasAccess() && vcState.verifiedSession &&
+    vcState.verifiedSession === $('vcSession').value.trim());
+}
+
+function vcLockWorkspace() {
+  vcState.verifiedSession = '';
+  $('vcWorkspace').hidden = true;
+  $('vcWorkStatus').textContent = '';
+  vcReset();
+}
+
+function vcOpenWorkspace(session) {
+  $('vcSession').value = session;
+  vcState.verifiedSession = session;
+  $('vcWorkspace').hidden = false;
+}
+
+function vcStatus(message, error = false) {
+  const ready = vcReady();
+  const status = $(ready ? 'vcWorkStatus' : 'vcStatus');
+  $(ready ? 'vcStatus' : 'vcWorkStatus').textContent = '';
+  status.textContent = message;
+  status.toggleAttribute('data-error', error);
+}
+const defaultCameraServer = 'http://cam.gpssaigon.vn:88';
+const defaultCameraGateway = 'https://lively-cloud-d33f.gianglue819.workers.dev';
+
+async function vcRequest(action, params, method) {
+  if (!vcHasAccess()) throw new Error('Nhập lại số cấp quyền để tiếp tục.');
+  const context = vcContext();
+  let base;
+  try {
+    base = new URL($('vcBase').value.trim());
+  } catch {
+    throw new Error('Địa chỉ máy chủ không hợp lệ.');
+  }
+  if (!['http:', 'https:'].includes(base.protocol) || base.username || base.password || base.search || base.hash) {
+    throw new Error('Nhập địa chỉ HTTP/HTTPS hợp lệ của máy chủ camera hoặc proxy.');
+  }
+
+  const url = new URL(base.href.replace(/\/$/, '') + '/' + action);
+  const fields = new URLSearchParams(params);
+  const options = {method, cache: 'no-store', credentials: 'omit', headers: {Accept: 'application/json'}};
+  let endpoint = url;
+  if (base.origin === defaultCameraServer) {
+    const configured = $('baseUrl').value.trim();
+    let gateway = defaultCameraGateway;
+    if (configured.startsWith('https://')) gateway = new URL(configured).origin;
+    endpoint = new URL('/camera-proxy', gateway);
+    if (method === 'POST') options.body = fields;
+    else url.search = fields;
+    endpoint.searchParams.set('url', url.href);
+  } else {
+    url.search = fields;
+  }
+
+  let response, data;
+  try {
+    response = await fetchWithTimeout(endpoint.href, options, 25000);
+    ({data} = await readResponseSmart(response));
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Máy chủ chưa phản hồi sau 25 giây.');
+    throw new Error('Không kết nối được API camera. Kiểm tra mạng, CORS hoặc địa chỉ proxy HTTPS.');
+  }
+  if (!vcHasAccess() || context !== vcContext()) {
+    throw new Error('Serial hoặc phiên đăng nhập đã thay đổi. Tìm lại serial trước khi tiếp tục.');
+  }
+  if (!response.ok || String(data?.result) !== '0') {
+    throw new Error('API ' + action.replace(/^StandardApiAction_|\.action$/g, '') +
+      ' báo lỗi ' + (data?.result ?? 'HTTP ' + response.status) + '. Kiểm tra phiên camera và quyền của tài khoản.');
+  }
+  return data;
+}
+async function vcApi(action, params = {}, login = false) {
+  if (login) return vcRequest(action, params, 'POST');
+  const session = $('vcSession').value.trim();
+  if (!vcReady()) throw new Error('Đăng nhập camera hoặc xác thực phiên trước khi tìm serial.');
+  return vcRequest(action, {...params, jsession: session}, 'POST');
+}
+async function vcRead(serial){const r=await vcApi('StandardApiAction_queryUserVehicle.action');
+ const rows=[];for(const v of r.vehicles||[]){for(const d of v.dl||[])if(String(d.id)===serial)rows.push({serial:String(d.id),count:Number(d.cc),plate:String(v.nm||''),device:d});}
+ if(rows.length!==1)throw new Error(rows.length?'Serial có nhiều kết quả, chưa thể lưu.':'Không tìm thấy đúng serial CAM trong tài khoản. Kiểm tra số 0 đầu và quyền quản lý.');return rows[0];}
+function vcShow(d){$('vcChannelCard').hidden=false;$('vcInfo').hidden=false;$('vcInfo').textContent='Xe: '+(d.plate||'Chưa có biển số')+' · Serial CAM: '+d.serial+' · Hiện tại: '+(Number.isInteger(d.count)?d.count+' kênh':'chưa rõ');$('vcSave').hidden=false;$('vcCount').value=Number.isInteger(d.count)&&d.count>=1&&d.count<=4?String(d.count):'';vcPreview();}
+function vcPreview(){const n=Number($('vcCount').value);$('vcPreview').textContent=n?'Hiển thị '+Array.from({length:n},(_,i)=>'CH'+(i+1)).join(', '):'Chọn số kênh trước khi lưu.';}
+async function vcRun(fn){if(vcState.busy||prState.busy)return;if(!vcHasAccess()){vcStatus('Mở số cấp quyền trước khi cài đặt.');return;}vcState.busy=true;const controls=[...$('camChannelPanel').querySelectorAll('input,select,button')];const old=controls.map(x=>x.disabled);controls.forEach(x=>x.disabled=true);try{await fn();}catch(e){vcStatus(e.message,true);}finally{controls.forEach((x,i)=>x.disabled=old[i]);vcState.busy=false;prSummary();$('prRefresh').disabled=!prState.selected;}}
+function vcRememberKey() {
+  const camera = $('vcBase').value.trim().replace(/\/$/, '');
+  const gateway = $('baseUrl').value.trim().replace(/\/$/, '');
+  return 'sgsi_saved_camera_login:' + JSON.stringify([vcAccess.owner, camera, gateway]);
+}
+
+function vcRestoreCameraLogin() {
+  const saved = safeJsonParse(safeStorageGet(localStorage, vcRememberKey()));
+  const valid = Boolean(saved && typeof saved.account === 'string' && saved.account &&
+    typeof saved.password === 'string' && saved.password);
+  $('vcRememberPassword').checked = valid;
+  $('vcUser').value = valid ? saved.account : '';
+  $('vcPassword').value = valid ? saved.password : '';
+}
+
+$('vcRememberPassword').addEventListener('change', () => {
+  if (vcHasAccess() && !$('vcRememberPassword').checked) {
+    safeStorageRemove(localStorage, vcRememberKey());
+  }
+});
+$('vcBase').addEventListener('input', () => {
+  $('vcUser').value = '';
+  $('vcPassword').value = '';
+  $('vcSession').value = '';
+  $('vcRememberPassword').checked = false;
+});
+$('vcBase').addEventListener('change', () => {
+  if (vcHasAccess()) vcRestoreCameraLogin();
+});
+
+$('vcLogin').onsubmit = async event => {
+  event.preventDefault();
+  await vcRun(async () => {
+    vcLockWorkspace();
+    $('vcSession').value = '';
+    vcStatus('Đang đăng nhập camera…');
+    const account = $('vcUser').value.trim();
+    const password = $('vcPassword').value;
+    if (!account || !password) throw new Error('Nhập tài khoản và mật khẩu camera.');
+
+    const remember = $('vcRememberPassword').checked;
+    const key = vcRememberKey();
+    const result = await vcApi('StandardApiAction_login.action', {account, password}, true);
+    const session = String(result.jsession ?? '').trim();
+    if (!session) throw new Error('Máy chủ chưa trả jsession.');
+
+    vcOpenWorkspace(session);
+    $('vcPassword').value = '';
+    const saved = !remember || safeStorageSet(localStorage, key, JSON.stringify({account, password}));
+    if (!saved) $('vcRememberPassword').checked = false;
+    vcStatus('Đăng nhập thành công. Nhập serial CAM để tìm.' +
+      (saved ? '' : ' Trình duyệt không lưu được mật khẩu.'));
+  });
+  if (vcReady()) $('vcSerial').focus();
+};
+
+$('vcSessionForm').onsubmit = async event => {
+  event.preventDefault();
+  await vcRun(async () => {
+    vcLockWorkspace();
+    const session = $('vcSession').value.trim();
+    if (!session) throw new Error('Nhập mã phiên camera.');
+    vcStatus('Đang xác thực phiên camera…');
+    await vcRequest('StandardApiAction_queryUserVehicle.action', {jsession: session}, 'POST');
+    vcOpenWorkspace(session);
+    vcStatus('Phiên camera đã được xác thực.');
+  });
+  if (vcReady()) $('vcSerial').focus();
+};
+$('vcFind').onsubmit=e=>{e.preventDefault();vcRun(async()=>{vcReset();const serial=$('vcSerial').value.trim();if(!/^\d+$/.test(serial))throw new Error('Serial CAM chỉ gồm chữ số.');vcStatus('Đang tìm serial CAM…');const d=await vcRead(serial);vcState.device=d;vcState.context=vcContext();vcShow(d);vcStatus('Đã tìm thấy. Có thể cài số kênh và quy tắc chụp hình.');await prLoadShared(d);});};
+$('vcSave').onsubmit=e=>{e.preventDefault();vcRun(async()=>{const d=vcState.device,n=Number($('vcCount').value);if(!d||vcState.context!==vcContext()||$('vcSerial').value.trim()!==d.serial)throw new Error('Tìm lại serial CAM trước khi lưu.');if(!Number.isInteger(n)||n<1||n>4)throw new Error('Chọn từ 1 đến 4 kênh.');vcStatus('Đang đọc lại cấu hình…');const fresh=await vcRead(d.serial);if(fresh.count!==d.count){vcState.device=fresh;vcShow(fresh);throw new Error('Cấu hình đã thay đổi. Kiểm tra số kênh mới rồi lưu lại.');}if(n===fresh.count){vcStatus('Thiết bị đã được cài '+n+' kênh.');return;}
+ vcStatus('Đang lưu '+n+' kênh cho CAM '+d.serial+'…');await vcApi('StandardApiAction_editDevice.action',{devIdno:d.serial,channelNum:n});
+ vcStatus('Máy chủ đã nhận. Đang kiểm tra lại…');const check=await vcRead(d.serial);vcState.device=check;vcShow(check);if(check.count!==n)throw new Error('Máy chủ đã nhận nhưng chưa xác nhận đúng số kênh. Tìm lại serial để kiểm tra trước khi lưu tiếp.');vcStatus('Đã lưu và xác nhận CAM '+d.serial+' hiển thị '+n+' kênh.');});};
+$('vcSerial').addEventListener('input', vcReset);
+for (const field of ['vcBase', 'vcSession']) {
+  $(field).addEventListener('input', () => {
+    vcLockWorkspace();
+    vcStatus('');
+  });
+}
+$('vcCount').onchange=vcPreview;
+const prState={selected:null,rules:null,added:new Set(),removed:new Set(),busy:false,context:''};
+function prMessage(t){$('prStatus').textContent=t;}
+function prInvalidate(){prState.selected=null;prState.rules=null;prState.added.clear();prState.removed.clear();prState.context='';$('photoRulePanel').hidden=true;$('prRules').replaceChildren();$('prVehicleInfo').textContent='';$('prSummary').textContent='';$('prSave').disabled=true;$('prRefresh').disabled=true;}
+async function prRequest(path, query) {
+  const session = $('vcSession').value.trim();
+  if (!vcReady()) throw new Error('Đăng nhập camera trước khi đọc quy tắc.');
+  const method = /_(devRulePermit|delDevRule)\.action$/.test(path) ? 'POST' : 'GET';
+  return vcRequest(path.slice(1), {...query, jsession: session}, method);
+}
+async function prPages(path,query,visit){
+ let page=1,total=0;const seen=new Set();while(page<=1000){const r=await prRequest(path,{...query,currentPage:page,pageRecords:100});if(!Array.isArray(r.infos))throw new Error('API chưa trả infos của danh sách quy tắc.');const fingerprint=JSON.stringify(r.infos);if(seen.has(fingerprint)&&r.infos.length)throw new Error('API lặp trang dữ liệu. Chưa thể xác nhận đầy đủ.');seen.add(fingerprint);total+=r.infos.length;if(visit(r.infos)===false)return;
+ const p=r.pagination;if(p){const pages=Number(p.totalPages),records=Number(p.totalRecords);if(Number.isFinite(pages)&&pages<=page&&p.hasNextPage!==true)return;if(Number.isFinite(records)&&total>=records&&p.hasNextPage!==true)return;if(p.hasNextPage===false)return;if(p.hasNextPage!==true&&!Number.isFinite(pages))throw new Error('API thiếu thông tin phân trang.');}else if(r.infos.length<100)return;
+ page++;}throw new Error('Danh sách quá lớn. Chưa đọc đủ dữ liệu để xác nhận.');
+}
+async function prIsAttached(ruleId,serial){let found=false;await prPages('/StandardApiAction_loadDevRuleByRuleId.action',{ruleId},rows=>{if(rows.some(r=>String(r.devIdno)===serial&&String(r.ruleId)===String(ruleId))){found=true;return false;}});return found;}
+async function prReadStandard(serial){const rules=[];await prPages('/StandardApiAction_queryRuleList.action',{ruleType:8},rows=>rules.push(...rows));const seen=new Set();for(const r of rules){const id=prId(r);if(seen.has(id))throw new Error('Danh sách trả ID quy tắc trùng.');seen.add(id);if(r.type!==undefined&&Number(r.type)!==8)throw new Error('API trả sai loại quy tắc chụp hình.');}
+ const attached=[];let next=0,completed=0;await Promise.all(Array.from({length:Math.min(3,rules.length)},async()=>{while(next<rules.length){const r=rules[next++];if(await prIsAttached(prId(r),serial))attached.push(r);completed++;prMessage('Đang đọc quy tắc chụp hình '+completed+'/'+rules.length+'…');}}));return{ruleList:rules,myRuleList:attached};
+}
+function prId(r){const id=String(r?.id??'');if(!/^\d+$/.test(id))throw new Error('Danh sách có mã quy tắc không hợp lệ.');return id;}
+function prName(r){return String(r.name??r.nm??r.ruleName??('Quy tắc '+r.id));}
+function prAssigned(data){if(!Array.isArray(data.ruleList)||!Array.isArray(data.myRuleList))throw new Error('Máy chủ chưa trả đầy đủ ruleList và myRuleList. Chưa cho phép lưu.');data.ruleList.forEach(prId);return [...new Set(data.myRuleList.map(prId))].sort();}
+function prNorm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();}
+function prRenderRules(){const root=$('prRules');root.replaceChildren();if(!prState.rules)return;const attached=new Set(prAssigned(prState.rules));const q=prNorm($('prRuleSearch').value.trim());const rows=prState.rules.ruleList.filter(r=>prNorm(prName(r)).includes(q));for(const r of rows){const id=prId(r),label=document.createElement('label'),input=document.createElement('input'),span=document.createElement('span');label.className='pr-row'+(attached.has(id)&&!prState.removed.has(id)?' selected':'');input.type='checkbox';input.checked=(attached.has(id)&&!prState.removed.has(id))||prState.added.has(id);input.disabled=prState.busy;input.onchange=()=>{if(attached.has(id)){input.checked?prState.removed.delete(id):prState.removed.add(id);}else{input.checked?prState.added.add(id):prState.added.delete(id);}prRenderRules();};span.textContent=prName(r)+(prState.removed.has(id)?' · Sẽ gỡ khỏi xe':attached.has(id)?' · Đã gắn':prState.added.has(id)?' · Sẽ gắn thêm':'');label.append(input,span);root.append(label);}if(!rows.length){const p=document.createElement('p');p.textContent='Không có quy tắc phù hợp. Kiểm tra tên hoặc quyền tài khoản.';root.append(p);}prSummary();}
+function prSummary(){const rules=prState.rules?.ruleList||[],add=rules.filter(r=>prState.added.has(prId(r))).map(prName),remove=rules.filter(r=>prState.removed.has(prId(r))).map(prName);$('prSummary').textContent='Quy tắc chụp hình đã gắn: '+(prState.rules?prAssigned(prState.rules).length:0)+' quy tắc.\nGắn thêm: '+(add.join(', ')||'Không có')+'\nGỡ khỏi xe: '+(remove.join(', ')||'Không có');$('prSave').disabled=prState.busy||!prState.selected||(!add.length&&!remove.length);}
+async function prSelect(v){if(prState.context!==vcContext())throw new Error('Phiên thay đổi. Tải lại danh sách xe.');prState.selected=v;prState.rules=null;prState.added.clear();prState.removed.clear();$('prRules').replaceChildren();$('prVehicleInfo').textContent='Xe: '+v.plate+'\nSerial CAM: '+v.serial;prMessage('Đang đọc quy tắc của xe '+v.plate+'…');const r=await prReadStandard(v.serial);prAssigned(r);prState.rules=r;prRenderRules();prMessage('Đã đọc quy tắc. Chọn để gắn thêm, bỏ chọn để gỡ khỏi xe rồi bấm Lưu thay đổi.');}
+async function prRun(fn){if(prState.busy)return;prState.busy=true;const controls=[...$('camChannelPanel').querySelectorAll('input,select,button')];const before=controls.map(c=>c.disabled);controls.forEach(c=>c.disabled=true);try{await fn();}catch(e){prMessage(e.message);}finally{prState.busy=false;controls.forEach((c,i)=>c.disabled=before[i]);prRenderRules();$('prRefresh').disabled=!prState.selected;prSummary();}}
+$('prRuleSearch').oninput=prRenderRules;
+async function prLoadShared(d){prState.context=vcContext();$('photoRulePanel').hidden=false;const selected={plate:d.plate,serial:d.serial};try{await prRun(()=>prSelect(selected));}catch(e){prMessage(e.message);}}
+$('prRefresh').onclick=()=>{if(!vcState.busy && prState.selected)prRun(()=>prSelect(prState.selected));};
+$('prSave').onclick=()=>{if(!vcState.busy)prRun(async()=>{
+ const selected=prState.selected,plan=[...[...prState.removed].map(id=>({id,remove:true})),...[...prState.added].map(id=>({id,remove:false}))];if(!selected||!prState.rules||prState.context!==vcContext()||selected.serial!==$('vcSerial').value.trim())throw new Error('Tìm lại serial trước khi lưu.');if(!plan.length)throw new Error('Chọn hoặc bỏ chọn quy tắc cần thay đổi.');let confirmed=0,added=0,removed=0;
+ try{for(const op of plan){const id=op.id;if(prState.context!==vcContext())throw new Error('Phiên hoặc serial đã thay đổi.');if(!prState.rules.ruleList.some(r=>prId(r)===id))throw new Error('Quy tắc không thuộc danh sách đã đọc.');prMessage('Đang '+(op.remove?'gỡ':'gắn')+' quy tắc '+(confirmed+1)+'/'+plan.length+' cho CAM '+selected.serial+'…');
+ const exists=await prIsAttached(id,selected.serial);if(op.remove?exists:!exists){await prRequest(op.remove?'/StandardApiAction_delDevRule.action':'/StandardApiAction_devRulePermit.action',{ruleId:id,devIdno:selected.serial});const actual=await prIsAttached(id,selected.serial);if(op.remove?actual:!actual)throw new Error('Máy chủ đã nhận nhưng chưa xác nhận quy tắc '+id+' '+(op.remove?'được gỡ':'được gắn')+'.');}
+ if(op.remove){prState.rules.myRuleList=prState.rules.myRuleList.filter(r=>prId(r)!==id);prState.removed.delete(id);removed++;}else{const rule=prState.rules.ruleList.find(r=>prId(r)===id);if(!prState.rules.myRuleList.some(r=>prId(r)===id))prState.rules.myRuleList.push(rule);prState.added.delete(id);added++;}confirmed++;}
+ prMessage('Đã lưu và xác nhận: gắn thêm '+added+', gỡ '+removed+' quy tắc cho xe '+selected.plate+' · CAM '+selected.serial+'.');
+ }catch(e){throw new Error('Đã xác nhận '+confirmed+'/'+plan.length+' thay đổi (gắn '+added+', gỡ '+removed+'). '+e.message+' Đọc lại quy tắc trước khi thử tiếp.');}
+});};
+const dlState = {request: null, profile: null, trip: null, contacts: null};
+const dlCacheMs = 30_000;
+const dlRequestTimeoutMs = 24_000;
+const dlDateFormatter = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: 'Asia/Ho_Chi_Minh', dateStyle: 'short', timeStyle: 'medium', hourCycle: 'h23'
+});
+
+function selectProtectedTool(tool) {
+  if (!vcHasAccess()) return;
+  const lookup = tool === 'device';
+  if (!lookup && dlState.request) {
+    dlCancel();
+    dlClear();
+  }
+  $('camChannelPanel').hidden = lookup;
+  $('deviceLookupPanel').hidden = !lookup;
+  $('vcToolCamera').setAttribute('aria-pressed', String(!lookup));
+  $('vcToolLookup').setAttribute('aria-pressed', String(lookup));
+}
+
+function dlStatus(message, error = false) {
+  $('dlStatus').textContent = message;
+  $('dlStatus').toggleAttribute('data-error', error);
+}
+
+function dlClear() {
+  $('dlResult').hidden = true;
+  $('dlResult').replaceChildren();
+  dlStatus('');
+}
+
+function dlControls(disabled) {
+  for (const id of ['dlMode', 'dlQuery', 'dlSubmit']) $(id).disabled = disabled;
+}
+
+function dlCancel() {
+  const request = dlState.request;
+  dlState.request = null;
+  request?.controller.abort();
+  dlControls(false);
+}
+
+function dlGetCache(entry, request) {
+  return entry?.base === request.base && Date.now() < entry.expires ? entry : null;
+}
+
+function dlSetCache(type, request, fields) {
+  dlState[type] = {...fields, base: request.base, expires: Date.now() + dlCacheMs};
+}
+
+function dlBase() {
+  return $('baseUrl').value.trim().replace(/\/$/, '');
+}
+
+function dlCheck(request) {
+  if (!vcHasAccess() || request !== dlState.request ||
+      request.generation !== vcAccess.generation || request.base !== dlBase()) {
+    throw new Error('Phiên tra cứu đã thay đổi.');
+  }
+}
+
+async function dlApi(request, path, fields = {}, apiKey = request.key) {
+  dlCheck(request);
+  const api = path.split('/').pop();
+  const query = new URLSearchParams({...fields, api_key: apiKey});
+  let response, data;
+  try {
+    response = await fetchWithTimeout(request.base + path + '?' + query, {
+      method: 'GET', cache: 'no-store', credentials: 'omit',
+      headers: {Accept: 'application/json'}, signal: request.controller.signal
+    });
+    ({data} = await readResponseSmart(response));
+  } catch (error) {
+    dlCheck(request);
+    throw new Error(request.controller.signal.aborted || error.name === 'AbortError'
+      ? api + ': máy chủ phản hồi quá lâu.' : api + ': không kết nối được máy chủ.');
+  }
+  dlCheck(request);
+  const message = extractApiMessage(data, '');
+  if (response.status === 401 || response.status === 403 ||
+      /unauthorized|forbidden|không có quyền|không được phép|api[_ -]?key.{0,30}(invalid|không hợp lệ)|token.{0,30}(invalid|expired|hết hạn|không hợp lệ)/i.test(message)) {
+    const error = new Error(api + ': máy chủ từ chối quyền truy cập hoặc phiên đã hết hạn.');
+    error.accessDenied = true;
+    throw error;
+  }
+  if (!response.ok) throw new Error(api + ': máy chủ trả lỗi HTTP ' + response.status + '.');
+  if (!data || typeof data !== 'object' || Object.hasOwn(data, 'raw')) {
+    throw new Error(api + ': máy chủ trả HTTP ' + response.status + ' nhưng không trả JSON tra cứu.');
+  }
+  const status = data.Status ?? data.status;
+  if (status === '0' || isExplicitApiFailure(data)) {
+    const code = dlText(status ?? data.Code ?? data.code);
+    const safeCode = /^\d{1,6}$/.test(code) ? ' (mã ' + code + ')' : '';
+    const notFound = /không tìm thấy|không tồn tại|not found|no (matching )?(device|vehicle)/i.test(message);
+    const error = new Error(api + ': ' + (notFound
+      ? 'không tìm thấy thiết bị.'
+      : 'máy chủ từ chối yêu cầu tra cứu' + safeCode + '.'));
+    error.retryPlate = true;
+    throw error;
+  }
+  return data;
+}
+
+function dlText(value) {
+  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value))
+    ? String(value).trim() : '';
+}
+
+function dlPlate(value) {
+  return dlText(value).toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function dlSerial(value) {
+  if (typeof value === 'number' && !Number.isSafeInteger(value)) return '';
+  const serial = dlText(value);
+  return /^\d+$/.test(serial) ? serial.replace(/^0+(?=\d)/, '') : '';
+}
+
+const dlTripDays = 7;
+const dlDayMs = 86_400_000;
+const dlVietnamOffsetMs = 7 * 3_600_000;
+
+function dlTimestamp(value) {
+  const text = dlText(value);
+  const microsoft = /^\/Date\((-?\d+)(?:[+-]\d{4})?\)\/$/.exec(text);
+  if (microsoft) return Number(microsoft[1]);
+  if (!/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(text)) return NaN;
+  const iso = text.replace(' ', 'T');
+  return Date.parse(/Z$|[+-]\d{2}:?\d{2}$/i.test(iso) ? iso : iso + '+07:00');
+}
+
+function dlDate(value) {
+  const time = dlTimestamp(value);
+  if (Number.isFinite(time) && Math.abs(time) <= 8.64e15) return dlDateFormatter.format(time);
+  return dlText(value);
+}
+
+function dlTripQueryTime(time) {
+  return new Date(time + dlVietnamOffsetMs).toISOString().slice(0, 19);
+}
+
+async function dlLatestTrip(request, serial) {
+  let end = Math.floor(Date.now() / 1000) * 1000;
+  const firstWindow = 3 * 3_600_000;
+  const windows = [firstWindow, dlDayMs - firstWindow, ...Array(dlTripDays - 1).fill(dlDayMs)];
+  // Keep the common request small and look further back only if needed.
+  for (const duration of windows) {
+    if (request.controller.signal.aborted) throw new Error('Hết thời gian kiểm tra hành trình.');
+    const begin = end - duration;
+    const result = await dlApi(request, '/api/Enterprise/GetTrip', {
+      serial, begin: dlTripQueryTime(begin), end: dlTripQueryTime(end), zip: false
+    });
+    if (!Array.isArray(result.Datas)) throw new Error('API hành trình chưa trả danh sách Datas.');
+    let latest = -Infinity;
+    for (const point of result.Datas) {
+      if (point?.Serial != null && dlSerial(point.Serial) !== serial) continue;
+      const time = dlTimestamp(point?.TimeUpdate);
+      if (time >= begin && time <= end && time > latest) latest = time;
+    }
+    if (Number.isFinite(latest)) return dlDateFormatter.format(latest);
+    end = begin;
+  }
+  return '';
+}
+
+function dlDeviceRecords(response) {
+  const data = response.Data ?? response;
+  const devices = data.DeviceEx ?? data.Device ?? data.Devices ?? data;
+  return (Array.isArray(devices) ? devices : [devices])
+    .filter(device => dlSerial(device?.Serial))
+    .map(device => ({...response, ...data, ...device}));
+}
+
+async function dlFindSerialByPlate(request, input, plate) {
+  const formatted = plate.replace(/^(\d{2}[A-Z]{1,2})(\d{3})(\d{2})$/, '$1-$2.$3');
+  const variants = new Set([input.toUpperCase(), plate, formatted]);
+  let rejected;
+  let hasValidResponse = false;
+  for (const bs of variants) {
+    try {
+      const data = await dlApi(request, '/api/Device/GetDeviceByNumber', {bs});
+      hasValidResponse = true;
+      const matches = dlDeviceRecords(data).filter(device => dlPlate(device.Bs) === plate);
+      const serials = new Set(matches.map(device => dlSerial(device.Serial)));
+      if (serials.size > 1) throw new Error('Có nhiều thiết bị cùng biển số. Hãy tra cứu bằng số serial.');
+      if (serials.size === 1) return serials.values().next().value;
+    } catch (error) {
+      if (!error.retryPlate) throw error;
+      rejected = error;
+    }
+  }
+  if (!hasValidResponse && rejected) throw rejected;
+  return '';
+}
+
+function dlPeople(value, field) {
+  const entries = Array.isArray(value) ? value : [value];
+  return [...new Set(entries.map(entry => dlText(entry) || dlText(entry?.[field])).filter(Boolean))].join('\n');
+}
+
+function dlAccountNames(device) {
+  const entries = Array.isArray(device.DirectlyUsernames) ? device.DirectlyUsernames : [device.DirectlyUsernames];
+  const names = new Map();
+  for (const entry of entries) {
+    const text = dlText(entry) || dlText(entry?.Username);
+    for (const part of text.split(/[,;|\r\n]+/)) {
+      const username = part.trim();
+      const key = username.toLowerCase();
+      if (username && username !== '-' && username !== '—' && !names.has(key)) names.set(key, username);
+    }
+  }
+  return [...names.values()];
+}
+
+async function dlReadAccount(request, username, keys) {
+  const normalized = username.toLowerCase();
+  const variants = new Set([normalized, username]);
+  let matchedAccount = null;
+  for (const key of keys) {
+    if (!key) continue;
+    for (const name of variants) {
+      if (request.controller.signal.aborted) return matchedAccount;
+      try {
+        const response = await dlApi(request, '/admin/GetUser', {username: name}, key);
+        const user = response.User ?? response.Data?.User ?? response.Data ?? response;
+        if (dlText(user.Username).toLowerCase() === normalized) {
+          const phone = dlUserPhones(user.Phone);
+          const account = {name: dlText(user.DisplayName) || matchedAccount?.name || '', phone};
+          if (phone) return account;
+          matchedAccount = account;
+          break;
+        }
+      } catch (error) {
+        dlCheck(request);
+        if (error.accessDenied) break;
+        if (!error.retryPlate) {
+          if (matchedAccount) return matchedAccount;
+          throw error;
+        }
+      }
+    }
+  }
+  return matchedAccount;
+}
+
+async function dlReadAccounts(request, serial, names) {
+  const cached = dlGetCache(dlState.contacts, request);
+  const namesKey = JSON.stringify(names);
+  if (cached?.serial === serial && cached.namesKey === namesKey) return cached.accounts;
+
+  const accounts = new Map();
+  if (!names.length || request.controller.signal.aborted) return accounts;
+
+  let setupKey;
+  try {
+    setupKey = await loginSetupPrivilegedUser();
+  } catch {
+    dlCheck(request);
+  }
+  dlCheck(request);
+  const keys = new Set([setupKey, request.key, vcAccess.token]);
+
+  for (const username of names) {
+    if (request.controller.signal.aborted) break;
+    try {
+      const account = await dlReadAccount(request, username, keys);
+      if (account) accounts.set(username, account);
+    } catch {
+      dlCheck(request);
+    }
+  }
+  dlCheck(request);
+  if (accounts.size === names.length) dlSetCache('contacts', request, {serial, namesKey, accounts});
+  return accounts;
+}
+
+function dlUserPhones(...fields) {
+  const phones = new Map();
+  for (const field of fields) {
+    for (const entry of Array.isArray(field) ? field : [field]) {
+      for (const phone of dlText(entry).split(/[,;|\/\r\n]+/)) {
+        const text = phone.trim();
+        const digits = text.replace(/\D/g, '');
+        if (!digits) continue;
+        const key = digits.replace(/^(?:0084|84)(?=[1-9]\d{8,9}$)/, '0');
+        if (!phones.has(key)) phones.set(key, text);
+      }
+    }
+  }
+  return [...phones.values()].join('\n');
+}
+
+function dlElement(tag, text, className) {
+  const element = document.createElement(tag);
+  if (text) element.textContent = text;
+  if (className) element.className = className;
+  return element;
+}
+
+function dlFields(fields, className = 'dl-grid') {
+  const list = dlElement('dl', '', className);
+  for (const [label, value, options = {}] of fields) {
+    const {tone, wide, id, important} = options;
+    const classes = ['dl-field'];
+    if (tone) classes.push('dl-field-' + tone);
+    if (wide) classes.push('dl-field-wide');
+    if (important) classes.push('dl-important');
+    const field = dlElement('div', '', classes.join(' '));
+    const content = dlElement('dd', value || '—');
+    if (id) content.id = id;
+    field.append(dlElement('dt', label), content);
+    list.append(field);
+  }
+  return list;
+}
+
+function dlRenderAccounts(container, device, names, accounts) {
+  const namesFromDevice = dlPeople(device.DirectlyUsers, 'DisplayName').split('\n');
+  const rows = names.map((username, index) => {
+    const account = accounts?.get(username);
+    const name = account?.name || (namesFromDevice.length === names.length ? namesFromDevice[index] : '');
+    const phone = account ? dlUserPhones(account.phone) : '';
+    return dlFields([
+      ['Tên tài khoản', username, {tone:'account'}],
+      ['Họ và tên', name, {tone:'name'}],
+      ['SĐT người dùng', phone || (account ? 'Chưa có số' : accounts ? 'Chưa tra được' : 'Đang tra cứu…'), {tone:'user-phone'}]
+    ]);
+  });
+  if (!rows.length) rows.push(dlElement('p', 'Thiết bị chưa có tài khoản liên kết.'));
+  const ownerPhone = dlUserPhones(device.OwnerPhone, device.Phone);
+  if (ownerPhone) rows.push(dlFields([['SĐT liên hệ theo hồ sơ thiết bị', ownerPhone, {tone:'owner-phone', wide:true}]]));
+  container.replaceChildren(...rows);
+}
+
+function dlRender(device, accountNames, lastTrip = '') {
+  const card = (title, fields, className = 'dl-card') => {
+    const section = dlElement('section', '', className);
+    section.append(dlElement('h3', title), dlFields(fields));
+    return section;
+  };
+  const vehicle = card('Thông tin xe và thiết bị', [
+    ['Biển số xe', dlText(device.Bs), {tone:'plate'}],
+    ['Số serial', dlText(device.Serial), {tone:'serial'}],
+    ['SĐT thiết bị', dlText(device.PhoneOfDevice), {tone:'device-phone'}],
+    ['Ngày hết phí', dlDate(device.EndTime), {tone:'expiry', important:true}],
+    ['Thời gian cập nhật', lastTrip, {tone:'update', id:'dlLastTripTime', important:true}],
+    ['Ghi chú', dlText(device.Note), {tone:'note', wide:true}]
+  ]);
+  const software = card('Thiết bị và phần mềm', [
+    ['Model thiết bị', dlText(device.ModelName), {tone:'model'}],
+    ['Phần mềm', dlText(device.FirmWareVersion), {tone:'firmware', important:true}]
+  ], 'dl-card dl-software');
+  const organization = card('Công ty và đội xe', [
+    ['Tên công ty', dlText(device.CompanyName), {tone:'company'}],
+    ['Nhóm / đội xe', dlText(device.GroupName), {tone:'group'}]
+  ]);
+  const users = dlElement('section', '', 'dl-card');
+  const accountRows = dlElement('div');
+  accountRows.id = 'dlAccountRows';
+  dlRenderAccounts(accountRows, device, accountNames);
+  users.append(dlElement('h3', 'Người dùng'), accountRows);
+  $('dlResult').replaceChildren(vehicle, software, organization, users);
+  $('dlResult').hidden = false;
+}
+
+$('vcToolCamera').onclick = () => selectProtectedTool('camera');
+$('vcToolLookup').onclick = () => {
+  selectProtectedTool('device');
+  if (vcHasAccess()) $('dlQuery').focus();
+};
+$('dlMode').addEventListener('change', () => {
+  const serial = $('dlMode').value === 'serial';
+  const input = $('dlQuery');
+  $('dlQueryLabel').textContent = serial ? 'Số serial' : 'Biển số xe';
+  input.inputMode = serial ? 'numeric' : 'text';
+  input.placeholder = serial ? 'Ví dụ 26080091' : 'Ví dụ 71F00264';
+  input.value = '';
+  dlClear();
+  input.focus();
+});
+$('dlQuery').addEventListener('input', dlClear);
+
+$('dlForm').onsubmit = async event => {
+  event.preventDefault();
+  if (!vcHasAccess() || dlState.request) return;
+  dlClear();
+  const bySerial = $('dlMode').value === 'serial';
+  const input = $('dlQuery').value.trim();
+  const plate = dlPlate(input);
+  const query = bySerial ? dlSerial(input) : plate;
+  if (!query || (!bySerial && !plate)) {
+    dlStatus(bySerial ? 'Nhập serial bằng chữ số.' : 'Nhập biển số xe.', true);
+    return;
+  }
+  const request = {
+    generation: vcAccess.generation, base: dlBase(), key: vcAccess.lookupKey,
+    controller: new AbortController()
+  };
+  const timeout = setTimeout(() => request.controller.abort(), dlRequestTimeoutMs);
+  dlState.request = request;
+  dlControls(true);
+  dlStatus('Đang tra cứu thiết bị…');
+  try {
+    const cached = dlGetCache(dlState.profile, request);
+    const useCached = cached && (bySerial ? cached.serial === query : dlPlate(cached.device.Bs) === plate);
+    const serial = useCached ? cached.serial : bySerial ? query : await dlFindSerialByPlate(request, input, plate);
+    const device = useCached ? cached.device : serial ? dlDeviceRecords(
+      await dlApi(request, '/api/Device/GetDeviceBySerialEx', {serial})
+    ).find(record => dlSerial(record.Serial) === serial && (bySerial || dlPlate(record.Bs) === plate)) : null;
+    if (!device) {
+      dlStatus('Không tìm thấy thiết bị khớp với thông tin đã nhập.', true);
+      return;
+    }
+
+    if (!useCached) dlSetCache('profile', request, {serial, device});
+    const trip = dlGetCache(dlState.trip, request);
+    const useCachedTrip = trip?.serial === serial;
+    const accountNames = dlAccountNames(device);
+    dlRender(device, accountNames, useCachedTrip ? trip.value : '');
+    dlStatus('Đã tìm thấy thiết bị. Đang kiểm tra hành trình và SĐT người dùng…');
+
+    const updatePhones = async () => {
+      const accounts = await dlReadAccounts(request, serial, accountNames);
+      dlCheck(request);
+      dlRenderAccounts($('dlResult').querySelector('#dlAccountRows'), device, accountNames, accounts);
+      return accounts.size < accountNames.length ? 'Chưa đọc được SĐT từ một số tài khoản.' : '';
+    };
+    const updateTrip = async () => {
+      let lastTrip;
+      try {
+        lastTrip = useCachedTrip ? trip.value : await dlLatestTrip(request, serial);
+      } catch {
+        dlCheck(request);
+        return 'Chưa đọc được hành trình từ máy chủ.';
+      }
+      dlCheck(request);
+      if (!useCachedTrip) dlSetCache('trip', request, {serial, value: lastTrip});
+      if (lastTrip) $('dlResult').querySelector('#dlLastTripTime').textContent = lastTrip;
+      return lastTrip ? '' : 'Chưa có điểm hành trình trong 7 ngày gần nhất.';
+    };
+    const notices = await Promise.all([updatePhones(), updateTrip()]);
+    dlCheck(request);
+    dlStatus(['Đã tìm thấy thiết bị.', ...notices.filter(Boolean)].join(' '));
+  } catch (error) {
+    if (request === dlState.request && vcHasAccess()) dlStatus(error.message || 'Tra cứu thất bại.', true);
+  } finally {
+    clearTimeout(timeout);
+    if (request === dlState.request) {
+      dlState.request = null;
+      dlControls(false);
+    }
+  }
+};
+
+window.addEventListener('video-settings-reset', () => {
+  dlCancel();
+  dlState.profile = null;
+  dlState.trip = null;
+  dlState.contacts = null;
+  $('vcTools').hidden = true;
+  $('deviceLookupPanel').hidden = true;
+  $('dlMode').value = 'plate';
+  $('dlQuery').value = '';
+  $('dlQuery').inputMode = 'text';
+  $('dlQuery').placeholder = 'Ví dụ 71F00264';
+  $('dlQueryLabel').textContent = 'Biển số xe';
+  dlClear();
+});
+
+})();
+</script>
 </body>
 </html>
