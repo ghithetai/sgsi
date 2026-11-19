@@ -1034,29 +1034,44 @@ function segmentTaskParams(file,criteria){
  const begin=Math.max(seconds(criteria.begin),Number(file.beg)),end=Math.min(seconds(criteria.end),Number(file.end));
  if(!(begin&lt;end))throw Error(&#x27;Khoảng chọn không nằm trong tệp này.&#x27;);
  if(String(params.did).trim()!==criteria.serial||Number(params.chn)!==Number(file.chn))throw Error(&#x27;Liên kết tác vụ không đúng camera hoặc kênh.&#x27;);
- params.jsession=session;params.dtp=&#x27;2&#x27;;params.chn=String(file.chn);
+ params.jsession=session;params.dtp=&#x27;2&#x27;;
  params.fbtm=criteria.date+&#x27; &#x27;+inputClock(begin);params.fetm=criteria.date+&#x27; &#x27;+inputClock(end);
  // sbtm/setm, did and fph remain the source metadata supplied by the server.
  return params;
 }
-async function getServerSegment(file,criteria){
- if(!file.DownTaskUrl)throw Error(&#x27;Máy chủ không trả liên kết tải đoạn. Không tải nguyên tệp để tránh tốn 4G.&#x27;);
+async function getServerSegment(file,criteria,skipTaskLink=false){
+if(!file.DownTaskUrl){if(file.DownUrl&amp;&amp;Number(file.stream)!==1&amp;&amp;Number(file.beg)&gt;=seconds(criteria.begin)&amp;&amp;Number(file.end)&lt;=seconds(criteria.end)&amp;&amp;Number(file.end)-Number(file.beg)&lt;=MAX_VIDEO_SECONDS)return file;throw Error(&#x27;Máy chủ không có liên kết tải đoạn; tệp gốc không nằm trọn trong khoảng chọn. Không tải nguyên tệp để tránh tốn 4G.&#x27;);}
  const params=segmentTaskParams(file,criteria);
  const key=JSON.stringify([session,params.did,params.fph,params.fbtm,params.fetm,params.chn]);
  let task=segmentTasks.get(key);
- if(!task){params.lab=&#x27;CameraB-Segment-&#x27;+Date.now()+&#x27;-&#x27;+Math.random().toString(36).slice(2,8);updateVideoProgress(2,&#x27;Đang yêu cầu xe tải đoạn &#x27;+params.fbtm.slice(11)+&#x27;–&#x27;+params.fetm.slice(11));await api(&#x27;addDownloadTask&#x27;,params);task={label:params.lab,params};segmentTasks.set(key,task);}
+ if(!task){params.lab=&#x27;CameraB-Segment-&#x27;+Date.now()+&#x27;-&#x27;+Math.random().toString(36).slice(2,8);updateVideoProgress(2,&#x27;Đang yêu cầu xe tải đoạn &#x27;+params.fbtm.slice(11)+&#x27;–&#x27;+params.fetm.slice(11));await api(&#x27;addDownloadTask&#x27;,params);task={label:params.lab,params,createdAt:Date.now()};segmentTasks.set(key,task);}
  for(let attempt=0;attempt&lt;36;attempt++){
   const data=await api(&#x27;downloadTasklist&#x27;,{jsession:session,devIdno:params.did,begintime:criteria.date+&#x27; 00:00:00&#x27;,endtime:criteria.date+&#x27; 23:59:59&#x27;,currentPage:1,pageRecords:100});
   const current=(data.infos||[]).find(t=&gt;t.lab===task.label);
   if(Number(current?.stu)===3){segmentTasks.delete(key);throw Error(&#x27;Xe tải đoạn thất bại · Mã lỗi &#x27;+current.err);}
   if(Number(current?.stu)===4){
    updateVideoProgress(20,&#x27;Đoạn đã lên máy chủ, đang lấy liên kết…&#x27;);
+   const begin=seconds(params.fbtm.slice(11)),end=seconds(params.fetm.slice(11));
+   // Use the completed task only when its identity matches the selected camera and channel.
+   const identityOK=(current.did==null||String(current.did).trim()===String(params.did).trim())&amp;&amp;(current.chn==null||Number(current.chn)===Number(params.chn));
+   if(!identityOK)throw Error(&#x27;Tác vụ trả về không đúng camera hoặc kênh.&#x27;);
+   const taskRangeOK=(!current.fbtmStr||String(current.fbtmStr)===params.fbtm)&amp;&amp;(!current.fetmStr||String(current.fetmStr)===params.fetm);
+   if(!skipTaskLink&amp;&amp;taskRangeOK&amp;&amp;(current.downUrl||current.DownUrl)){
+    const link=current.downUrl||current.DownUrl;
+    try{downloadURL(link);return {DownUrl:link,beg:begin,end,chn:Number(params.chn),devIdno:params.did,len:0,fromTask:true};}catch{}
+   }
    const [YEAR,MON,DAY]=criteria.date.split(&#x27;-&#x27;);
-   const result=await api(&#x27;getVideoFileInfo&#x27;,{jsession:session,DevIDNO:criteria.apiPlate,LOC:2,CHN:params.chn,YEAR,MON,DAY,BEG:seconds(criteria.begin),END:seconds(criteria.end),RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:-1,STORE:0});
-   const segment=(result.files||[]).find(x=&gt;x.DownUrl&amp;&amp;String(x.devIdno)===String(params.did)&amp;&amp;Number(x.chn)===Number(params.chn)&amp;&amp;Math.abs(Number(x.beg)-seconds(params.fbtm.slice(11)))&lt;=0.1&amp;&amp;Math.abs(Number(x.end)-seconds(params.fetm.slice(11)))&lt;=0.1&amp;&amp;Number(x.end)&gt;Number(x.beg));
-   if(segment)return segment;
-   updateVideoProgress(20,&#x27;Đang chờ máy chủ lập danh sách đoạn video…&#x27;);
-  }else updateVideoProgress(5,&#x27;Đang chờ xe gửi đoạn video lên máy chủ…&#x27;,current?&#x27;Trạng thái tác vụ: &#x27;+current.stu:&#x27;Đang chờ tác vụ xuất hiện&#x27;);
+   const query={jsession:session,DevIDNO:criteria.apiPlate||criteria.serial,CHN:params.chn,YEAR,MON,DAY,BEG:seconds(criteria.begin),END:seconds(criteria.end),RECTYPE:-1,FILEATTR:2,ARM1:0,ARM2:0,RES:0,STREAM:-1,STORE:0};
+   let lookupError;
+   for(const LOC of [2,4]){
+    try{
+     const result=await api(&#x27;getVideoFileInfo&#x27;,{...query,LOC});
+     const segment=(Array.isArray(result.files)?result.files:[]).find(x=&gt;x.DownUrl&amp;&amp;String(x.devIdno).trim()===String(params.did).trim()&amp;&amp;Number(x.chn)===Number(params.chn)&amp;&amp;Number(x.beg)&gt;=begin&amp;&amp;Number(x.end)&lt;=end&amp;&amp;Number(x.end)&gt;Number(x.beg));
+     if(segment)return {...segment,sourceLoc:LOC};
+    }catch(error){lookupError=error;}
+   }
+   updateVideoProgress(20,&#x27;Đang chờ danh sách video LOC=2 / LOC=4…&#x27;,lookupError?&#x27;API: &#x27;+lookupError.message:&#x27;Tác vụ đã hoàn thành&#x27;);
+  }else updateVideoProgress(5,&#x27;Đang chờ xe gửi đoạn video lên máy chủ…&#x27;, (current?&#x27;Trạng thái tác vụ: &#x27;+current.stu:&#x27;Đang chờ tác vụ xuất hiện&#x27;)+&#x27; · Đã chờ &#x27;+Math.floor((Date.now()-(task.createdAt||Date.now()))/1000)+&#x27; giây&#x27;);
   await new Promise(resolve=&gt;setTimeout(resolve,5000));
  }
  throw Error(&#x27;Tác vụ chưa hoàn thành. Bấm lại để tiếp tục kiểm tra tác vụ đã tạo.&#x27;);
@@ -1112,15 +1127,15 @@ info:&#x27;Kênh &#x27;+(ch+1)+&#x27; · &#x27;+new Date(result.actualBegin*1000
 updateVideoProgress(96,&#x27;MP4 đã sẵn sàng&#x27;);return preparedVideo;
 }
 
-function render8(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownUrl&amp;&amp;Number(f.stream)!==1){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
+function render8(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownUrl&amp;&amp;Number(f.stream)!==1){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;runVideo12(button,async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
 const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
-preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
+preview.onclick=()=&gt;runVideo12(preview,async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
 
 function videoSerialFlow(value){
  const serial=String(value??&#x27;&#x27;).trim();
  if(/^\d{8}$/.test(serial))return &#x27;8&#x27;;
- if(/^0000\d{8}$/.test(serial))return &#x27;12&#x27;;
- throw Error(&#x27;Serial chưa được hỗ trợ: cần 8 số hoặc 0000 + 8 số.&#x27;);
+ if(/^0000\d{7,8}$/.test(serial))return &#x27;12&#x27;;
+ throw Error(&#x27;Serial chưa được hỗ trợ: cần 8 số hoặc 11–12 số bắt đầu bằng 0000.&#x27;);
 }
 async function prepareVideo(file){
  validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);
@@ -1137,9 +1152,25 @@ function render(){
 
 async function prepareVideo12(f){
 resetVideoProgress();
-const key=JSON.stringify([session,f.DownUrl,searchCriteria]);
+const key=JSON.stringify([session,f.DownUrl,f.DownTaskUrl,f.file,f.chn,f.beg,f.end,searchCriteria]);
 if(preparedVideo&amp;&amp;preparedVideo.key===key){updateVideoProgress(96,&#x27;MP4 đã có sẵn&#x27;);return preparedVideo;}updateVideoProgress(0,&#x27;Đang kết nối tải video…&#x27;);
-if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang chuẩn bị đoạn video kênh &#x27;+(ch+1)+&#x27;…&#x27;);const segment=await getServerSegment(f,criteria);const u=downloadURL(segment.DownUrl);u.searchParams.set(&#x27;jsession&#x27;,session);const response=await cameraFetch(u,{signal:AbortSignal.timeout(300000)});if(!response.ok)throw Error(&#x27;Tải dữ liệu thất bại: HTTP &#x27;+response.status);const buffer=await readVideoWithProgress(response,segment.len);updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const isMP4=new TextDecoder().decode(new Uint8Array(buffer,4,4))===&#x27;ftyp&#x27;;if(isMP4&amp;&amp;Math.abs(mp4Duration(buffer)-(Number(segment.end)-Number(segment.beg)))&gt;0.25)throw Error(&#x27;Máy chủ trả MP4 có thời lượng khác đoạn đã chọn. Không lưu tệp sai giờ.&#x27;);const result=isMP4?{bytes:new Uint8Array(buffer),actualBegin:day+Number(segment.beg),actualEnd:day+Number(segment.end),duration:Number(segment.end)-Number(segment.beg)}:await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),day+Number(segment.beg),&#x27;12&#x27;);
+if(!searchCriteria)throw Error(&#x27;Tìm video trước.&#x27;);const criteria={...searchCriteria};const ch=criteria.channel&lt;0?Number(f.chn):criteria.channel;show(&#x27;Đang chuẩn bị đoạn video kênh &#x27;+(ch+1)+&#x27;…&#x27;);let segment=await getServerSegment(f,criteria);
+const receive=async item=&gt;{
+ const u=downloadURL(item.DownUrl);
+ const safePath=/^\/(?:\d{1,4}\/?){1,5}$/.test(u.pathname)?u.pathname:&#x27;(đường dẫn riêng)&#x27;;
+ const dt=u.searchParams.get(&#x27;DownType&#x27;),loc=u.searchParams.get(&#x27;FILELOC&#x27;);
+ const target=[item.fromTask?&#x27;downUrl tác vụ&#x27;:item.sourceLoc?&#x27;LOC=&#x27;+item.sourceLoc:&#x27;Tệp gốc&#x27;,u.protocol+&#x27;//&#x27;+u.host+safePath,&#x27;DownType=&#x27;+(/^\d{1,3}$/.test(dt||&#x27;&#x27;)?dt:&#x27;không có&#x27;),&#x27;FILELOC=&#x27;+(/^\d{1,3}$/.test(loc||&#x27;&#x27;)?loc:&#x27;không có&#x27;)].join(&#x27; · &#x27;);
+ u.searchParams.set(&#x27;jsession&#x27;,session);
+ let response;
+ try{response=await cameraFetch(u,{signal:AbortSignal.timeout(300000)});}catch(error){throw Error(&#x27;Không kết nối được khi tải video · &#x27;+target+&#x27; · &#x27;+(error.name===&#x27;TimeoutError&#x27;?&#x27;Hết thời gian chờ&#x27;:&#x27;Lỗi mạng&#x27;));}
+ if(!response.ok){
+  let reason=&#x27;Máy chủ không chấp nhận yêu cầu&#x27;;
+  try{const data=await response.json();const known=[&#x27;Camera URL is not allowed&#x27;,&#x27;Camera target is not allowed&#x27;,&#x27;Camera path is not allowed&#x27;,&#x27;Method is not allowed&#x27;,&#x27;Camera returned a redirect; check the camera endpoint&#x27;,&#x27;Cannot reach upstream server; check DNS and allow_custom_ports&#x27;];if(known.includes(data.message))reason=data.message;}catch{}
+  throw Error(&#x27;HTTP &#x27;+response.status+&#x27; · &#x27;+reason+&#x27; · &#x27;+target);
+ }
+ return readVideoWithProgress(response,item.len);
+};
+let buffer;try{buffer=await receive(segment);}catch(error){if(!segment.fromTask)throw error;updateVideoProgress(20,&#x27;Liên kết tác vụ chưa tải được; thử LOC=2 / LOC=4&#x27;);try{segment=await getServerSegment(f,criteria,true);buffer=await receive(segment);}catch(fallback){throw Error(&#x27;Thử 1: &#x27;+error.message+&#x27; | Thử 2: &#x27;+fallback.message);}}updateVideoProgress(92,&#x27;Đang tách kênh và đóng gói MP4…&#x27;);show(&#x27;Đang tách kênh và đóng gói MP4…&#x27;);await new Promise(resolve=&gt;setTimeout(resolve,30));const [y,m,d]=criteria.date.split(&#x27;-&#x27;).map(Number);const day=Date.UTC(y,m-1,d)/1000;const isMP4=new TextDecoder().decode(new Uint8Array(buffer,4,4))===&#x27;ftyp&#x27;;const result=isMP4?{bytes:new Uint8Array(buffer),actualBegin:day+Number(segment.beg),actualEnd:day+Number(segment.end),duration:Number(segment.end)-Number(segment.beg)}:await remuxVideoOffThread(buffer,ch,day+seconds(criteria.begin),day+seconds(criteria.end),day+Number(segment.beg),&#x27;12&#x27;);
 const filename=criteria.plate.replace(/[^A-Za-z0-9.-]/g,&#x27;_&#x27;)+&#x27;_CH&#x27;+(ch+1)+&#x27;_&#x27;+criteria.date+&#x27;_&#x27;+new Date(result.actualBegin*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;-&#x27;+new Date(result.actualEnd*1000).toISOString().slice(11,19).replaceAll(&#x27;:&#x27;,&#x27;&#x27;)+&#x27;.mp4&#x27;;
 clearPreview();
 preparedVideo={key,blob:new Blob([result.bytes],{type:&#x27;video/mp4&#x27;}),filename,
@@ -1159,9 +1190,39 @@ $(&#x27;savePreview&#x27;).onclick=()=&gt;run(async()=&gt;{if(!preparedVideo)thr
 $(&#x27;previewPlayer&#x27;).addEventListener(&#x27;error&#x27;,()=&gt;show(&#x27;Trình duyệt không phát được MP4 này. Bạn vẫn có thể tải video để mở bằng VLC.&#x27;,true));
 window.addEventListener(&#x27;pagehide&#x27;,()=&gt;{if(previewObjectURL)URL.revokeObjectURL(previewObjectURL);});
 
-function render12(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;run(async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(item.info.includes(&#x27;không đủ&#x27;)?&#x27;Đã tải MP4 · Video nhận được chưa đủ toàn bộ khoảng giờ chọn&#x27;:&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
+function runVideo12(button,fn){
+ if(videoOperationBusy)return;
+ const card=button.closest(&#x27;.video-result-card&#x27;)||button.parentElement;
+ document.querySelectorAll(&#x27;[data-video12-status]&#x27;).forEach(node=&gt;node.remove());
+ const note=document.createElement(&#x27;div&#x27;);note.dataset.video12Status=&#x27;1&#x27;;note.setAttribute(&#x27;role&#x27;,&#x27;status&#x27;);note.style.cssText=&#x27;grid-column:1/-1;margin:8px 0 0;padding:12px;border:1px solid #bee4d5;border-radius:12px;background:#e3f3ee;color:#075b48;font-size:13px;overflow-wrap:anywhere&#x27;;
+ const top=document.createElement(&#x27;div&#x27;);top.style.cssText=&#x27;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:700;margin-bottom:8px&#x27;;
+ const title=document.createElement(&#x27;span&#x27;),percent=document.createElement(&#x27;span&#x27;);title.textContent=&#x27;Đang chuẩn bị tải video…&#x27;;percent.textContent=&#x27;0%&#x27;;top.append(title,percent);
+ const bar=document.createElement(&#x27;progress&#x27;);bar.max=100;bar.value=0;bar.setAttribute(&#x27;aria-label&#x27;,&#x27;Tiến trình tải video&#x27;);bar.style.cssText=&#x27;display:block;width:100%;height:14px;accent-color:#09866b&#x27;;
+ const detail=document.createElement(&#x27;div&#x27;);detail.style.cssText=&#x27;margin-top:7px;font-size:12px;line-height:1.4&#x27;;note.append(top,bar,detail);card.append(note);
+ const start=Date.now();let finished=false;
+ return run(async()=&gt;{
+  const progress=$(&#x27;videoProgressText&#x27;),source=$(&#x27;videoProgressBar&#x27;),box=$(&#x27;videoProgressBox&#x27;);
+  const sync=()=&gt;{
+   if(finished)return;
+   const elapsed=Math.max(0,Math.floor((Date.now()-start)/1000));
+   const message=progress.textContent||&#x27;Đang chuẩn bị tải video…&#x27;;
+   const done=box.dataset.state===&#x27;done&#x27;;
+   const waiting=/Đang chờ|Đang yêu cầu xe/.test(message)&amp;&amp;!done;
+   const unknown=!source.hasAttribute(&#x27;value&#x27;)||waiting;
+   title.textContent=message===&#x27;0%&#x27;?&#x27;Đang chuẩn bị tải video…&#x27;:message;
+   if(done){bar.value=100;percent.textContent=&#x27;100%&#x27;;}
+   else if(unknown){bar.removeAttribute(&#x27;value&#x27;);percent.textContent=waiting?&#x27;Đang chờ&#x27;:&#x27;Đang tải&#x27;;}
+   else{bar.value=Math.max(0,Math.min(99,Number(source.value)||0));percent.textContent=Math.round(bar.value)+&#x27;%&#x27;;}
+   const bytes=$(&#x27;videoProgressBytes&#x27;).textContent;detail.textContent=[bytes,&#x27;Thời gian: &#x27;+Math.floor(elapsed/60)+&#x27; phút &#x27;+(elapsed%60)+&#x27; giây&#x27;].filter(Boolean).join(&#x27; · &#x27;);
+  };
+  const observer=new MutationObserver(sync);observer.observe(progress,{childList:true,subtree:true,characterData:true});observer.observe($(&#x27;videoProgressBytes&#x27;),{childList:true,subtree:true,characterData:true});observer.observe(source,{attributes:true,attributeFilter:[&#x27;value&#x27;]});observer.observe(box,{attributes:true,attributeFilter:[&#x27;data-state&#x27;]});
+  const timer=setInterval(sync,1000);
+  try{await fn();sync();finished=true;note.style.background=&#x27;#ddf7e8&#x27;;note.style.color=&#x27;#087442&#x27;;}catch(error){finished=true;note.style.background=&#x27;#ffe5e8&#x27;;note.style.color=&#x27;#9f1239&#x27;;note.style.borderColor=&#x27;#ffc4cd&#x27;;title.textContent=&#x27;Tải video thất bại&#x27;;percent.textContent=&#x27;!&#x27;;bar.hidden=true;detail.textContent=error.message;throw error;}finally{finished=true;clearInterval(timer);observer.disconnect();}
+ });
+}
+function render12(){clearPreview();$(&#x27;results&#x27;).replaceChildren();if(!files.length){$(&#x27;results&#x27;).textContent=&#x27;Không có bản ghi phù hợp.&#x27;;return;}const table=document.createElement(&#x27;table&#x27;),head=table.createTHead().insertRow();for(const title of [&#x27;Tệp&#x27;,&#x27;Kênh&#x27;,&#x27;Thời gian&#x27;,&#x27;Dung lượng&#x27;,&#x27;Tải&#x27;]){const th=document.createElement(&#x27;th&#x27;);th.textContent=title;head.append(th);}const body=table.createTBody();for(const f of files){const r=body.insertRow();for(const value of [f.file,Number(f.chn)+1,time(f.clipBeg??f.beg)+&#x27;–&#x27;+time(f.clipEnd??f.end),&#x27;Tệp gốc &#x27;+(Number(f.len)/1048576).toFixed(1)+&#x27; MB&#x27;])r.insertCell().textContent=value;const cell=r.insertCell();if(f.DownTaskUrl||(f.DownUrl&amp;&amp;Number(f.stream)!==1&amp;&amp;Number(f.beg)&gt;=seconds(searchCriteria.begin)&amp;&amp;Number(f.end)&lt;=seconds(searchCriteria.end))){const button=document.createElement(&#x27;button&#x27;);button.type=&#x27;button&#x27;;button.textContent=&#x27;Tải video&#x27;;button.onclick=()=&gt;runVideo12(button,async()=&gt;{const item=await prepareVideo(f);await savePrepared(item);finishVideoProgress(item.info.includes(&#x27;không đủ&#x27;)?&#x27;Đã tải MP4 · Video nhận được chưa đủ toàn bộ khoảng giờ chọn&#x27;:&#x27;Đã gửi MP4 tới trình tải xuống&#x27;);show(&#x27;Đã lưu MP4. &#x27;+item.info);});
 const preview=document.createElement(&#x27;button&#x27;);preview.type=&#x27;button&#x27;;preview.textContent=&#x27;Xem trước&#x27;;preview.style.marginRight=&#x27;8px&#x27;;
-preview.onclick=()=&gt;run(async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else if(f.DownTaskUrl){const button=document.createElement(&#x27;button&#x27;);button.textContent=&#x27;Tạo tác vụ tải&#x27;;button.onclick=()=&gt;run(async()=&gt;{resetVideoProgress();validateVideoRange($(&#x27;begin&#x27;).value,$(&#x27;end&#x27;).value);const u=downloadURL(f.DownTaskUrl);if(u.pathname!==&#x27;/StandardApiAction_addDownloadTask.action&#x27;)throw Error(&#x27;Không đúng API tạo tác vụ.&#x27;);const params=Object.fromEntries(u.searchParams);params.jsession=session;if(seconds(params.fetm.slice(11))-seconds(params.fbtm.slice(11))&gt;MAX_VIDEO_SECONDS)throw Error(&#x27;Tác vụ này tải cả tệp dài hơn 10 phút nên đã bị chặn.&#x27;);params.dtp=1;params.lab=&#x27;CameraB-&#x27;+Date.now();await api(&#x27;addDownloadTask&#x27;,params);show(&#x27;Đã tạo tác vụ. Nhấn Kiểm tra tác vụ tải; khi hoàn thành, tìm lại tại Máy chủ tải.&#x27;);});cell.append(button);}else cell.textContent=&#x27;Chưa có liên kết&#x27;;}$(&#x27;results&#x27;).append(table);}
+preview.onclick=()=&gt;runVideo12(preview,async()=&gt;previewPrepared(await prepareVideo(f)));cell.append(preview,button);}else cell.textContent=&#x27;Chưa có liên kết tải đoạn phù hợp&#x27;;}$(&#x27;results&#x27;).append(table);}
 $(&#x27;tasksButton&#x27;).onclick=()=&gt;run(async()=&gt;{if(!session)throw Error(&#x27;Đăng nhập trước.&#x27;);if(!selected())throw Error(&#x27;Chọn biển số xe hợp lệ trước.&#x27;);const d=await api(&#x27;downloadTasklist&#x27;,{jsession:session,devIdno:$(&#x27;serial&#x27;).value.trim(),begintime:$(&#x27;date&#x27;).value+&#x27; 00:00:00&#x27;,endtime:$(&#x27;date&#x27;).value+&#x27; 23:59:59&#x27;,currentPage:1,pageRecords:100});$(&#x27;tasks&#x27;).replaceChildren();for(const t of d.infos||[]){const p=document.createElement(&#x27;p&#x27;);p.textContent=(t.fph||t.lab)+&#x27; · &#x27;+({1:&#x27;Chờ tải&#x27;,2:&#x27;Đang tải&#x27;,3:&#x27;Thất bại&#x27;,4:&#x27;Đã tải về máy chủ&#x27;}[t.stu]||t.stu)+(Number(t.stu)===3?&#x27; · Lỗi &#x27;+t.err:&#x27;&#x27;);$(&#x27;tasks&#x27;).append(p);}show(&#x27;Đã cập nhật tác vụ. Tác vụ máy chủ đã cập nhật. Tìm video hiện mặc định từ thiết bị trên xe.&#x27;);});
 &lt;/script&gt;&lt;script&gt;function resizeCameraFrame(){if(window.frameElement)window.frameElement.style.height=Math.ceil(document.documentElement.scrollHeight)+&#x27;px&#x27;;}new ResizeObserver(resizeCameraFrame).observe(document.body);window.addEventListener(&#x27;load&#x27;,resizeCameraFrame);
 const VIDEO_UI_ICON=&#x27;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.8&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3&quot; y=&quot;6&quot; width=&quot;13&quot; height=&quot;12&quot; rx=&quot;2&quot;/&gt;&lt;path d=&quot;m16 10 5-3v10l-5-3z&quot;/&gt;&lt;/svg&gt;&#x27;;
